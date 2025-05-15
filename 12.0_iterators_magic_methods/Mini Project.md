@@ -30,7 +30,7 @@ __del__	הדפסה על סיום חיים של האובייקט
 הדפסת המילון ב־table מיידית
 
 📦 מבנה קוד לדוגמה (ראשוני בלבד):
-python
+```python
 Copy
 Edit
 t = SmartTranslationDict({
@@ -50,7 +50,7 @@ with t:
     print("📝 Using translation context")
 
 print(t)                # תצוגה יפה של כל הזוגות
-
+````
 
 🔧 שלבים לביצוע:
 ---
@@ -74,7 +74,7 @@ print(t)                # תצוגה יפה של כל הזוגות
 
 
 
-python
+```python
 import json
 
 class SmartTranslationDict:
@@ -169,3 +169,4 @@ if __name__ == "__main__":
     print(repr(t))
     print(bool(t))
     print(range(t.__index__()))
+````
