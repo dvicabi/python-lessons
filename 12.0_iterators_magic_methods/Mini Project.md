@@ -74,7 +74,7 @@ print(t)                # תצוגה יפה של כל הזוגות
 
 
 
-
+python
 import json
 
 class SmartTranslationDict:
