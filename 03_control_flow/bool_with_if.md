@@ -137,10 +137,3 @@ name2 = "Cabessa"
 
 ---
 
-🎁 רוצה עכשיו שאארוז את זה כקובץ:
-
-* 📄 Markdown להדפסה?
-* 📘 Jupyter Notebook עם cells להרצה?
-* 🎮 חידון אינטראקטיבי לילדים?
-
-רק תגיד מה הכי יתאים לך 🤓📚
