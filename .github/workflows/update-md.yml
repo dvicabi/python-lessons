@@ -1,0 +1,43 @@
+name: Update Markdown Headers/Footers
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "**/*.md"
+      - "header.md"
+      - "footer.md"
+      - "update_markdown.py"
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-md:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run updater
+        run: |
+          python -V
+          python update_markdown.py --root .
+
+      - name: Create Pull Request with changes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(md): auto-apply DC header/footer"
+          branch: ci/md-auto-update
+          title: "Auto-apply DC header/footer to Markdown"
+          body: "This PR adds/updates the bilingual header and footer across the repo."
+          labels: documentation, automation
