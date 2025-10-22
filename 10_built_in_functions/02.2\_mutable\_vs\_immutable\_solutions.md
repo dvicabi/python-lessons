@@ -1,3 +1,15 @@
+<!-- DC_HEADER_START -->
+<div align="center">
+
+🐍 **Python Learning Series | סדרת לימודי פייתון**  
+**Dvir Cabessa | דביר קבסה**  
+© 2025 All Rights Reserved | כל הזכויות שמורות
+
+</div>
+
+---
+<!-- DC_HEADER_END -->
+
 # 📘 פתרונות – טיפוסים משתנים ולא משתנים (Mutable vs Immutable)
 
 ## 🧪 פתרונות לתרגילים
@@ -108,4 +120,28 @@ print("Outside function:", words)  # Output: ["hello", "world"]
 * טיפוסים בלתי משתנים כמו `int`, `str`, `tuple` לא משתנים מחוץ לפונקציה – כל שינוי יוצר עותק חדש.
 * טיפוסים משתנים כמו `list`, `dict` נשמרים בזיכרון – ושינויים משפיעים גם על המקור.
 * השימוש ב־`id()` מאפשר לראות האם האובייקט בזיכרון באמת נשמר או הוחלף.
-* 
+*
+
+<!-- DC_FOOTER_START -->
+---
+
+<div align="center">
+
+✨ **Thank you for learning with Dvir Cabessa** ✨  
+✨ **תודה שלמדתם עם דביר קבסה** ✨  
+
+📘 *All Rights Reserved © Dvir Cabessa 2025*  
+📘 *כל הזכויות שמורות © דביר קבסה 2025*  
+
+🔗 *For educational purposes only – copying or distribution without permission is prohibited.*  
+🔗 *החומר נועד לשימוש חינוכי בלבד — אין להעתיק או להפיץ ללא אישור.*
+
+---
+
+> _"Education is the art of awakening curiosity and guiding it toward creation."_  
+> _"החינוך הוא אמנות המעירה את הסקרנות ומכוונת אותה ליצירה."_  
+> — **Dvir Cabessa**
+
+</div>
+<!-- DC_FOOTER_END -->
+
