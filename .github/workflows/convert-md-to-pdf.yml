@@ -2,7 +2,7 @@ name: Convert all Markdown files to PDF
 
 on:
   push:
-    branches: [ main ]  # אפשר לשנות ל־master אם זה השם שלך
+    branches: [ main ]  
 
 jobs:
   build:
