@@ -1,46 +1,126 @@
-name: Convert all Markdown files to PDF
+name: MD ➜ PDF (Unicode, RTL, Images)
 
 on:
   push:
-    branches: [ main ]  
+    branches: [ main ]             # שנה/י ל-master אם צריך
+    paths:
+      - '**.md'
+      - '.github/workflows/convert-md-to-pdf.yml'
+  workflow_dispatch: {}            # מאפשר Run workflow ידני
+
+concurrency:
+  group: md-to-pdf-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      # שלב 1: הורדת קבצי הריפוזיטורי
-      - name: Checkout repository
+      # 1) קח את קבצי הריפו
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      # שלב 2: התקנת Pandoc ו־TeX (נדרש להמרת PDF תקינה)
-      - name: Install dependencies
+      # 2) התקנות: Pandoc + XeLaTeX + חבילות LaTeX רלוונטיות + פונטים כולל עברית
+      - name: Install Pandoc, XeLaTeX, and fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y pandoc texlive texlive-latex-extra
+          sudo apt-get install -y \
+            pandoc \
+            texlive-xetex \
+            texlive-latex-recommended \
+            texlive-latex-extra \
+            texlive-fonts-recommended \
+            fonts-dejavu \
+            fonts-noto \
+            fonts-freefont-ttf \
+            culmus
 
-      # שלב 3: המרת כל קובצי ה־.md לקובצי PDF באותו שם ובאותו נתיב
-      - name: Convert Markdown to PDF
+      # 3) המרה חסינת Unicode + RTL:
+      #    - זיהוי אוטומטי של עברית → כיווניות RTL + גופן עברי
+      #    - LTR לקבצים באנגלית/שפות אחרות
+      #    - דילוג על תיקיות לא רלוונטיות
+      #    - ממשיך גם אם קובץ בודד נכשל (איסוף סטטיסטיקות)
+      - name: Convert Markdown to PDF (Unicode + RTL safe)
+        shell: bash
         run: |
-          find . -name "*.md" -type f | while read file; do
+          set -o pipefail
+          echo "Scanning for Markdown files…"
+          mapfile -t FILES < <(find . -type f -name '*.md' \
+            -not -path './.git/*' \
+            -not -path './.github/*' \
+            -not -path '*/node_modules/*' \
+            -not -path '*/venv/*' \
+            -not -path '*/.venv/*')
+
+          echo "Found ${#FILES[@]} files."
+          SUCCESS=0
+          FAIL=0
+
+          for file in "${FILES[@]}"; do
             output="${file%.md}.pdf"
-            echo "Converting $file -> $output"
-            pandoc "$file" -o "$output" --standalone
+            mkdir -p "$(dirname "$output")"
+
+            # RTL detect: Hebrew block \u0590-\u05FF
+            if grep -P -q "[\x{0590}-\x{05FF}]" "$file"; then
+              echo "Converting (RTL) $file → $output"
+              pandoc "$file" \
+                --from gfm+footnotes+emoji \
+                --pdf-engine=xelatex \
+                -V lang=hebrew \
+                -V mainfont="Noto Sans Hebrew" \
+                -V monofont="DejaVu Sans Mono" \
+                -V geometry:margin=2cm \
+                -V urlcolor=blue \
+                -V colorlinks=true \
+                --standalone \
+                -o "$output" \
+              && SUCCESS=$((SUCCESS+1)) || { echo "::warning ::Failed $file"; FAIL=$((FAIL+1)); continue; }
+            else
+              echo "Converting (LTR) $file → $output"
+              pandoc "$file" \
+                --from gfm+footnotes+emoji \
+                --pdf-engine=xelatex \
+                -V lang=en-US \
+                -V mainfont="DejaVu Sans" \
+                -V monofont="DejaVu Sans Mono" \
+                -V geometry:margin=2cm \
+                -V urlcolor=blue \
+                -V colorlinks=true \
+                --standalone \
+                -o "$output" \
+              && SUCCESS=$((SUCCESS+1)) || { echo "::warning ::Failed $file"; FAIL=$((FAIL+1)); continue; }
+            fi
           done
 
-      # שלב 4: העלאת ה־PDFים שנוצרו כ־Artifact (להורדה)
-      - name: Upload PDFs as artifact
+          echo "==== Summary ===="
+          echo "Converted OK: $SUCCESS"
+          echo "Failed      : $FAIL"
+
+          # אל תכשיל את כל הריצה אם חלק נכשלו; נכשל רק אם אף קובץ לא הצליח
+          if [ "$SUCCESS" -eq 0 ]; then
+            echo "::error ::No PDFs were successfully generated."
+            exit 1
+          fi
+
+      # 4) העלאה כ-Artifact (מבנה תיקיות נשמר בתוך ה-zip)
+      - name: Upload PDFs (artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: all-pdfs
+          name: md-pdfs
           path: '**/*.pdf'
+          if-no-files-found: error
+          retention-days: 14
 
-      # אופציונלי: אם תרצה ש־PDFים ייכנסו ישירות לריפו
-      - name: Commit and push generated PDFs
-        if: github.ref == 'refs/heads/main'
+      # 5) אופציונלי: לדחוף את ה-PDFים חזרה לריפוזיטורי (באופן שלא יפעיל שוב את ה-CI)
+      - name: Commit & push PDFs back to repo [optional]
+        if: ${{ github.ref == 'refs/heads/main' && false }}   # החלף ל-true כדי להפעיל
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add '*.pdf' || true
-          git commit -m "Auto-generate PDFs from Markdown" || echo "No changes"
-          git push origin main || echo "Nothing to push"
+          git add -A '*.pdf'
+          git commit -m "[skip ci][skip actions] Auto-generate PDFs from Markdown" || exit 0
+          git push
