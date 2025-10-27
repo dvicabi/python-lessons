@@ -1,0 +1,46 @@
+name: Convert all Markdown files to PDF
+
+on:
+  push:
+    branches: [ main ]  # אפשר לשנות ל־master אם זה השם שלך
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # שלב 1: הורדת קבצי הריפוזיטורי
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # שלב 2: התקנת Pandoc ו־TeX (נדרש להמרת PDF תקינה)
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive texlive-latex-extra
+
+      # שלב 3: המרת כל קובצי ה־.md לקובצי PDF באותו שם ובאותו נתיב
+      - name: Convert Markdown to PDF
+        run: |
+          find . -name "*.md" -type f | while read file; do
+            output="${file%.md}.pdf"
+            echo "Converting $file -> $output"
+            pandoc "$file" -o "$output" --standalone
+          done
+
+      # שלב 4: העלאת ה־PDFים שנוצרו כ־Artifact (להורדה)
+      - name: Upload PDFs as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: all-pdfs
+          path: '**/*.pdf'
+
+      # אופציונלי: אם תרצה ש־PDFים ייכנסו ישירות לריפו
+      - name: Commit and push generated PDFs
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add '*.pdf' || true
+          git commit -m "Auto-generate PDFs from Markdown" || echo "No changes"
+          git push origin main || echo "Nothing to push"
