@@ -1,12 +1,13 @@
-name: MD ➜ PDF (Unicode, RTL, Images)
+name: MD ➜ PDF (Pixel-perfect GitHub style, Unicode, RTL, Images)
 
 on:
   push:
-    branches: [ main ]             # שנה/י ל-master אם צריך
+    branches: [ main ]                 # שנה/י ל-master אם צריך
     paths:
       - '**.md'
-      - '.github/workflows/convert-md-to-pdf.yml'
-  workflow_dispatch: {}            # מאפשר Run workflow ידני
+      - '.github/workflows/md-to-pdf.yml'
+      - 'tools/mdpdf/**'
+  workflow_dispatch: {}
 
 concurrency:
   group: md-to-pdf-${{ github.ref }}
@@ -24,89 +25,205 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 2) התקנות: Pandoc + XeLaTeX + חבילות LaTeX רלוונטיות + פונטים כולל עברית
-      - name: Install Pandoc, XeLaTeX, and fonts
+      # 2) התקן Node + פונטים מלאים (כולל עברית ואימוג'י)
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install system fonts (Hebrew + Emoji)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            pandoc \
-            texlive-xetex \
-            texlive-latex-recommended \
-            texlive-latex-extra \
-            texlive-fonts-recommended \
-            fonts-dejavu \
             fonts-noto \
-            fonts-freefont-ttf \
-            culmus
+            fonts-noto-extra \
+            fonts-noto-color-emoji \
+            fonts-dejavu \
+            culmus \
+            xvfb
 
-      # 3) המרה חסינת Unicode + RTL:
-      #    - זיהוי אוטומטי של עברית → כיווניות RTL + גופן עברי
-      #    - LTR לקבצים באנגלית/שפות אחרות
-      #    - דילוג על תיקיות לא רלוונטיות
-      #    - ממשיך גם אם קובץ בודד נכשל (איסוף סטטיסטיקות)
-      - name: Convert Markdown to PDF (Unicode + RTL safe)
-        shell: bash
+      # 3) התקן תלות NPM לשכבת ה-HTML/CSS (md-to-pdf + CSS של GitHub + הדגשת סינטקס)
+      - name: Install md-to-pdf toolchain
         run: |
-          set -o pipefail
-          echo "Scanning for Markdown files…"
-          mapfile -t FILES < <(find . -type f -name '*.md' \
-            -not -path './.git/*' \
-            -not -path './.github/*' \
-            -not -path '*/node_modules/*' \
-            -not -path '*/venv/*' \
-            -not -path '*/.venv/*')
+          mkdir -p tools/mdpdf
+          cd tools/mdpdf
+          npm init -y
+          npm install --save-exact md-to-pdf@5 github-markdown-css@5 highlight.js@11 markdown-it@14 markdown-it-footnote@4 markdown-it-emoji@3
+          # קבצי העזר (JS+CSS) יישמרו תחת tools/mdpdf
 
-          echo "Found ${#FILES[@]} files."
-          SUCCESS=0
-          FAIL=0
+      # 4) כתיבת קובץ ה-JS שממיר את כל ה-MD בתיקייה (עם RTL אוטומטי)
+      - name: Write convert.js
+        run: |
+          cat > tools/mdpdf/convert.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const { mdToPdf } = require('md-to-pdf');
+          const md = require('markdown-it')({ html: true, linkify: true, typographer: true })
+            .use(require('markdown-it-footnote'))
+            .use(require('markdown-it-emoji'));
 
-          for file in "${FILES[@]}"; do
-            output="${file%.md}.pdf"
-            mkdir -p "$(dirname "$output")"
+          // Utility: detect Hebrew block
+          function isRTL(content) {
+            return /[\u0590-\u05FF]/.test(content);
+          }
 
-            # RTL detect: Hebrew block \u0590-\u05FF
-            if grep -P -q "[\x{0590}-\x{05FF}]" "$file"; then
-              echo "Converting (RTL) $file → $output"
-              pandoc "$file" \
-                --from gfm+footnotes+emoji \
-                --pdf-engine=xelatex \
-                -V lang=hebrew \
-                -V mainfont="Noto Sans Hebrew" \
-                -V monofont="DejaVu Sans Mono" \
-                -V geometry:margin=2cm \
-                -V urlcolor=blue \
-                -V colorlinks=true \
-                --standalone \
-                -o "$output" \
-              && SUCCESS=$((SUCCESS+1)) || { echo "::warning ::Failed $file"; FAIL=$((FAIL+1)); continue; }
-            else
-              echo "Converting (LTR) $file → $output"
-              pandoc "$file" \
-                --from gfm+footnotes+emoji \
-                --pdf-engine=xelatex \
-                -V lang=en-US \
-                -V mainfont="DejaVu Sans" \
-                -V monofont="DejaVu Sans Mono" \
-                -V geometry:margin=2cm \
-                -V urlcolor=blue \
-                -V colorlinks=true \
-                --standalone \
-                -o "$output" \
-              && SUCCESS=$((SUCCESS+1)) || { echo "::warning ::Failed $file"; FAIL=$((FAIL+1)); continue; }
-            fi
-          done
+          // Wrap HTML in GitHub markdown container + RTL/LTR
+          function wrapHtml(bodyHtml, rtl) {
+            const dirAttr = rtl ? 'dir="rtl"' : 'dir="ltr"';
+            return `
+            <!doctype html>
+            <html ${dirAttr} lang="${rtl ? 'he' : 'en'}">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <link rel="stylesheet" href="node_modules/github-markdown-css/github-markdown.css">
+              <link rel="stylesheet" href="mdpdf.css">
+            </head>
+            <body>
+              <article class="markdown-body">
+                ${bodyHtml}
+              </article>
+            </body>
+            </html>`;
+          }
 
-          echo "==== Summary ===="
-          echo "Converted OK: $SUCCESS"
-          echo "Failed      : $FAIL"
+          // Collect all .md files (excluding CI/node_modules/venv etc.)
+          function collectMarkdownFiles(startDir) {
+            const results = [];
+            function walk(dir) {
+              for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+                const full = path.join(dir, entry.name);
+                if (entry.isDirectory()) {
+                  const skip = full.includes(path.sep + '.git' + path.sep)
+                    || full.includes(path.sep + '.github' + path.sep)
+                    || full.includes(path.sep + 'node_modules' + path.sep)
+                    || full.includes(path.sep + 'venv' + path.sep)
+                    || full.includes(path.sep + '.venv' + path.sep)
+                    || full.startsWith(path.resolve('tools/mdpdf'));
+                  if (!skip) walk(full);
+                } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.md')) {
+                  results.push(full);
+                }
+              }
+            }
+            walk(startDir);
+            return results;
+          }
 
-          # אל תכשיל את כל הריצה אם חלק נכשלו; נכשל רק אם אף קובץ לא הצליח
-          if [ "$SUCCESS" -eq 0 ]; then
-            echo "::error ::No PDFs were successfully generated."
-            exit 1
-          fi
+          async function main() {
+            const files = collectMarkdownFiles('.');
+            console.log(`Found ${files.length} markdown files.`);
+            let ok = 0, fail = 0;
 
-      # 4) העלאה כ-Artifact (מבנה תיקיות נשמר בתוך ה-zip)
+            for (const file of files) {
+              try {
+                const mdContent = fs.readFileSync(file, 'utf8');
+                const rtl = isRTL(mdContent);
+                const html = md.render(mdContent);
+                const wrapped = wrapHtml(html, rtl);
+
+                const outPath = file.replace(/\.md$/i, '.pdf');
+                const outDir = path.dirname(outPath);
+                fs.mkdirSync(outDir, { recursive: true });
+
+                const result = await mdToPdf({ content: wrapped, basePath: path.dirname(file) }, {
+                  // Puppeteer print options
+                  pdf_options: {
+                    format: 'A4',
+                    printBackground: true,
+                    margin: {
+                      top: '20mm', right: '20mm', bottom: '20mm', left: '20mm'
+                    }
+                  },
+                  launch_options: {
+                    // GitHub Actions sandbox sometimes needs this:
+                    args: ['--no-sandbox', '--disable-setuid-sandbox']
+                  }
+                });
+
+                if (result?.pdf) {
+                  fs.writeFileSync(outPath, result.pdf);
+                  console.log(`OK  : ${file} -> ${outPath} ${rtl ? '[RTL]' : '[LTR]'}`);
+                  ok++;
+                } else {
+                  console.warn(`FAIL: ${file} (no PDF)`);
+                  fail++;
+                }
+              } catch (e) {
+                console.warn(`FAIL: ${file} (${e.message})`);
+                fail++;
+              }
+            }
+
+            console.log('==== Summary ====');
+            console.log('Converted OK:', ok);
+            console.log('Failed      :', fail);
+            if (ok === 0) process.exit(1);
+          }
+
+          main().catch(err => { console.error(err); process.exit(1); });
+          EOF
+
+      # 5) CSS שמקבע מראה GitHub + פונטים + תמיכה ב-RTL/LTR
+      - name: Write mdpdf.css
+        run: |
+          cat > tools/mdpdf/mdpdf.css << 'EOF'
+          @page { size: A4; margin: 20mm; }
+
+          body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            font-family: "Noto Sans Hebrew", "Noto Sans", system-ui, Arial, sans-serif;
+            line-height: 1.5;
+          }
+
+          /* GitHub wrapper */
+          .markdown-body {
+            box-sizing: border-box;
+            max-width: 100%;
+          }
+
+          /* תמיכה ב-RTL */
+          html[dir="rtl"] .markdown-body {
+            direction: rtl;
+            text-align: right;
+          }
+          html[dir="rtl"] .markdown-body code,
+          html[dir="rtl"] .markdown-body pre {
+            direction: ltr;       /* קוד תמיד LTR */
+            text-align: left;
+            font-family: "DejaVu Sans Mono", "Noto Sans Mono", monospace;
+          }
+
+          /* קישורים בצבע GitHubי */
+          .markdown-body a { text-decoration: none; }
+          .markdown-body a:hover { text-decoration: underline; }
+
+          /* תמונות בקנה מידה נכון */
+          .markdown-body img { max-width: 100%; }
+
+          /* טבלאות */
+          .markdown-body table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          .markdown-body th, .markdown-body td {
+            border: 1px solid #d0d7de;
+            padding: 6px 10px;
+          }
+          .markdown-body th {
+            background: #f6f8fa;
+          }
+          EOF
+
+      # 6) הרצה: המרה של כל קבצי ה-MD בכל הריפו ל-PDF
+      - name: Convert all Markdown files to PDF (Chromium render)
+        run: |
+          cd tools/mdpdf
+          npx --yes md-to-pdf --version
+          node convert.js
+
+      # 7) העלאה כ-Artifact (מבנה תיקיות נשמר)
       - name: Upload PDFs (artifact)
         uses: actions/upload-artifact@v4
         with:
@@ -115,7 +232,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      # 5) אופציונלי: לדחוף את ה-PDFים חזרה לריפוזיטורי (באופן שלא יפעיל שוב את ה-CI)
+      # 8) אופציונלי: דחיפת ה-PDFים לריפו (לא יפעיל CI שוב)
       - name: Commit & push PDFs back to repo [optional]
         if: ${{ github.ref == 'refs/heads/main' && false }}   # החלף ל-true כדי להפעיל
         run: |
