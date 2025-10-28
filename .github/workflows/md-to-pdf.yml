@@ -1,16 +1,11 @@
-name: MD ➜ PDF (Pixel-perfect GitHub style, Unicode, RTL, Images)
+name: MD ➜ PDF (Pixel-perfect GitHub style, RTL, Unicode)
 
 on:
   push:
     branches: [ main ]
     paths:
       - '**.md'
-      - '.github/workflows/md-to-pdf.yml'
   workflow_dispatch: {}
-
-concurrency:
-  group: md-to-pdf-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -18,29 +13,23 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install system fonts (Hebrew + Emoji)
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            xvfb \
             fonts-noto \
-            fonts-noto-extra \
             fonts-noto-color-emoji \
             fonts-dejavu \
-            culmus \
-            xvfb
-
-      - name: Install md-to-pdf toolchain
-        run: |
+            culmus
           mkdir -p tools/mdpdf
           cd tools/mdpdf
           npm init -y
@@ -53,7 +42,7 @@ jobs:
             markdown-it-footnote@3.0.3 \
             markdown-it-emoji@2.0.2
 
-      - name: Write convert.js (stable, RTL, HTML mode)
+      - name: Write convert.js (with xvfb wrapper)
         run: |
           cat > tools/mdpdf/convert.js << 'EOF'
           const fs = require('fs');
@@ -61,175 +50,90 @@ jobs:
           const { mdToPdf } = require('md-to-pdf');
           const MarkdownIt = require('markdown-it');
           const hljs = require('highlight.js');
-
-          const mdFootnoteMod = require('markdown-it-footnote');
-          const mdEmojiMod = require('markdown-it-emoji');
-          const asPlugin = (mod) => (typeof mod === 'function' ? mod : (mod && mod.default) ? mod.default : mod);
+          const mdFootnote = require('markdown-it-footnote');
+          const mdEmoji = require('markdown-it-emoji');
 
           const md = new MarkdownIt({
             html: true,
             linkify: true,
-            typographer: true,
             highlight: (code, lang) => {
               try {
                 if (lang && hljs.getLanguage(lang)) {
-                  const out = hljs.highlight(code, { language: lang, ignoreIllegals: true }).value;
-                  return `<pre><code class="hljs language-${lang}">${out}</code></pre>`;
+                  return `<pre><code class="hljs language-${lang}">` +
+                         hljs.highlight(code, { language: lang }).value +
+                         '</code></pre>';
                 }
               } catch {}
-              const esc = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-              return `<pre><code class="hljs">${esc}</code></pre>`;
+              return `<pre><code class="hljs">${code}</code></pre>`;
             }
-          })
-            .use(asPlugin(mdFootnoteMod))
-            .use(asPlugin(mdEmojiMod));
+          }).use(mdFootnote).use(mdEmoji);
 
           const isRTL = (s) => /[\u0590-\u05FF]/.test(s);
 
-          function wrapHtml(bodyHtml, rtl) {
-            const dirAttr = rtl ? 'dir="rtl"' : 'dir="ltr"';
+          function wrapHtml(body, rtl) {
+            const dir = rtl ? 'rtl' : 'ltr';
             return `<!doctype html>
-            <html ${dirAttr} lang="${rtl ? 'he' : 'en'}">
+            <html dir="${dir}" lang="${rtl ? 'he' : 'en'}">
             <head>
               <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1">
               <link rel="stylesheet" href="node_modules/github-markdown-css/github-markdown.css">
-              <link rel="stylesheet" href="mdpdf.css">
+              <style>
+                body { font-family: "Noto Sans Hebrew", "Noto Sans", sans-serif; }
+                .markdown-body { box-sizing: border-box; padding: 20px; }
+                html[dir=rtl] .markdown-body { direction: rtl; text-align: right; }
+              </style>
             </head>
-            <body>
-              <article class="markdown-body">
-                ${bodyHtml}
-              </article>
-            </body>
+            <body><article class="markdown-body">${body}</article></body>
             </html>`;
           }
 
-          const MDPDF_DIR = path.resolve(__dirname);
-          const isInMdpdf = (p) => {
-            const full = path.resolve(p);
-            return full === MDPDF_DIR || full.startsWith(MDPDF_DIR + path.sep);
-          };
-          const containsSeg = (p, seg) => p.split(path.sep).includes(seg);
-
-          function collectMarkdownFiles(startDir) {
-            const out = [];
-            function walk(dir) {
-              if (isInMdpdf(dir)) return;
-              if (containsSeg(dir, 'node_modules')) return;
-              if (containsSeg(dir, '.git')) return;
-              if (containsSeg(dir, '.github')) return;
-              if (containsSeg(dir, 'venv')) return;
-              if (containsSeg(dir, '.venv')) return;
-
-              for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-                const full = path.join(dir, entry.name);
-                if (entry.isDirectory()) {
-                  walk(full);
-                } else if (entry.isFile()) {
-                  if (isInMdpdf(full)) continue;
-                  if (containsSeg(full, 'node_modules')) continue;
-                  if (entry.name.toLowerCase().endsWith('.md')) out.push(full);
-                }
-              }
+          function* walk(dir) {
+            for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+              const f = path.join(dir, e.name);
+              if (e.isDirectory()) yield* walk(f);
+              else if (e.isFile() && f.endsWith('.md') && !f.includes('node_modules') && !f.includes('.git'))
+                yield f;
             }
-            walk(startDir);
-            return out;
           }
 
-          (async function main() {
-            const ROOT = path.resolve(__dirname, '..', '..');
-            const files = collectMarkdownFiles(ROOT);
-            console.log(`Found ${files.length} markdown files.`);
-            console.log('First up to 10 files:\n' + files.slice(0, 10).map(f => ' - ' + f).join('\n'));
-
-            let ok = 0, fail = 0;
+          (async () => {
+            const root = path.resolve(__dirname, '../..');
+            const files = [...walk(root)];
+            console.log('Found', files.length, 'markdown files');
+            let ok=0, fail=0;
             for (const file of files) {
               try {
-                const mdContent = fs.readFileSync(file, 'utf8');
-                const rtl = isRTL(mdContent);
-                const html = md.render(mdContent);
-                const wrapped = wrapHtml(html, rtl);
-                const outPath = file.replace(/\.md$/i, '.pdf');
-                fs.mkdirSync(path.dirname(outPath), { recursive: true });
-
-                const result = await mdToPdf(
-                  { content: wrapped, filePath: file },
-                  {
-                    as_html: true,
-                    pdf_options: {
-                      format: 'A4',
-                      printBackground: true,
-                      margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' }
-                    },
-                    launch_options: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
-                  }
-                );
-
-                if (result && result.pdf) {
-                  fs.writeFileSync(outPath, result.pdf);
-                  console.log(`✅ OK: ${file} → ${outPath} ${rtl ? '[RTL]' : '[LTR]'}`);
+                const mdText = fs.readFileSync(file, 'utf8');
+                const html = wrapHtml(md.render(mdText), isRTL(mdText));
+                const out = file.replace(/\.md$/, '.pdf');
+                const res = await mdToPdf({ content: html, filePath: file }, {
+                  as_html: true,
+                  launch_options: { args: ['--no-sandbox'] },
+                  pdf_options: { format: 'A4', printBackground: true }
+                });
+                if (res && res.pdf) {
+                  fs.writeFileSync(out, res.pdf);
+                  console.log('✅', out);
                   ok++;
-                } else {
-                  console.warn(`⚠️ FAIL (no PDF): ${file}`);
-                  fail++;
-                }
+                } else { console.log('⚠️ no PDF:', file); fail++; }
               } catch (e) {
-                console.warn(`❌ FAIL: ${file} — ${e && e.message ? e.message : e}`);
+                console.error('❌', file, e.message);
                 fail++;
               }
             }
-
-            console.log('==== Summary ====');
-            console.log('Converted OK:', ok);
-            console.log('Failed      :', fail);
-            if (ok === 0) process.exit(1);
+            console.log('OK:', ok, ' FAIL:', fail);
+            if (ok===0) process.exit(1);
           })();
           EOF
 
-      - name: Write mdpdf.css (GitHub style + RTL)
-        run: |
-          cat > tools/mdpdf/mdpdf.css << 'EOF'
-          @page { size: A4; margin: 20mm; }
-          body {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-            font-family: "Noto Sans Hebrew", "Noto Sans", system-ui, Arial, sans-serif;
-            line-height: 1.5;
-          }
-          .markdown-body { box-sizing: border-box; max-width: 100%; }
-          html[dir="rtl"] .markdown-body { direction: rtl; text-align: right; }
-          html[dir="rtl"] .markdown-body code,
-          html[dir="rtl"] .markdown-body pre {
-            direction: ltr; text-align: left;
-            font-family: "DejaVu Sans Mono", "Noto Sans Mono", monospace;
-          }
-          .markdown-body img { max-width: 100%; }
-          .markdown-body table { border-collapse: collapse; width: 100%; }
-          .markdown-body th, .markdown-body td { border: 1px solid #d0d7de; padding: 6px 10px; }
-          .markdown-body th { background: #f6f8fa; }
-          pre code.hljs { display: block; overflow-x: auto; padding: 1em; }
-          code.hljs { padding: 0.2em 0.4em; }
-          .hljs { background: #f6f8fa; color: #24292e; }
-          .hljs-comment, .hljs-quote { color: #6a737d; font-style: italic; }
-          .hljs-keyword, .hljs-selector-tag, .hljs-subst { color: #d73a49; }
-          .hljs-literal, .hljs-number { color: #005cc5; }
-          .hljs-string, .hljs-doctag, .hljs-regexp { color: #032f62; }
-          .hljs-title, .hljs-section, .hljs-selector-id { color: #6f42c1; }
-          .hljs-type, .hljs-class .hljs-title { color: #005cc5; }
-          .hljs-attribute, .hljs-name, .hljs-variable { color: #e36209; }
-          .hljs-template-variable, .hljs-bullet, .hljs-code, .hljs-addition { color: #22863a; }
-          .hljs-selector-class, .hljs-symbol, .hljs-link, .hljs-deletion { color: #b31d28; }
-          EOF
-
-      - name: Convert all Markdown files to PDF
+      - name: Convert Markdown → PDF under xvfb
         run: |
           cd tools/mdpdf
-          node convert.js
+          xvfb-run -a node convert.js
 
-      - name: Upload PDFs (artifact)
+      - name: Upload PDFs as artifact
         uses: actions/upload-artifact@v4
         with:
           name: md-pdfs
           path: '**/*.pdf'
           if-no-files-found: error
-          retention-days: 14
