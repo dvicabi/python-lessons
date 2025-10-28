@@ -57,8 +57,8 @@ jobs:
             markdown-it-footnote@3.0.3 \
             markdown-it-emoji@2.0.2
 
-      # 4) כתיבת סקריפט ההמרה (ללא backslash ב-backticks) + RTL + הדגשת קוד
-      - name: Write convert.js (safe plugin loading + RTL + highlight)
+      # 4) כתיבת סקריפט ההמרה (סורק משורש הריפו, החרגות node_modules/tools/mdpdf, RTL, הדגשת קוד)
+      - name: Write convert.js (repo-root scan + safe plugins + RTL + highlight)
         run: |
           cat > tools/mdpdf/convert.js << 'EOF'
           const fs = require('fs');
@@ -113,32 +113,47 @@ jobs:
             </html>`;
           }
 
-          // איסוף כל קבצי ה-MD (דלג על תיקיות CI/venv/node_modules וכלי ההמרה)
+          // איסוף כל קבצי ה-MD — סריקה משורש הריפו עם החרגות קשיחות
           function collectMarkdownFiles(startDir) {
             const results = [];
+            const MDPDF_DIR = path.resolve(__dirname); // tools/mdpdf המלא
+
+            const isInMdpdf = (p) => {
+              const full = path.resolve(p);
+              return full === MDPDF_DIR || full.startsWith(MDPDF_DIR + path.sep);
+            };
+
             function walk(dir) {
+              // החרגות ברמת תיקייה
+              if (isInMdpdf(dir)) return;
+              if (dir.includes(path.sep + '.git' + path.sep)) return;
+              if (dir.includes(path.sep + '.github' + path.sep)) return;
+              if (dir.includes(path.sep + 'node_modules' + path.sep)) return;
+              if (dir.includes(path.sep + 'venv' + path.sep)) return;
+              if (dir.includes(path.sep + '.venv' + path.sep)) return;
+
               for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
                 const full = path.join(dir, entry.name);
                 if (entry.isDirectory()) {
-                  const skip = full.includes(path.sep + '.git' + path.sep)
-                    || full.includes(path.sep + '.github' + path.sep)
-                    || full.includes(path.sep + 'node_modules' + path.sep)
-                    || full.includes(path.sep + 'venv' + path.sep)
-                    || full.includes(path.sep + '.venv' + path.sep)
-                    || full.startsWith(path.resolve('tools/mdpdf'));
-                  if (!skip) walk(full);
-                } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.md')) {
-                  results.push(full);
+                  walk(full);
+                } else if (entry.isFile()) {
+                  // החרגות ברמת קובץ (ליתר בטחון)
+                  if (isInMdpdf(full)) continue;
+                  if (full.includes(path.sep + 'node_modules' + path.sep)) continue;
+                  if (full.toLowerCase().endsWith('.md')) results.push(full);
                 }
               }
             }
+
             walk(startDir);
             return results;
           }
 
           (async function main() {
-            const files = collectMarkdownFiles('.');
-            console.log(`Found ${files.length} markdown files.`);
+            // סריקה משורש הריפו (שתי תיקיות למעלה מ-tools/mdpdf)
+            const ROOT = path.resolve(__dirname, '..', '..');
+            const files = collectMarkdownFiles(ROOT);
+            console.log(`Found ${files.length} markdown files (repo-root scan, excluding node_modules/tools/mdpdf).`);
             let ok = 0, fail = 0;
 
             for (const file of files) {
@@ -190,8 +205,8 @@ jobs:
           else
             echo "No stray backslashes before backticks found."
           fi
-          echo "Preview convert.js (lines 60-90):"
-          nl -ba tools/mdpdf/convert.js | sed -n '60,90p'
+          echo "Preview convert.js (lines 60-100):"
+          nl -ba tools/mdpdf/convert.js | sed -n '60,100p'
 
       # 6) CSS: GitHub-look + RTL + הדגשת סינטקס (ללא CDN)
       - name: Write mdpdf.css
@@ -229,7 +244,7 @@ jobs:
           .hljs-selector-class, .hljs-symbol, .hljs-link, .hljs-deletion { color: #b31d28; }
           EOF
 
-      # 7) דיאגנוסטיקה ידידותית (רשות) – מציג גרסאות והתחלה של הקבצים
+      # 7) דיאגנוסטיקה – מציג גרסאות והתחלה של הקבצים
       - name: Show installed plugin versions
         run: |
           cd tools/mdpdf
