@@ -1,4 +1,4 @@
-name: MD ➜ PDF (Pixel-perfect GitHub style, RTL, Unicode)
+name: MD ➜ PDF (GitHub style, RTL, Unicode, Auto Chrome)
 
 on:
   push:
@@ -10,10 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -21,32 +20,21 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      - name: Install dependencies (Puppeteer + fonts)
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            xvfb \
-            fonts-noto \
-            fonts-noto-color-emoji \
-            fonts-dejavu \
-            culmus
+          sudo apt-get install -y xvfb fonts-noto fonts-noto-cjk fonts-noto-color-emoji fonts-dejavu-core culmus
           mkdir -p tools/mdpdf
           cd tools/mdpdf
           npm init -y
-          npm pkg set type="commonjs"
-          npm install --save-exact \
-            md-to-pdf@5 \
-            github-markdown-css@5 \
-            highlight.js@11 \
-            markdown-it@14 \
-            markdown-it-footnote@3.0.3 \
-            markdown-it-emoji@2.0.2
+          npm install --save-exact puppeteer@22 md-to-pdf@5 github-markdown-css@5 highlight.js markdown-it markdown-it-footnote markdown-it-emoji
 
-      - name: Write convert.js (with xvfb wrapper)
+      - name: Write convert.js (force Chrome path)
         run: |
           cat > tools/mdpdf/convert.js << 'EOF'
           const fs = require('fs');
           const path = require('path');
+          const puppeteer = require('puppeteer');
           const { mdToPdf } = require('md-to-pdf');
           const MarkdownIt = require('markdown-it');
           const hljs = require('highlight.js');
@@ -101,37 +89,44 @@ jobs:
             const files = [...walk(root)];
             console.log('Found', files.length, 'markdown files');
             let ok=0, fail=0;
+            const browser = await puppeteer.launch({
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            });
             for (const file of files) {
               try {
                 const mdText = fs.readFileSync(file, 'utf8');
                 const html = wrapHtml(md.render(mdText), isRTL(mdText));
                 const out = file.replace(/\.md$/, '.pdf');
-                const res = await mdToPdf({ content: html, filePath: file }, {
-                  as_html: true,
-                  launch_options: { args: ['--no-sandbox'] },
+                const res = await mdToPdf({ content: html }, {
+                  launch_options: { args: ['--no-sandbox'], browser },
                   pdf_options: { format: 'A4', printBackground: true }
                 });
                 if (res && res.pdf) {
                   fs.writeFileSync(out, res.pdf);
                   console.log('✅', out);
                   ok++;
-                } else { console.log('⚠️ no PDF:', file); fail++; }
+                } else {
+                  console.log('⚠️ no PDF:', file);
+                  fail++;
+                }
               } catch (e) {
                 console.error('❌', file, e.message);
                 fail++;
               }
             }
+            await browser.close();
             console.log('OK:', ok, ' FAIL:', fail);
             if (ok===0) process.exit(1);
           })();
           EOF
 
-      - name: Convert Markdown → PDF under xvfb
+      - name: Run conversion under xvfb
         run: |
           cd tools/mdpdf
           xvfb-run -a node convert.js
 
-      - name: Upload PDFs as artifact
+      - name: Upload PDFs
         uses: actions/upload-artifact@v4
         with:
           name: md-pdfs
