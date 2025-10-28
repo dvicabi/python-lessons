@@ -18,11 +18,13 @@ jobs:
     timeout-minutes: 30
 
     steps:
+      # 1) קח את קבצי הריפו
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # 2) התקן Node + פונטים (עברית+אימוג'י) כדי לשמר את המראה
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -39,12 +41,13 @@ jobs:
             culmus \
             xvfb
 
-      # נועלים גרסאות CJS כדי למנוע plugin.apply errors
+      # 3) התקנת התלויות עם נעילת פלאגינים לגרסאות CJS יציבות
       - name: Install md-to-pdf toolchain (locked CJS plugins)
         run: |
           mkdir -p tools/mdpdf
           cd tools/mdpdf
           npm init -y
+          # מבטיחים מודול CommonJS כדי require יעבוד חלק
           npm pkg set type="commonjs"
           npm install --save-exact \
             md-to-pdf@5 \
@@ -54,6 +57,7 @@ jobs:
             markdown-it-footnote@3.0.3 \
             markdown-it-emoji@2.0.2
 
+      # 4) כתיבת סקריפט ההמרה (ללא backslash ב-backticks) + RTL + הדגשת קוד
       - name: Write convert.js (safe plugin loading + RTL + highlight)
         run: |
           cat > tools/mdpdf/convert.js << 'EOF'
@@ -90,6 +94,7 @@ jobs:
           // RTL detect: Hebrew block \u0590-\u05FF
           function isRTL(content) { return /[\u0590-\u05FF]/.test(content); }
 
+          // עטיפת HTML עם CSS של GitHub + קובץ CSS פנימי + כיווניות
           function wrapHtml(bodyHtml, rtl) {
             const dirAttr = rtl ? 'dir="rtl"' : 'dir="ltr"';
             return `<!doctype html>
@@ -108,6 +113,7 @@ jobs:
             </html>`;
           }
 
+          // איסוף כל קבצי ה-MD (דלג על תיקיות CI/venv/node_modules וכלי ההמרה)
           function collectMarkdownFiles(startDir) {
             const results = [];
             function walk(dir) {
@@ -132,7 +138,7 @@ jobs:
 
           (async function main() {
             const files = collectMarkdownFiles('.');
-            console.log(\`Found \${files.length} markdown files.\`);
+            console.log(`Found ${files.length} markdown files.`);
             let ok = 0, fail = 0;
 
             for (const file of files) {
@@ -142,7 +148,7 @@ jobs:
                 const html = md.render(mdContent);
                 const wrapped = wrapHtml(html, rtl);
 
-                const outPath = file.replace(/\\.md$/i, '.pdf');
+                const outPath = file.replace(/\.md$/i, '.pdf');
                 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 
                 const result = await mdToPdf({ content: wrapped, basePath: path.dirname(file) }, {
@@ -156,14 +162,14 @@ jobs:
 
                 if (result?.pdf) {
                   fs.writeFileSync(outPath, result.pdf);
-                  console.log(\`OK  : \${file} -> \${outPath} \${rtl ? '[RTL]' : '[LTR]'}\`);
+                  console.log(`OK  : ${file} -> ${outPath} ${rtl ? '[RTL]' : '[LTR]'}`);
                   ok++;
                 } else {
-                  console.warn(\`FAIL: \${file} (no PDF)\`);
+                  console.warn(`FAIL: ${file} (no PDF)`);
                   fail++;
                 }
               } catch (e) {
-                console.warn(\`FAIL: \${file} (\${e.message})\`);
+                console.warn(`FAIL: ${file} (${e.message})`);
                 fail++;
               }
             }
@@ -175,6 +181,19 @@ jobs:
           })();
           EOF
 
+      # 5) Sanitize קשיח – אם משום מה backticks נשמרו עם backslash, ננקה
+      - name: Sanitize backticks in convert.js (remove stray backslashes)
+        run: |
+          if grep -q '\\`' tools/mdpdf/convert.js; then
+            perl -pi -e 's/\\`/`/g' tools/mdpdf/convert.js
+            echo "Sanitized backticks in convert.js"
+          else
+            echo "No stray backslashes before backticks found."
+          fi
+          echo "Preview convert.js (lines 60-90):"
+          nl -ba tools/mdpdf/convert.js | sed -n '60,90p'
+
+      # 6) CSS: GitHub-look + RTL + הדגשת סינטקס (ללא CDN)
       - name: Write mdpdf.css
         run: |
           cat > tools/mdpdf/mdpdf.css << 'EOF'
@@ -210,17 +229,22 @@ jobs:
           .hljs-selector-class, .hljs-symbol, .hljs-link, .hljs-deletion { color: #b31d28; }
           EOF
 
-      # לוג אימות: מדפיס את 40 השורות הראשונות של convert.js כדי לוודא שנכתב נכון
-      - name: Show convert.js header (for debugging)
-        run: |
-          sed -n '1,80p' tools/mdpdf/convert.js
-
-      - name: Convert all Markdown files to PDF (Chromium render)
+      # 7) דיאגנוסטיקה ידידותית (רשות) – מציג גרסאות והתחלה של הקבצים
+      - name: Show installed plugin versions
         run: |
           cd tools/mdpdf
           npx --yes md-to-pdf --version
+          npm ls markdown-it markdown-it-footnote markdown-it-emoji highlight.js || true
+          echo "convert.js (first 40 lines):"
+          sed -n '1,40p' convert.js
+
+      # 8) המרה: כל קבצי ה-MD בריפו → PDF בעזרת Chromium
+      - name: Convert all Markdown files to PDF (Chromium render)
+        run: |
+          cd tools/mdpdf
           node convert.js
 
+      # 9) העלאה כ-Artifact (מבנה תיקיות נשמר)
       - name: Upload PDFs (artifact)
         uses: actions/upload-artifact@v4
         with:
@@ -229,6 +253,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+      # 10) אופציונלי: לדחוף את ה-PDFים חזרה לריפו (לא יפעיל CI שוב)
       - name: Commit & push PDFs back to repo [optional]
         if: ${{ github.ref == 'refs/heads/main' && false }}   # החלף ל-true כדי להפעיל
         run: |
