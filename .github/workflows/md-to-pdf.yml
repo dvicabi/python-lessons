@@ -2,7 +2,7 @@ name: MD ➜ PDF (Pixel-perfect GitHub style, Unicode, RTL, Images)
 
 on:
   push:
-    branches: [ main ]                 # שנה/י ל-master אם צריך
+    branches: [ main ]
     paths:
       - '**.md'
       - '.github/workflows/md-to-pdf.yml'
@@ -18,13 +18,11 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # 1️⃣ שלב ראשון – קח את כל קבצי הריפו
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2️⃣ התקנת Node ופונטים (כולל עברית + אימוג’ים)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -41,8 +39,7 @@ jobs:
             culmus \
             xvfb
 
-      # 3️⃣ התקנת התלויות הדרושות (עם נעילת גרסאות יציבות)
-      - name: Install md-to-pdf toolchain (locked stable versions)
+      - name: Install md-to-pdf toolchain
         run: |
           mkdir -p tools/mdpdf
           cd tools/mdpdf
@@ -56,8 +53,7 @@ jobs:
             markdown-it-footnote@3.0.3 \
             markdown-it-emoji@2.0.2
 
-      # 4️⃣ יצירת סקריפט ההמרה convert.js
-      - name: Write convert.js (repo-root scan + safe plugins + RTL + highlight)
+      - name: Write convert.js (stable, RTL, HTML mode)
         run: |
           cat > tools/mdpdf/convert.js << 'EOF'
           const fs = require('fs');
@@ -66,7 +62,6 @@ jobs:
           const MarkdownIt = require('markdown-it');
           const hljs = require('highlight.js');
 
-          // Plugins (CJS/ESM-safe just in case)
           const mdFootnoteMod = require('markdown-it-footnote');
           const mdEmojiMod = require('markdown-it-emoji');
           const asPlugin = (mod) => (typeof mod === 'function' ? mod : (mod && mod.default) ? mod.default : mod);
@@ -89,10 +84,8 @@ jobs:
             .use(asPlugin(mdFootnoteMod))
             .use(asPlugin(mdEmojiMod));
 
-          // RTL detect
           const isRTL = (s) => /[\u0590-\u05FF]/.test(s);
 
-          // HTML wrapper
           function wrapHtml(bodyHtml, rtl) {
             const dirAttr = rtl ? 'dir="rtl"' : 'dir="ltr"';
             return `<!doctype html>
@@ -111,34 +104,30 @@ jobs:
             </html>`;
           }
 
-          // helpers
-          const MDPDF_DIR = path.resolve(__dirname);               // tools/mdpdf/*
+          const MDPDF_DIR = path.resolve(__dirname);
           const isInMdpdf = (p) => {
             const full = path.resolve(p);
             return full === MDPDF_DIR || full.startsWith(MDPDF_DIR + path.sep);
           };
-          const contains = (p, seg) => p.split(path.sep).includes(seg);
+          const containsSeg = (p, seg) => p.split(path.sep).includes(seg);
 
-          // walk repo root and collect .md (excluding mdpdf/node_modules/.git/.github/venv/.venv)
           function collectMarkdownFiles(startDir) {
             const out = [];
             function walk(dir) {
-              // directory-level excludes
               if (isInMdpdf(dir)) return;
-              if (contains(dir, 'node_modules')) return;
-              if (contains(dir, '.git')) return;
-              if (contains(dir, '.github')) return;
-              if (contains(dir, 'venv')) return;
-              if (contains(dir, '.venv')) return;
+              if (containsSeg(dir, 'node_modules')) return;
+              if (containsSeg(dir, '.git')) return;
+              if (containsSeg(dir, '.github')) return;
+              if (containsSeg(dir, 'venv')) return;
+              if (containsSeg(dir, '.venv')) return;
 
               for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
                 const full = path.join(dir, entry.name);
                 if (entry.isDirectory()) {
                   walk(full);
                 } else if (entry.isFile()) {
-                  // file-level excludes + extension check (FIX: use entry.name)
                   if (isInMdpdf(full)) continue;
-                  if (contains(full, 'node_modules')) continue;
+                  if (containsSeg(full, 'node_modules')) continue;
                   if (entry.name.toLowerCase().endsWith('.md')) out.push(full);
                 }
               }
@@ -148,11 +137,9 @@ jobs:
           }
 
           (async function main() {
-            const ROOT = path.resolve(__dirname, '..', '..');      // repo root
+            const ROOT = path.resolve(__dirname, '..', '..');
             const files = collectMarkdownFiles(ROOT);
-
-            console.log(`Found ${files.length} markdown files (excluding node_modules/tools/mdpdf).`);
-            // הדפס טעימה ראשונית כדי לאמת שאנחנו אכן פוגעים בקבצים שאתה מצפה:
+            console.log(`Found ${files.length} markdown files.`);
             console.log('First up to 10 files:\n' + files.slice(0, 10).map(f => ' - ' + f).join('\n'));
 
             let ok = 0, fail = 0;
@@ -165,15 +152,18 @@ jobs:
                 const outPath = file.replace(/\.md$/i, '.pdf');
                 fs.mkdirSync(path.dirname(outPath), { recursive: true });
 
-                // NOTE: use filePath to help md-to-pdf resolve relative assets
-                const result = await mdToPdf({ content: wrapped, filePath: file }, {
-                  pdf_options: {
-                    format: 'A4',
-                    printBackground: true,
-                    margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' }
-                  },
-                  launch_options: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
-                });
+                const result = await mdToPdf(
+                  { content: wrapped, filePath: file },
+                  {
+                    as_html: true,
+                    pdf_options: {
+                      format: 'A4',
+                      printBackground: true,
+                      margin: { top: '20mm', right: '20mm', bottom: '20mm', left: '20mm' }
+                    },
+                    launch_options: { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
+                  }
+                );
 
                 if (result && result.pdf) {
                   fs.writeFileSync(outPath, result.pdf);
@@ -196,16 +186,7 @@ jobs:
           })();
           EOF
 
-      # 5️⃣ Sanitize אם נשמרו backticks לא תקינים
-      - name: Sanitize backticks in convert.js
-        run: |
-          if grep -q '\\`' tools/mdpdf/convert.js; then
-            perl -pi -e 's/\\`/`/g' tools/mdpdf/convert.js
-            echo "✅ Sanitized stray backticks"
-          fi
-
-      # 6️⃣ יצירת CSS עם עיצוב GitHub ו-RTL
-      - name: Write mdpdf.css
+      - name: Write mdpdf.css (GitHub style + RTL)
         run: |
           cat > tools/mdpdf/mdpdf.css << 'EOF'
           @page { size: A4; margin: 20mm; }
@@ -240,22 +221,11 @@ jobs:
           .hljs-selector-class, .hljs-symbol, .hljs-link, .hljs-deletion { color: #b31d28; }
           EOF
 
-      # 7️⃣ דיאגנוסטיקה
-      - name: Show installed plugin versions
-        run: |
-          cd tools/mdpdf
-          npx --yes md-to-pdf --version
-          npm ls markdown-it markdown-it-footnote markdown-it-emoji highlight.js || true
-          echo "convert.js (first 40 lines):"
-          sed -n '1,40p' convert.js
-
-      # 8️⃣ המרה
       - name: Convert all Markdown files to PDF
         run: |
           cd tools/mdpdf
           node convert.js
 
-      # 9️⃣ העלאה כ-Artifact
       - name: Upload PDFs (artifact)
         uses: actions/upload-artifact@v4
         with:
