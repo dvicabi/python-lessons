@@ -72,12 +72,12 @@ print(x, y)
 ---
 ##שאלות
 ---
-```python
 
 ## שאלה 1
 
 מה יודפס למסך בסיום הריצה של הקוד הבא?
 
+```python
 total = 0
 x = 1
 
@@ -86,7 +86,7 @@ for i in range(1, 5):
     x += 1
 
 print(total, x)
-
+```
 
 ---
 
@@ -94,6 +94,7 @@ print(total, x)
 
 מה יודפס למסך לאחר סיום הלולאה?
 
+```python
 num = 18
 count = 0
 
@@ -102,6 +103,7 @@ while num > 0:
     count += 1
 
 print(num, count)
+```
 
 ---
 
@@ -109,6 +111,7 @@ print(num, count)
 
 מה הפלט הסופי של הקוד הבא?
 
+```python
 sum_numbers = 0
 
 for i in range(1, 8):
@@ -116,7 +119,7 @@ for i in range(1, 8):
         sum_numbers += i
 
 print(sum_numbers, i)
-
+```
 
 ---
 
@@ -124,6 +127,7 @@ print(sum_numbers, i)
 
 מה יודפס למסך בסיום הריצה?
 
+```python
 number = 246
 total = 0
 
@@ -132,7 +136,7 @@ while number > 0:
     number //= 10
 
 print(total, number)
-
+```
 
 ---
 
@@ -140,13 +144,14 @@ print(total, number)
 
 מה הפלט שיודפס למסך?
 
+```python
 value = 1
 
 for i in range(1, 5):
     value *= 2
 
 print(value, i)
-
+```
 
 ---
 
@@ -154,6 +159,7 @@ print(value, i)
 
 מה יודפס למסך בסיום הקוד?
 
+```python
 a = 2
 b = 3
 
@@ -162,7 +168,7 @@ for i in range(3):
     b += 1
 
 print(a, b)
-
+```
 
 ---
 
@@ -170,12 +176,14 @@ print(a, b)
 
 מה הפלט הסופי של הקוד הבא?
 
+```python
 x = 11
 
 while x > 0:
     x -= 4
 
 print(x)
+```
 
 ---
 
@@ -183,6 +191,7 @@ print(x)
 
 מה יודפס למסך בסיום הריצה?
 
+```python
 count = 0
 
 for i in range(1, 11):
@@ -190,7 +199,7 @@ for i in range(1, 11):
         count += 1
 
 print(count, i)
-
+```
 
 ---
 
@@ -198,6 +207,7 @@ print(count, i)
 
 מה הפלט שיודפס למסך?
 
+```python
 num = 538
 count = 0
 
@@ -207,7 +217,7 @@ while num > 0:
     num //= 10
 
 print(count, num)
-
+```
 
 ---
 
@@ -215,6 +225,7 @@ print(count, num)
 
 מה יודפס למסך בסיום הקוד?
 
+```python
 number = 97531
 total = 0
 
@@ -225,7 +236,7 @@ while number > 0:
     number //= 10
 
 print(total)
-
+```
 
 ---
 
@@ -233,6 +244,7 @@ print(total)
 
 מה הפלט הסופי?
 
+```python
 x = 50
 y = 0
 
@@ -242,14 +254,15 @@ while x > 0:
     x -= 7
 
 print(x, y)
+```
 
-
-
+---
 
 ## שאלה 12
 
 מה יודפס למסך?
 
+```python
 num = 1234
 count = 0
 
@@ -259,7 +272,7 @@ while num > 0:
     num //= 10
 
 print(count)
-
+```
 
 ---
 
@@ -267,6 +280,7 @@ print(count)
 
 מה הפלט הסופי של הקוד?
 
+```python
 a = 1
 b = 246
 
@@ -275,7 +289,7 @@ while b > 0:
     b //= 10
 
 print(a, b)
-
+```
 
 ---
 
@@ -283,13 +297,14 @@ print(a, b)
 
 מה יודפס למסך בסיום הריצה?
 
+```python
 result = 0
 
 for i in range(10, 51, 10):
     result += (i // 10) % 3
 
 print(result, i)
-
+```
 
 ---
 
@@ -297,6 +312,7 @@ print(result, i)
 
 מה הפלט הסופי?
 
+```python
 num = 808
 total = 0
 
@@ -307,7 +323,7 @@ while num > 0:
     num //= 10
 
 print(total)
-
+```
 
 ---
 
@@ -315,12 +331,13 @@ print(total)
 
 מה יודפס למסך?
 
+```python
 x = 0
 
 for i in range(3, 18, 3):
     x += (i % 10) // 3
 
 print(x, i)
-
+```
 
 ---
