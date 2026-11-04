@@ -1,4 +1,4 @@
-# חלק ב: לולאות while
+# לולאות while
 ## איך תוכנית יודעת מתי להפסיק?
 
 בלולאת `for` אנחנו בדרך כלל יודעים מראש כמה חזרות אנחנו רוצים לבצע.
@@ -461,7 +461,7 @@ print("Alert score:", alert_score)
 פתרונות:
 תרגיל 6: מיכל המים
 
-| קלט | water | pump_score | turn |
+| input | water | pump_score | turn |
 | --- | ----- | ---------- | ---- |
 | 5   | 23    | 17         | 5    |
 | 12  | 23    | 16         | 3    |
@@ -469,7 +469,7 @@ print("Alert score:", alert_score)
 
 תרגיל 7: הפחתת רעש
 
-| קלט | noise | alert_score | rounds |
+| input | noise | alert_score | rounds |
 | --- | ----- | ----------- | ------ |
 | 52  | 47    | 6           | 1      |
 | 65  | 50    | 10          | 3      |
@@ -477,7 +477,7 @@ print("Alert score:", alert_score)
 
 תרגיל 8: המעלית החכמה
 
-| קלט | current | energy_score | moves |
+| input | current | energy_score | moves |
 | --- | ------- | ------------ | ----- |
 | 1   | 1       | 10           | 2     |
 | 3   | 3       | 4            | 0     |
@@ -485,7 +485,7 @@ print("Alert score:", alert_score)
 
 תרגיל 9: טעינה סולארית
 
-| קלט | energy | heat_score | minute | status  |
+| input | energy | heat_score | minute | status  |
 | --- | ------ | ---------- | ------ | ------- |
 | 0   | 36     | 11         | 4      | Timeout |
 | 12  | 48     | 9          | 4      | Ready   |
@@ -493,7 +493,7 @@ print("Alert score:", alert_score)
 
 תרגיל 10: חיישן התנועה
 
-| קלט            | count | total | alert_score |
+| input            | count | total | alert_score |
 | -------------- | ----- | ----- | ----------- |
 | 20,55,75,-1    | 3     | 150   | 13          |
 | 45,60,-1       | 2     | 105   | 8           |
