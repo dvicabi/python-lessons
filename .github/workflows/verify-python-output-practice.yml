@@ -1,0 +1,14 @@
+name: Verify Python output exercises
+on:
+  push:
+    paths:
+      - "20_python_output_practice_240/**"
+      - ".github/workflows/verify-python-output-practice.yml"
+  workflow_dispatch:
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run all 240 exercises and compare outputs
+        run: python3 20_python_output_practice_240/verify_exercises.py
