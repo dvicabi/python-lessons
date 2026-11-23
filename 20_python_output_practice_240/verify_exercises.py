@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Run all 240 exercises and compare stdout with their embedded final answer."""
+"""Run all 242 exercises and compare stdout with their embedded final answer."""
 from pathlib import Path
 import subprocess
 import sys
@@ -43,7 +43,7 @@ def check(path: Path):
     return None
 
 def main():
-    exercises = sorted(ROOT.glob("0[1-6]_*/exercise_*.py"))
+    exercises = sorted(ROOT.glob("0[1-7]_*/exercise_*.py"))
     failures = []
     for file in exercises:
         error = check(file)
@@ -52,7 +52,7 @@ def main():
     for path, reason in failures:
         print(f"FAIL {path}: {reason}")
     print(f"Checked: {len(exercises)} | Passed: {len(exercises) - len(failures)} | Failed: {len(failures)}")
-    if len(exercises) != 240 or failures:
+    if len(exercises) != 242 or failures:
         raise SystemExit(1)
 
 if __name__ == "__main__":
