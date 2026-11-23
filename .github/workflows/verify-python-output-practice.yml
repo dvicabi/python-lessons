@@ -10,5 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run all 242 exercises and compare outputs
+      - name: Run all 282 exercises and compare outputs
         run: python3 20_python_output_practice_240/verify_exercises.py
