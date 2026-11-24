@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Run all 442 exercises and compare stdout with their embedded final answer."""
+"""Run all 482 exercises and compare stdout with their embedded final answer."""
 from pathlib import Path
 import subprocess
 import sys
@@ -14,7 +14,7 @@ END = "# <<< END EXPECTED OUTPUT"
 def check(path: Path):
     lines = path.read_text(encoding="utf-8").splitlines()
     # The newly added nested-loop exercises must not use early-exit statements.
-    if path.parent.name == '08_nested_loops_no_break_continue' or '09_loops_with_lists' in path.parts or '10_functions_output_tracing' in path.parts:
+    if path.parent.name == '08_nested_loops_no_break_continue' or '09_loops_with_lists' in path.parts or '10_functions_output_tracing' in path.parts or '11_classes_output_tracing' in path.parts:
         source = '\n'.join(lines) + '\n'
         tokens = tokenize.generate_tokens(io.StringIO(source).readline)
         if any(tok.type == tokenize.NAME and tok.string in {'break', 'continue'} for tok in tokens):
@@ -60,7 +60,7 @@ def main():
     for path, reason in failures:
         print(f"FAIL {path}: {reason}")
     print(f"Checked: {len(exercises)} | Passed: {len(exercises) - len(failures)} | Failed: {len(failures)}")
-    if len(exercises) != 442 or failures:
+    if len(exercises) != 482 or failures:
         raise SystemExit(1)
 
 if __name__ == "__main__":
