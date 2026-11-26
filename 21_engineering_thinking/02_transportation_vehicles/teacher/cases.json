@@ -1,0 +1,902 @@
+[
+  {
+    "id": "09_fuel_management",
+    "levels": [
+      {
+        "input": "",
+        "out": "TRIP | A\nFuel: 18 units | Range: 60\nReserve: 3 | Status: OK\n",
+        "edits": [
+          [
+            "print(\"18\", end=\" units\")",
+            "print(\"18\", end=\"\\n\")"
+          ],
+          [
+            "print(\"60\")",
+            "print(\"45\", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "TRIP | A\nFuel: 18\n | Range: 45 | Reserve: 3 | Status: OK\n",
+        "solution_input": "",
+        "solution_out": "TRIP | B\nFuel: 12 units | Range: 40\nReserve: 3 | Status: LOW\n"
+      },
+      {
+        "input": "",
+        "out": "38 12 6\n26 24 10\nTotal: 50\n",
+        "edits": [
+          [
+            "rate = 3",
+            "rate = 4"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "38 12 6\n22 28 10\nTotal: 50\n",
+        "solution_input": "",
+        "solution_out": "55 10 5\n34 31 12\n22 43 15\nTotal: 65\n"
+      },
+      {
+        "input": "40\n5\n2\n6\n3\n",
+        "out": "After 1: 30\nAfter 2: 12\nUsed: 28\nDistance: 11\nAvailable: 9\n",
+        "edits": [],
+        "alt_input": "22\n5\n2\n6\n3\n",
+        "alt_out": "After 1: 12\nAfter 2: -6\nUsed: 28\nDistance: 11\nAvailable: -9\n",
+        "solution_input": "50\n5\n4\n6\n8\n",
+        "solution_out": "42\n30\n14\nUsed: 36\nAvailable: 9\n"
+      },
+      {
+        "input": "",
+        "out": "GO 14\nDENIED 14\nOK\nUsed: 12\n",
+        "edits": [
+          [
+            "fuel = 26",
+            "fuel = 27"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "GO 15\nGO 3\nRESERVE\nUsed: 24\n",
+        "solution_input": "20\n-2\n17\n",
+        "solution_out": "ERROR\nGO\n3 17\n"
+      },
+      {
+        "input": "7\n0\n8\n12\n5\n",
+        "out": "1 23 7\nINVALID 2\n3 15 15\n4 3 27\nSTOP 5\nDone: 3\nLeft: 3\n",
+        "edits": [],
+        "alt_input": "9\n9\n9\n3\n0\n",
+        "alt_out": "1 21 9\n2 12 18\n3 3 27\nSTOP 4\nDone: 3\nLeft: 3\n",
+        "solution_input": "30\n4\n4\n2\n5\n2\n3\n3\n1\n1\n",
+        "solution_out": "1 22\n2 12\n3 3\nSTOP\n3 12 3\n"
+      },
+      {
+        "input": "",
+        "out": "1 6 24\n2 15 9\n3 2 7\nSTOP 4\n[24, 9, 7]\nUsed: 23\nUnread: 2\n",
+        "edits": [
+          [
+            "fuel = 30",
+            "fuel = 34"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "1 6 28\n2 15 13\n3 2 11\n4 8 3\nSTOP 5\n[28, 13, 11, 3]\nUsed: 31\nUnread: 1\n",
+        "solution_input": "",
+        "solution_out": "[1, 2, 3, 4, 5]\n[6, 15, 2, 8, 4]\nLeft: 5\n"
+      },
+      {
+        "input": "",
+        "out": "[24, 9, 7]\n[34, 19, 17, 9]\nTrue\n",
+        "edits": [
+          [
+            "fuel - cost >= reserve",
+            "fuel - cost > reserve"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[24, 9, 7]\n[34, 19, 17, 9]\nFalse\n",
+        "solution_input": "",
+        "solution_out": "[24, 9, 7]\n[24, 9]\n[]\n"
+      },
+      {
+        "input": "",
+        "out": "True\nTrue\nTrue\nFalse\n3 9 [15, 3]\n9 5 [9]\n",
+        "edits": [
+          [
+            "b = Vehicle(24, 5)",
+            "b = Vehicle(21, 5)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "True\nTrue\nTrue\nFalse\n3 9 [15, 3]\n6 5 [6]\n",
+        "solution_input": "",
+        "solution_out": "False\n40\nTrue\nTrue\n32 4 [32]\n14 3 [14]\n"
+      }
+    ]
+  },
+  {
+    "id": "10_parking_sensors",
+    "levels": [
+      {
+        "input": "",
+        "out": "REAR | Sensor 1\nDistance: 18 cm | Level: STOP\n[!!!]\n",
+        "edits": [
+          [
+            "print(\"18\", end=\" cm\")",
+            "print(\"18\", end=\"\\n\")"
+          ],
+          [
+            "print(\"!!!\", end=\"\")",
+            "print(\"!!!\", end=\" \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "REAR | Sensor 1\nDistance: 18\n | Level: STOP\n[!!! ]\n",
+        "solution_input": "",
+        "solution_out": "REAR | Sensor 2\nDistance: 42 cm | Level: NEAR\n[!!]\n"
+      },
+      {
+        "input": "",
+        "out": "85 25 25\n55 30 55\n65 -10 45\nCheck: 45\n",
+        "edits": [
+          [
+            "distance += 10",
+            "distance -= 10"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "85 25 25\n55 30 55\n45 10 65\nCheck: 65\n",
+        "solution_input": "",
+        "solution_out": "80 20\n85 15\n45 55\n30 70\nTotal: 70\n"
+      },
+      {
+        "input": "100\n80\n50\n35\n",
+        "out": "Changes: 20 30 15\nTotal: 65\nAverage: 21\nLast: 35\nCheck: 65\n",
+        "edits": [],
+        "alt_input": "100\n40\n90\n100\n",
+        "alt_out": "Changes: 60 -50 -10\nTotal: 0\nAverage: 0\nLast: 100\nCheck: 0\n",
+        "solution_input": "80\n65\n70\n20\n",
+        "solution_out": "Step: 15 -5 50\nFrom start: 15 10 60\nTotal: 60\n"
+      },
+      {
+        "input": "",
+        "out": "CLEAR\nSTOP\nAlerts: 1\n",
+        "edits": [
+          [
+            "first = 51",
+            "first = 50"
+          ],
+          [
+            "second = 20",
+            "second = -1"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "NEAR\nERROR\nAlerts: 1\n",
+        "solution_input": "20\n201\n",
+        "solution_out": "STOP\nERROR\n1 1\n"
+      },
+      {
+        "input": "15\n60\n40\n70\n80\n-1\n10\n",
+        "out": "1 True 0\n2 True 1\n3 True 0\n4 True 1\n5 False 2\nERROR False\n7 True 0\nFinal: True\n",
+        "edits": [],
+        "alt_input": "15\n60\n80\n40\n20\n60\n70\n",
+        "alt_out": "1 True 0\n2 True 1\n3 False 2\n4 False 0\n5 True 0\n6 True 1\n7 False 2\nFinal: False\n",
+        "solution_input": "7\n15\n60\n-1\n70\n80\n30\n10\n",
+        "solution_out": "True 0\nTrue 1\nERROR\nTrue 1\nFalse 2\nFalse 0\nTrue 0\n4 1\n"
+      },
+      {
+        "input": "",
+        "out": "['CLEAR', 'NEAR', 'STOP', 'ERROR', 'NEAR', 'STOP', 'CLEAR']\nClosest: 10\nErrors: 1\nCount: 7\n",
+        "edits": [
+          [
+            "readings = [80, 42, 15, -1, 22, 10, 55]",
+            "readings = [-1, 250, 200, 50, 20, 0, 60]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "['ERROR', 'ERROR', 'CLEAR', 'NEAR', 'STOP', 'STOP', 'CLEAR']\nClosest: 0\nErrors: 2\nCount: 7\n",
+        "solution_input": "",
+        "solution_out": "[50, 20, 0, 75]\n[3, 4]\nClosest: 0\n"
+      },
+      {
+        "input": "",
+        "out": "Stops: 2\nStops: 0\n['NEAR', 'STOP', 'ERROR', 'CLEAR', 'STOP']\n['CLEAR', 'CLEAR', 'CLEAR']\n",
+        "edits": [
+          [
+            "if distance <= 20:",
+            "if distance < 20:"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "Stops: 1\nStops: 0\n['NEAR', 'NEAR', 'ERROR', 'CLEAR', 'STOP']\n['CLEAR', 'CLEAR', 'CLEAR']\n",
+        "solution_input": "",
+        "solution_out": "STOP\nNEAR\nCLEAR\nERROR\nSTOP\n"
+      },
+      {
+        "input": "",
+        "out": "STOP\nCLEAR\nSTOP\nCLEAR\nERROR\n['STOP', 'STOP', 'CLEAR']\n['CLEAR', 'ERROR']\n",
+        "edits": [
+          [
+            "print(a.read(70))",
+            "print(a.read(40))"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "STOP\nCLEAR\nSTOP\nSTOP\nERROR\n['STOP', 'STOP', 'STOP']\n['CLEAR', 'ERROR']\n",
+        "solution_input": "",
+        "solution_out": "['STOP', 'STOP', 'CLEAR', 'CLEAR']\n['STOP', 'STOP', 'STOP', 'CLEAR']\n"
+      }
+    ]
+  },
+  {
+    "id": "11_train_station",
+    "levels": [
+      {
+        "input": "",
+        "out": "PLATFORM 2 | TRAIN 17\nPlanned: 120 | Actual: 127\nDelay: 7 min | WAIT\n",
+        "edits": [
+          [
+            "print(\"127\")",
+            "print(\"127\", end=\" / \")"
+          ],
+          [
+            "print(\"7\", end=\" min | \")",
+            "print(\"7\", end=\"\\n\")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "PLATFORM 2 | TRAIN 17\nPlanned: 120 | Actual: 127 / Delay: 7\nWAIT\n",
+        "solution_input": "",
+        "solution_out": "PLATFORM 4 | TRAIN 22\nPlanned: 150 | Actual: 150\nDelay: 0 min | READY\n"
+      },
+      {
+        "input": "",
+        "out": "Arrival: 112\n115 113 2\n133 128 5\nTotal elapsed: 33\n",
+        "edits": [
+          [
+            "travel = 15",
+            "travel = 13"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "Arrival: 112\n115 113 2\n131 128 3\nTotal elapsed: 31\n",
+        "solution_input": "",
+        "solution_out": "93 90 3\n110 102 8\nElapsed: 30\n"
+      },
+      {
+        "input": "100\n12\n3\n110\n",
+        "out": "Arrival: 112\nEarliest: 115\nGap: 5\nTime spent: 15\nPlanned gap: 10\n",
+        "edits": [],
+        "alt_input": "100\n5\n2\n112\n",
+        "alt_out": "Arrival: 105\nEarliest: 107\nGap: -5\nTime spent: 7\nPlanned gap: 12\n",
+        "solution_input": "100\n12\n3\n110\n8\n2\n130\n",
+        "solution_out": "Station 1: 112 115 5\nStation 2: 123 125 -5\n"
+      },
+      {
+        "input": "",
+        "out": "WAIT 3\n112 0\nDEPART\n128 3\n",
+        "edits": [
+          [
+            "arrival = actual + 7",
+            "arrival = actual + 12"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "DEPART\n114 2\nDEPART\n130 5\n",
+        "solution_input": "107\n2\n112\n",
+        "solution_out": "Actual: 112\nWait: 3\nDelay: 0\nON TIME\n"
+      },
+      {
+        "input": "7\n112\n13\n125\n8\n140\n12\n152\n",
+        "out": "1 112 0\n2 127 2\n3 140 0\n4 154 2\nLate: 2\nWorst: 2\n",
+        "edits": [],
+        "alt_input": "15\n112\n4\n125\n5\n140\n8\n152\n",
+        "alt_out": "1 117 5\n2 125 0\n3 140 0\n4 152 0\nLate: 1\nWorst: 5\n",
+        "solution_input": "3\n100\n7\n2\n112\n13\n3\n125\n6\n2\n140\n",
+        "solution_out": "1 112 0\n2 128 3\n3 140 0\nWait: 7\nOn time: 2\n"
+      },
+      {
+        "input": "",
+        "out": "[112, 127, 140, 154, 162]\n[0, 2, 0, 2, 0]\n[2, 4]\n",
+        "edits": [
+          [
+            "travels = [7, 13, 8, 12, 5]",
+            "travels = [12, 13, 8, 12, 5]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[114, 129, 140, 154, 162]\n[2, 4, 0, 2, 0]\n[1, 2, 4]\n",
+        "solution_input": "",
+        "solution_out": "[112, 127, 140, 154, 162]\n[0, 2, 0, 2, 0]\n[3, 0, 3, 0, 1]\n2 3\n"
+      },
+      {
+        "input": "",
+        "out": "112\n127\n[0, 2, 0, 2]\n[2, 4, 0, 2]\n",
+        "edits": [
+          [
+            "actual = departure(actual + travels[i], 2, plans[i])",
+            "actual = departure(actual + travels[i], 4, plans[i])"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "112\n127\n[0, 4, 1, 5]\n[4, 8, 5, 9]\n",
+        "solution_input": "",
+        "solution_out": "[0, 2, 0]\n[0, 4, 0]\n[]\n"
+      },
+      {
+        "input": "",
+        "out": "0\n2\n2\n4\n0\n0\n140 6 [0, 2, 0]\n140 1 [2, 4, 0]\n",
+        "edits": [
+          [
+            "b = Train(105)",
+            "b = Train(110)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "0\n7\n2\n9\n0\n4\n140 6 [0, 2, 0]\n144 0 [7, 9, 4]\n",
+        "solution_input": "",
+        "solution_out": "0 0\n0\n2\n2\n4\n0\n0\n140 6 [0, 2, 0]\n140 1 [2, 4, 0]\n0 1\n0 2\n"
+      }
+    ]
+  },
+  {
+    "id": "12_bus_capacity",
+    "levels": [
+      {
+        "input": "",
+        "out": "LINE 18 | STOP 3\nPassengers: 9/12\nFree: 3 | Waiting: 2\nBOARD\n",
+        "edits": [
+          [
+            "print(\"12\")",
+            "print(\"12\", end=\" | \")"
+          ],
+          [
+            "print(\"3\", end=\" | \")",
+            "print(\"3\", end=\"\\n\")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "LINE 18 | STOP 3\nPassengers: 9/12 | Free: 3\nWaiting: 2\nBOARD\n",
+        "solution_input": "",
+        "solution_out": "LINE 25 | STOP 4\nPassengers: 12/12\nFree: 0 | Waiting: 5\nFULL\n"
+      },
+      {
+        "input": "",
+        "out": "9 3\n8 4\nTotal: 9 6\nCheck: 8\n",
+        "edits": [
+          [
+            "on = 3",
+            "on = 6"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "9 3\n11 1\nTotal: 12 6\nCheck: 11\n",
+        "solution_input": "",
+        "solution_out": "9 6\n11 4\n9 6\n13 8\n"
+      },
+      {
+        "input": "12\n5\n2\n6\n4\n3\n",
+        "out": "Stop 1: 9 3\nStop 2: 8 4\nBoarded: 9\nLeft: 6\n",
+        "edits": [],
+        "alt_input": "12\n5\n2\n10\n4\n5\n",
+        "alt_out": "Stop 1: 13 -1\nStop 2: 14 -2\nBoarded: 15\nLeft: 6\n",
+        "solution_input": "15\n4\n1\n6\n3\n5\n4\n2\n",
+        "solution_out": "Off 1: 3\nOn 1: 9\nOff 2: 6\nOn 2: 11\nOff 3: 7\nOn 3: 9\nFree: 6\n"
+      },
+      {
+        "input": "",
+        "out": "Boarded: 6\nDenied: 2\nFULL\nPassengers: 12\n",
+        "edits": [
+          [
+            "off = 3",
+            "off = 10"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "ERROR\nPassengers: 9\n",
+        "solution_input": "11\n1\n5\n",
+        "solution_out": "Boarded: 2\nDenied: 3\nFree: 0\nPassengers: 12\n"
+      },
+      {
+        "input": "2\n6\n4\n8\n20\n1\n2\n3\n1\n0\n",
+        "out": "1 9 0\n2 12 1\nERROR 3\n4 12 1\n5 11 0\nBoarded: 15\nDenied: 2\n",
+        "edits": [],
+        "alt_input": "2\n20\n0\n0\n12\n1\n0\n15\n5\n2\n",
+        "alt_out": "1 12 11\n2 12 0\n3 1 0\n4 12 4\n5 9 0\nBoarded: 23\nDenied: 15\n",
+        "solution_input": "10\n4\n3\n1\n9\n20\n1\n5\n3\n2\n10\n",
+        "solution_out": "1 10\nERROR\n3 8\n4 10\n15 8 7 2\nCheck: 10\n"
+      },
+      {
+        "input": "",
+        "out": "[9, 12, 12, 8, 12]\n[0, 1, 2, 0, 0]\n[2, 3, 5]\n",
+        "edits": [
+          [
+            "waitings = [6, 8, 2, 1, 7]",
+            "waitings = [9, 8, 2, 1, 7]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[12, 12, 12, 8, 12]\n[0, 4, 2, 0, 0]\n[1, 2, 3, 5]\n",
+        "solution_input": "",
+        "solution_out": "[9, 12, 12, 8, 12]\n[0, 1, 2, 0, 0]\n[3, 0, 0, 4, 0]\n3 3 2\n"
+      },
+      {
+        "input": "",
+        "out": "[12, 6, 2, 'OK']\n[4, 0, 0, 'ERROR']\n[[9, 6, 0, 'OK'], [12, 7, 1, 'OK'], [12, 0, 2, 'OK']]\n",
+        "edits": [
+          [
+            "print(stop(12, 4, 5, 2))",
+            "print(stop(12, 4, 4, 12))"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[12, 6, 2, 'OK']\n[12, 12, 0, 'OK']\n[[9, 6, 0, 'OK'], [12, 7, 1, 'OK'], [12, 0, 2, 'OK']]\n",
+        "solution_input": "",
+        "solution_out": "[12, 3, 0]\n[11, 0, 1]\n[]\n"
+      },
+      {
+        "input": "",
+        "out": "9\n6\nERROR\n3\n1\n11 1 [12, 11]\n6 4 [8, 6]\n",
+        "edits": [
+          [
+            "b = Bus(8, 3)",
+            "b = Bus(8, 8)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "9\n1\nERROR\n3\n1\n11 1 [12, 11]\n6 9 [8, 6]\n",
+        "solution_input": "",
+        "solution_out": "9\n6\nERROR\n3\n1\n11 1 [12, 11]\n6 4 [8, 6]\n1 1\n2 0\n"
+      }
+    ]
+  },
+  {
+    "id": "13_electric_scooter",
+    "levels": [
+      {
+        "input": "",
+        "out": "RIDE 02 | UPHILL\nBattery: 18/30\nSegment: 4 km | Cost: 8\n",
+        "edits": [
+          [
+            "print(\"18\", end=\"/\")",
+            "print(\"18\", end=\"\\n\")"
+          ],
+          [
+            "print(\"4\", end=\" km | \")",
+            "print(\"4\", end=\"\")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "RIDE 02 | UPHILL\nBattery: 18\n30\nSegment: 4Cost: 8\n",
+        "solution_input": "",
+        "solution_out": "RIDE 03 | FLAT\nBattery: 9/30\nSegment: 5 km | Cost: 5\n"
+      },
+      {
+        "input": "",
+        "out": "19 5 0 5\n11 13 0 9\n14 13 3 12\nNet used: 10\n",
+        "edits": [
+          [
+            "length = 3",
+            "length = 6"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "19 5 0 5\n11 13 0 9\n17 13 6 15\nNet used: 7\n",
+        "solution_input": "",
+        "solution_out": "19 6\n11 10\n16 15\n13 18\n17 5 12\n"
+      },
+      {
+        "input": "25\n6\n5\n4\n",
+        "out": "Flat: 19\nUphill: 9\nDownhill: 13\nLength: 15\nNet: 12\nAbove reserve: 11\n",
+        "edits": [],
+        "alt_input": "10\n4\n3\n5\n",
+        "alt_out": "Flat: 6\nUphill: 0\nDownhill: 5\nLength: 12\nNet: 5\nAbove reserve: 3\n",
+        "solution_input": "28\n4\n3\n5\n2\n",
+        "solution_out": "20\n23\n13\n11\nLength: 14\n"
+      },
+      {
+        "input": "",
+        "out": "RECOVERED\nBattery: 30\nUnused recovery: 3\n",
+        "edits": [
+          [
+            "kind = 3",
+            "kind = 2"
+          ],
+          [
+            "battery = 27",
+            "battery = 13"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "DENIED\nBattery: 13\nUnused recovery: 0\n",
+        "solution_input": "28\n5\n3\n",
+        "solution_out": "RECOVERED\n0 2 30\n"
+      },
+      {
+        "input": "1\n4\n2\n5\n3\n6\n2\n6\n1\n2\n",
+        "out": "1 16 4\n2 6 9\n3 12 15\nSTOP 4\n14 6 12\n",
+        "edits": [],
+        "alt_input": "3\n15\n2\n7\n1\n8\n3\n9\n2\n5\n",
+        "alt_out": "1 30 15\n2 16 22\n3 8 30\n4 17 39\n5 7 44\n32 19 7\n",
+        "solution_input": "28\n4\n3\n6\n2\n8\n1\n6\n2\n4\n",
+        "solution_out": "1 30\n2 14\n3 8\nSTOP\n3 20 4\n"
+      },
+      {
+        "input": "",
+        "out": "[1, 2, 3]\n[16, 6, 12]\nRemaining: 2\n",
+        "edits": [
+          [
+            "battery = 20",
+            "battery = 24"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[1, 2, 3, 4, 5]\n[20, 10, 16, 4, 2]\nRemaining: 0\n",
+        "solution_input": "",
+        "solution_out": "[30, 18, 13, 3]\n[4, 0, 0, 0]\n4 4\n"
+      },
+      {
+        "input": "",
+        "out": "[18, 8, 14, 2]\n[30, 14, 8]\n",
+        "edits": [
+          [
+            "if battery - cost < 2:",
+            "if battery - cost <= 2:"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[18, 8, 14]\n[30, 14, 8]\n",
+        "solution_input": "",
+        "solution_out": "[18, 8, 14, 2]\n[18, 8, 14]\n"
+      },
+      {
+        "input": "",
+        "out": "True\nFalse\nTrue\nTrue\n18 13 [10, 18]\n15 12 [15]\n",
+        "edits": [
+          [
+            "b = Scooter(8, 15)",
+            "b = Scooter(12, 15)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "True\nTrue\nTrue\nTrue\n18 13 [10, 18]\n14 17 [2, 14]\n",
+        "solution_input": "",
+        "solution_out": "True\nFalse\nTrue\nTrue\n18 13 [10, 18]\n15 12 [15]\n18 0\n15 1\n"
+      }
+    ]
+  },
+  {
+    "id": "14_navigation_system",
+    "levels": [
+      {
+        "input": "",
+        "out": "ROUTE A | FAST\nTime: 32 min | Distance: 18 km\nToll: 5 | SELECTED\n",
+        "edits": [
+          [
+            "print(\"32\", end=\" min | \")",
+            "print(\"32\", end=\"\\n\")"
+          ],
+          [
+            "print(\"18\", end=\" km\\n\")",
+            "print(\"18\", end=\" km | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "ROUTE A | FAST\nTime: 32\nDistance: 18 km | Toll: 5 | SELECTED\n",
+        "solution_input": "",
+        "solution_out": "ROUTE B | CHEAP\nTime: 40 min | Distance: 12 km\nToll: 0 | SELECTED\n"
+      },
+      {
+        "input": "",
+        "out": "17 12 29\n21 11 32\nFinal: 42\n",
+        "edits": [
+          [
+            "delay_a += 4",
+            "delay_a += 8"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "17 12 29\n25 11 36\nFinal: 46\n",
+        "solution_input": "",
+        "solution_out": "10 17 8\n15 11\nA: 35\nB: 26\nDifference: 9\n"
+      },
+      {
+        "input": "20\n4\n8\n25\n3\n0\n10\n",
+        "out": "A: 24 2\nB: 28 10\nTime gap: -4\nPrice gap: 8\n",
+        "edits": [],
+        "alt_input": "20\n4\n15\n25\n3\n0\n10\n",
+        "alt_out": "A: 24 -5\nB: 28 10\nTime gap: -4\nPrice gap: 15\n",
+        "solution_input": "18\n7\n4\n12\n22\n2\n0\n18\n8\n",
+        "solution_out": "A: 25 4 12\nB: 24 8 18\nTime gap: 1\nDistance gap: -6\n"
+      },
+      {
+        "input": "",
+        "out": "True True\nSelected: B\n",
+        "edits": [
+          [
+            "time_a = 24",
+            "time_a = 20"
+          ],
+          [
+            "budget = 8",
+            "budget = 7"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "False True\nSelected: B\n",
+        "solution_input": "20\n8\n22\n4\n5\n",
+        "solution_out": "B 22 4\n"
+      },
+      {
+        "input": "30\n0\n20\n9\n26\n5\n26\n3\n26\n3\n",
+        "out": "UPDATE 1 30 0\nSKIP 2\nUPDATE 3 26 5\nUPDATE 4 26 3\nKEEP 4\nBest: 4 26 3\n",
+        "edits": [],
+        "alt_input": "20\n9\n21\n10\n24\n5\n24\n5\n23\n6\n",
+        "alt_out": "SKIP 1\nSKIP 2\nUPDATE 3 24 5\nKEEP 3\nUPDATE 5 23 6\nBest: 5 23 6\n",
+        "solution_input": "4\n8\n25\n4\n12\n25\n4\n10\n20\n9\n5\n25\n3\n15\n",
+        "solution_out": "4 25 3 15\nSkipped: 1\n"
+      },
+      {
+        "input": "",
+        "out": "[25, 23, 24, 25]\n[0, 2, 3]\nBest index: 2\n",
+        "edits": [
+          [
+            "delays = [7, 3, 0, 6]",
+            "delays = [7, 3, 6, 6]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[25, 23, 30, 25]\n[0, 2, 3]\nBest index: 3\n",
+        "solution_input": "",
+        "solution_out": "[25, 23, 24, 25]\n[2, 2, 2, 1]\n"
+      },
+      {
+        "input": "",
+        "out": "[25, 23, 24]\n2\n1\n2\n",
+        "edits": [
+          [
+            "prices = [4, 6, 0]",
+            "prices = [4, 6, 7]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[25, 23, 24]\n0\n1\n-1\n",
+        "solution_input": "",
+        "solution_out": "1\n2\n-1\n-1\n"
+      },
+      {
+        "input": "",
+        "out": "2\n1\n0\n1\n[2, 0]\n[1, 1]\n",
+        "edits": [
+          [
+            "times[2] += 5",
+            "times[2] += 0"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "2\n1\n2\n1\n[2, 2]\n[1, 1]\n",
+        "solution_input": "",
+        "solution_out": "2\n1\n0\n1\n[2, 0, 1] 2\n[1, 1] 0\n"
+      }
+    ]
+  },
+  {
+    "id": "15_gas_station",
+    "levels": [
+      {
+        "input": "",
+        "out": "PUMP 03 | TYPE 1\nQuantity: 5 | Price: 35\nPaid: 40 | Change: 5\n",
+        "edits": [
+          [
+            "print(\"35\")",
+            "print(\"35\", end=\" | \")"
+          ],
+          [
+            "print(\"40\", end=\" | \")",
+            "print(\"40\", end=\"\\n\")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "PUMP 03 | TYPE 1\nQuantity: 5 | Price: 35 | Paid: 40\nChange: 5\n",
+        "solution_input": "",
+        "solution_out": "PUMP 07 | TYPE 2\nQuantity: 4 | Price: 36\nPaid: 50 | Change: 14\n"
+      },
+      {
+        "input": "",
+        "out": "34 42 8\n34 21 78\nCheck: 78\n",
+        "edits": [
+          [
+            "quantity = 4",
+            "quantity = 3"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "34 42 8\n34 22 69\nCheck: 69\n",
+        "solution_input": "",
+        "solution_out": "27 20\n27 18\n23 18\n67 8\n"
+      },
+      {
+        "input": "30\n20\n4\n30\n3\n30\n",
+        "out": "Type 1: 26 28 2\nType 2: 17 27 3\nRevenue: 55\nNet cash: 55\n",
+        "edits": [],
+        "alt_input": "30\n2\n4\n26\n3\n20\n",
+        "alt_out": "Type 1: 26 28 -2\nType 2: -1 27 -7\nRevenue: 55\nNet cash: 55\n",
+        "solution_input": "25\n7\n3\n25\n4\n30\n2\n15\n",
+        "solution_out": "21 4 22\n28 2 18\n14 1 16\nRevenue: 63\n"
+      },
+      {
+        "input": "",
+        "out": "REJECTED 44\n12 8 0\n",
+        "edits": [
+          [
+            "paid = 44",
+            "paid = 45"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "SERVED 0\n12 3 45\n",
+        "solution_input": "1\n12\n84\n",
+        "solution_out": "SERVED 0\n0 8 84\n"
+      },
+      {
+        "input": "4\n30\n5\n30\n10\n70\n-1\n10\n1\n7\n",
+        "out": "SERVED 2 11\nREJECTED 30\nSERVED 0 1\nERROR\nSERVED 0 0\n3 1 105 0\n",
+        "edits": [],
+        "alt_input": "8\n56\n8\n56\n7\n49\n1\n7\n0\n0\n",
+        "alt_out": "SERVED 0 7\nREJECTED 56\nSERVED 0 0\nREJECTED 7\nERROR\n2 2 105 0\n",
+        "solution_input": "10\n7\n4\n3\n25\n8\n56\n2\n13\n7\n50\n",
+        "solution_out": "SERVED\nREJECTED\nREJECTED\nSERVED\n70 74 144\nCheck: 70\nStock: 0\n"
+      },
+      {
+        "input": "",
+        "out": "[5, 4]\n[2, 3, 56, 17, 1]\nRevenue: 62\n",
+        "edits": [
+          [
+            "payments = [30, 30, 56, 17, 8]",
+            "payments = [30, 30, 56, 18, 8]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[5, 2]\n[2, 3, 56, 0, 1]\nRevenue: 80\n",
+        "solution_input": "",
+        "solution_out": "[5, 4]\n['SERVED', 'SERVED', 'REJECTED', 'REJECTED', 'SERVED', 'ERROR']\n[35, 27]\n[2, 3, 56, 17, 1, 10]\n"
+      },
+      {
+        "input": "",
+        "out": "[6, 28, 2, 'SERVED']\n[6, 0, 50, 'REJECTED']\n[0, 42, 0, 'SERVED']\n0 70\n",
+        "edits": [
+          [
+            "result = sell(stock, 7, 7, 50)",
+            "result = sell(stock, 7, 5, 50)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[6, 28, 2, 'SERVED']\n[1, 35, 15, 'SERVED']\n[1, 0, 42, 'REJECTED']\n1 63\n",
+        "solution_input": "",
+        "solution_out": "[0, 70, ['SERVED', 'REJECTED', 'SERVED'], [2, 50, 0]]\n[]\n"
+      },
+      {
+        "input": "",
+        "out": "2\n3\nREJECTED\n0\n[6, 7] [28, 0] ['SERVED', 'REJECTED']\n[0, 7] [35, 27] ['SERVED', 'SERVED']\n",
+        "edits": [
+          [
+            "print(a.sell(1, 7, 50))",
+            "print(a.sell(1, 6, 42))"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "2\n3\n0\n0\n[0, 7] [70, 0] ['SERVED', 'SERVED']\n[0, 7] [35, 27] ['SERVED', 'SERVED']\n",
+        "solution_input": "",
+        "solution_out": "2\n3\nREJECTED\n0\n[6, 7] [28, 0] ['SERVED', 'REJECTED']\n[0, 7] [35, 27] ['SERVED', 'SERVED']\n0\n[16, 7] 56\n[0, 7] 62\n"
+      }
+    ]
+  },
+  {
+    "id": "16_delivery_company",
+    "levels": [
+      {
+        "input": "",
+        "out": "ORDER 104 | PRIORITY 1\nWeight: 4 kg | Time: 12 min\nTruck: A | ASSIGNED\n",
+        "edits": [
+          [
+            "print(\"4\", end=\" kg | \")",
+            "print(\"4\", end=\"\\n\")"
+          ],
+          [
+            "print(\"12\", end=\" min\\n\")",
+            "print(\"12\", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "ORDER 104 | PRIORITY 1\nWeight: 4\nTime: 12 | Truck: A | ASSIGNED\n",
+        "solution_input": "",
+        "solution_out": "ORDER 208 | PRIORITY 2\nWeight: 7 kg | Time: 18 min\nTruck: B | WAITING\n"
+      },
+      {
+        "input": "",
+        "out": "14 33 1\n10 18 2\n3 8 3\nUsed: 17 37\n",
+        "edits": [
+          [
+            "duration = 15",
+            "duration = 20"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "14 33 1\n10 13 2\n3 3 3\nUsed: 17 42\n",
+        "solution_input": "",
+        "solution_out": "20 40 1\n12 28 2\n6 10 3\nUsed: 19 50\n"
+      },
+      {
+        "input": "20\n45\n6\n12\n7\n20\n",
+        "out": "After 1: 14 33\nAfter 2: 7 13\nUsed: 13 32\n",
+        "edits": [],
+        "alt_input": "20\n25\n6\n12\n7\n20\n",
+        "alt_out": "After 1: 14 13\nAfter 2: 7 -7\nUsed: 13 32\n",
+        "solution_input": "20\n45\n5\n10\n8\n20\n4\n16\n",
+        "solution_out": "15 35\n7 15\n3 -1\nUsed: 17 46\n"
+      },
+      {
+        "input": "",
+        "out": "NO\nYES\n5 10 1\n",
+        "edits": [
+          [
+            "duration = 30",
+            "duration = 25"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "YES\nNO\n3 0 1\n",
+        "solution_input": "10\n25\n7\n30\n5\n15\n",
+        "solution_out": "WAIT\nASSIGNED\n5 10 1\n"
+      },
+      {
+        "input": "4\n10\n8\n25\n3\n12\n0\n4\n2\n7\n1\n2\n",
+        "out": "1 ASSIGNED 11 30\n2 ASSIGNED 3 5\n3 WAIT\n4 ERROR\n5 WAIT\n6 ASSIGNED 2 3\n3 2 1\n",
+        "edits": [],
+        "alt_input": "10\n30\n1\n12\n3\n5\n1\n1\n-1\n5\n2\n4\n",
+        "alt_out": "1 ASSIGNED 5 10\n2 WAIT\n3 ASSIGNED 2 5\n4 ASSIGNED 1 4\n5 ERROR\n6 WAIT\n3 2 1\n",
+        "solution_input": "5\n12\n30\n6\n10\n2\n5\n12\n1\n2\n6\n1\n1\n5\n3\n1\n2\n2\n",
+        "solution_out": "3 1 1 1\n0 6\n"
+      },
+      {
+        "input": "",
+        "out": "4 10 24\n2 6 14\n3 3 6\n[4, 2, 3]\n",
+        "edits": [
+          [
+            "time_left = 30",
+            "time_left = 34"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "4 10 28\n2 6 18\n1 1 0\n[4, 2, 1]\n",
+        "solution_input": "",
+        "solution_out": "[4, 3, 2]\n[0, 1]\n3 6 2\n"
+      },
+      {
+        "input": "",
+        "out": "[4, 2, 3]\n[4, 2, 1]\n[]\n",
+        "edits": [
+          [
+            "priorities = [2, 1, 1, 2, 1]",
+            "priorities = [1, 2, 2, 1, 2]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[3, 0, 4]\n[3, 0, 4]\n[]\n",
+        "solution_input": "",
+        "solution_out": "[[4, 2, 3], 3, 6]\n[[2, 1], 3, 2]\n"
+      },
+      {
+        "input": "",
+        "out": "True\nTrue\nFalse\nFalse\nTrue\n7 12 [104]\n0 0 [107, 109]\n",
+        "edits": [
+          [
+            "a = Truck(12, 30)",
+            "a = Truck(12, 34)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "True\nTrue\nTrue\nFalse\nTrue\n3 1 [104, 108]\n0 0 [107, 109]\n",
+        "solution_input": "",
+        "solution_out": "0\n1\n-1\n-1\n0\n3 2 [104, 110]\n4 10 [107]\n[104, 107, 110]\n"
+      }
+    ]
+  }
+]
