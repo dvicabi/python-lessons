@@ -1,0 +1,10 @@
+flight_ids = [41, 42]
+flight_caps = [5, 8]
+booked = [5, 7]
+flight_times = [30, 40]
+requested = 41
+checked = 5
+bag_weights = [10, 12, 8, 15]
+gate_sizes = [8, 5, 6]
+gate_busy = [False, False, True]
+now = 20

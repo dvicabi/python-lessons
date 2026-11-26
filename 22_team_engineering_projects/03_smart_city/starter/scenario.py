@@ -1,0 +1,11 @@
+districts = [11, 22]
+district = 11
+water_need = 4
+base_power = 8
+trips = 3
+cars = 2
+water_available = [10, 8]
+power_available = [24, 15]
+bus_district = [11, 11, 22]
+bus_free = [5, 3, 6]
+parking_free = [3, 5]

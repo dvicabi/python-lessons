@@ -1,0 +1,10 @@
+product_ids = [10, 20]
+recipes = [[2, 1, 0], [1, 2, 1]]
+product = 20
+quantity = 3
+materials = [8, 15, 10]
+machine_capacity = [2, 8, 6]
+machine_rate = [2, 3, 2]
+machine_minutes = [12, 20, 8]
+quality_scores = [80, 75, 90]
+shipping_free = [2, 5, 3]

@@ -1,0 +1,11 @@
+groups = [11, 22]
+sizes = [28, 20]
+group = 11
+subject = "python"
+teacher_subjects = ["python", "python", "math"]
+teacher_quota = [2, 1, 3]
+teacher_free = [[False, True, True], [True, False, True], [True, True, True]]
+room_caps = [24, 30, 40]
+room_free = [[True, True, True], [False, True, True], [True, True, False]]
+group_free = [[True, True, True], [True, False, True]]
+group_quota = [2, 2]

@@ -1,0 +1,10 @@
+customer_ids = [101, 102]
+customer_active = [True, False]
+customer_zones = [1, 2]
+customer = 101
+cart = [[0, 2], [0, 1], [1, 2]]
+stock = [5, 4, 7]
+prices = [10, 8, 5]
+paid = 50
+delivery_zones = [2, 1, 1]
+delivery_free = [2, 0, 3]

@@ -1,0 +1,11 @@
+product_ids = [10, 20, 30]
+stock = [6, 5, 2]
+weights = [2, 3, 4]
+product = 20
+quantity = 3
+pack_limit = 10
+vehicle_caps = [8, 12, 10]
+vehicle_range = [15, 20, 9]
+route_dist = [7, 9]
+route_delay = [3, 0]
+deadline = 10

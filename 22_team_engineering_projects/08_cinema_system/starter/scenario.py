@@ -1,0 +1,13 @@
+movie_ids = [10, 20]
+durations = [90, 100]
+movie = 10
+booking_code = 11
+used_codes = [7, 8]
+group_size = 3
+show_movies = [10, 10, 20]
+show_starts = [100, 120, 110]
+earliest_start = 100
+closing = 240
+halls = [[[0, 0, 7, 0], [7, 0, 8, 0]], [[0, 0, 0, 8], [7, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0]]]
+ticket_prices = [30, 35, 40]
+paid = 100
