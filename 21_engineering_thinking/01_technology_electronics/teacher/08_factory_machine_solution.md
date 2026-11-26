@@ -1,100 +1,422 @@
-# פתרון והערות למורה: מכונה במפעל: מתי חריגה בודדת הופכת לתקלה?
+# פתרונות למורה: מכונה במפעל: מתי חריגה הופכת לתקלה?
 
 [חזרה למשימת התלמיד](../08_factory_machine.md)
 
-## פלט מדויק ומעקב
+כל פתרון הוא דרך אפשרית. יש לדרוש מהתלמידים הסבר ותכנון, ולא רק התאמה לפלט. מומלץ לחשוף כל רמה רק לאחר שנלמד החומר שלה. הפתרונות במאגר ציבורי.
 
-קלט ראשון:
+## רמה 1: תצוגה: print ו-end
 
-```text
-1 48 0 NORMAL
-2 75 1 WARNING
-3 78 2 WARNING
-4 65 0 NORMAL
-5 82 1 WARNING
-6 83 2 WARNING
-7 84 3 STOPPED
-8 60 3 STOPPED
-```
-
-קלט שני:
+### א. פלט קריאת הקוד
 
 ```text
-1 75 1 WARNING
-2 74 0 NORMAL
-3 75 1 WARNING
-4 74 0 NORMAL
-5 75 1 WARNING
-6 75 2 WARNING
-7 74 0 NORMAL
-8 75 1 WARNING
+Load: 78 | Streak: 2
+Status: WARNING
 ```
 
-### טבלאות מעקב מלאות
+מדידה בודדת אינה מספר החריגות הרצופות; שתי התוויות מסבירות את ההחלטה.
 
-**קלט ראשון**
+### ב. שינוי ודיון
 
-| מדידה | value | חריגה? | streak | stopped | status |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 48 | לא | 0 | False | NORMAL |
-| 2 | 75 | כן | 1 | False | WARNING |
-| 3 | 78 | כן | 2 | False | WARNING |
-| 4 | 65 | לא | 0 | False | NORMAL |
-| 5 | 82 | כן | 1 | False | WARNING |
-| 6 | 83 | כן | 2 | False | WARNING |
-| 7 | 84 | כן | 3 | True | STOPPED |
-| 8 | 60 | לא, לא נבדק לאחר עצירה | 3 | True | STOPPED |
+Status:  | STOPPED; יש רווח מיותר לפני המפריד כי התווית כבר כוללת רווח.
 
-**קלט שני**
-
-| מדידה | value | חריגה? | streak | stopped | status |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 75 | כן | 1 | False | WARNING |
-| 2 | 74 | לא | 0 | False | NORMAL |
-| 3 | 75 | כן | 1 | False | WARNING |
-| 4 | 74 | לא | 0 | False | NORMAL |
-| 5 | 75 | כן | 1 | False | WARNING |
-| 6 | 75 | כן | 2 | False | WARNING |
-| 7 | 74 | לא | 0 | False | NORMAL |
-| 8 | 75 | כן | 1 | False | WARNING |
-
-**מעקב שורה-אחר-שורה לדוגמה:** מדידה 7 בקלט הראשון: streak מ-2 ל-3, stopped מ-False ל-True, status=STOPPED. במדידה 8 תנאי not stopped נכשל, ולכן הרצף אינו מתאפס.
-
-## תשובות והנחיות לדיון
-
-העצירה בקלט הראשון במדידה 7, והתקלה נשמרת. בקלט השני חמש חריגות (1,3,5,6,8) והרצף הארוך ביותר 2. בלי איפוס הרצף עצירה שגויה במדידה 5. אם מונה מגיע כבר ל-4, ==3 לא יזהה את המצב ו-`>=3` כן. דוגמת חלון: חריג, חריג, תקין, חריג, חריג יגרום לחלון לעצור אך לא לרצף; שלוש חריגות רצופות בתחילת קלט עוצרות ברצף לפני שיש חלון מלא של חמש.
-
-מומלץ לבקש מהתלמידים לנמק את הבחירה לפני הצגת הפתרון. בדקו במיוחד את ההבדל בין תוצאה מקרית נכונה לבין פתרון שעומד בכל הדרישות. בהרחבה ניתן לקבל יותר מתכנון אחד אם הכללים והבדיקות מנומקים.
-
-## פתרון אפשרי לכתיבה העצמאית
+### ג. פתרון אפשרי
 
 ```python
+print("Load: 84", end=" | ")
+print("Streak: 3")
+print("Status: ", end="")
+print("STOPPED")
+```
+
+פלט:
+
+```text
+Load: 84 | Streak: 3
+Status: STOPPED
+```
+
+---
+
+## רמה 2: משתנים ופעולות חשבון
+
+### א. פלט קריאת הקוד
+
+```text
+3 1
+```
+
+total מודד חריגות מהתחלת הניסוי; streak מודד את הרצף האחרון.
+
+### ב. שינוי ודיון
+
+1 3; שני המונים מתארים כעת מידע שגוי.
+
+### ג. פתרון אפשרי
+
+```python
+total = 0
+streak = 0
+total += 1
+streak += 1
+print(total, streak)
+streak = 0
+print(total, streak)
+total += 1
+streak += 1
+print(total, streak)
+total += 1
+streak += 1
+print(total, streak)
+streak = 0
+print(total, streak)
+total += 1
+streak += 1
+print(total, streak)
+```
+
+פלט:
+
+```text
+1 1
+1 0
+2 1
+3 2
+3 0
+4 1
+```
+
+---
+
+## רמה 3: קלט מהמשתמש
+
+### א. פלט קריאת הקוד
+
+```text
+Load: 79
+Change: 7
+```
+
+לא. יש צורך גם במדידה עצמה ובכלל סיווג, למשל סף 75.
+
+### ב. שינוי ודיון
+
+Load: 72, Change: -7. המדידה ירדה ב-7.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+70
+78
+75
+```
+
+```python
+a = int(input())
+b = int(input())
+c = int(input())
+print("First change:", b - a)
+print("Second change:", c - b)
+print("Total change:", c - a)
+```
+
+פלט:
+
+```text
+First change: 8
+Second change: -3
+Total change: 5
+```
+
+---
+
+## רמה 4: תנאים
+
+### א. פלט קריאת הקוד
+
+```text
+STOPPED
+3
+```
+
+75 מוגדרת חריגה; שינוי האופרטור מפספס את ערך הגבול.
+
+### ב. שינוי ודיון
+
+NORMAL, 0. ללא איפוס היינו מדווחים WARNING, 2.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+1
+90
+```
+
+```python
+streak = int(input())
+reading = int(input())
+if reading < 0 or reading > 100:
+    print("INVALID")
+elif reading >= 90:
+    print("CRITICAL")
+else:
+    if reading >= 75:
+        streak += 1
+    else:
+        streak = 0
+    if streak >= 3:
+        print("STOPPED")
+    elif streak > 0:
+        print("WARNING")
+    else:
+        print("NORMAL")
+print(streak)
+```
+
+פלט:
+
+```text
+CRITICAL
+1
+```
+
+---
+
+## רמה 5: לולאות
+
+### א. פלט קריאת הקוד
+
+```text
+1
+2
+0
+1
+2
+3
+STOPPED
+```
+
+כאן שתי חריגות ראשונות נקטעות במדידה תקינה; עצירה מתרחשת רק במדידה 6.
+
+### ב. שינוי ודיון
+
+שלוש. יודפסו 1,2,3,STOPPED והשאר לא ייקראו.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+75
+70
+77
+95
+```
+
+```python
+streak = 0
+count = 0
+reason = ""
+while streak < 3:
+    reading = int(input())
+    count += 1
+    if reading >= 90:
+        reason = "CRITICAL"
+        break
+    if reading >= 75:
+        streak += 1
+    else:
+        streak = 0
+if reason == "":
+    reason = "STREAK"
+print(reason, count)
+```
+
+פלט:
+
+```text
+CRITICAL 4
+```
+
+---
+
+## רמה 6: רשימות בלבד
+
+### א. פלט קריאת הקוד
+
+```text
+[1, 0, 1, 2, 3]
+Read: 5
+```
+
+המכונה עצרה לפני המדידה השישית. רשימת הקלט אינה הוכחה שהנתונים עובדו.
+
+### ב. שינוי ודיון
+
+[1,0,1,0,1,2,0,1], Read: 8. יש 5 חריגות מצטברות אבל אין שלוש רצופות.
+
+### ג. פתרון אפשרי
+
+```python
+readings = [70, 75, 80, 73, 78, 91, 60]
+history = []
+streak = 0
+for value in readings:
+    if value >= 90:
+        history.append("CRITICAL")
+        break
+    if value >= 75:
+        streak += 1
+    else:
+        streak = 0
+    if streak >= 3:
+        history.append("STOPPED")
+        break
+    elif streak > 0:
+        history.append("WARNING")
+    else:
+        history.append("NORMAL")
+print(history)
+print(len(history))
+```
+
+פלט:
+
+```text
+['NORMAL', 'WARNING', 'WARNING', 'NORMAL', 'WARNING', 'CRITICAL']
+6
+```
+
+---
+
+## רמה 7: פעולות (פונקציות)
+
+### א. פלט קריאת הקוד
+
+```text
+NORMAL
+WARNING
+CRITICAL
+INVALID
+```
+
+101 עונה גם על >=90 וגם על >=75, אבל נתון לא חוקי קודם. 90 חמור ולא אזהרה רגילה.
+
+### ב. שינוי ודיון
+
+NORMAL, WARNING, WARNING, INVALID; חריגה חמורה סווגה לא נכון.
+
+### ג. פתרון אפשרי
+
+```python
+def classify(value):
+    if value < 0 or value > 100:
+        return "INVALID"
+    if value >= 90:
+        return "CRITICAL"
+    if value >= 75:
+        return "WARNING"
+    return "NORMAL"
+
 def monitor(readings):
+    history = []
     streak = 0
-    for index, (load, vibration) in enumerate(readings, 1):
-        if not (0 <= load <= 100 and 0 <= vibration <= 20):
-            return "STOPPED", streak, index, "INVALID"
-        if load >= 90 or vibration >= 12:
-            return "STOPPED", streak, index, "CRITICAL"
-        if load >= 75 or vibration >= 8:
+    for value in readings:
+        status = classify(value)
+        if status == "INVALID" or status == "CRITICAL":
+            history.append(status)
+            break
+        if status == "WARNING":
             streak += 1
+            if streak >= 3:
+                history.append("STOPPED")
+                break
         else:
             streak = 0
-        if streak >= 3:
-            return "STOPPED", streak, index, "STREAK"
-    return ("WARNING" if streak else "NORMAL"), streak, None, None
+        history.append(status)
+    return history
+
+print(monitor([75, 80, 60, 75, 76, 77, 90]))
 ```
 
-## בדיקות אוטומטיות
+פלט:
+
+```text
+['WARNING', 'WARNING', 'NORMAL', 'WARNING', 'WARNING', 'STOPPED']
+```
+
+---
+
+## רמה 8: מחלקות
+
+### א. פלט קריאת הקוד
+
+```text
+3 True
+1 False
+```
+
+העצירה נעולה; הפעולה חוזרת לפני עיבוד המדידה.
+
+### ב. שינוי ודיון
+
+a לא נעצר: streak=0, stopped=False; b נשאר 1 False.
+
+### ג. פתרון אפשרי
 
 ```python
-assert monitor([(75,2),(70,8),(76,1),(0,0)]) == ("STOPPED",3,3,"STREAK")
-assert monitor([(75,2),(70,2),(75,2)]) == ("WARNING",1,None,None)
-assert monitor([(75,1),(90,0),(0,0)]) == ("STOPPED",1,2,"CRITICAL")
-assert monitor([(80,1),(-1,12)]) == ("STOPPED",1,2,"INVALID")
-assert monitor([]) == ("NORMAL",0,None,None)
-assert monitor([(74,7),(74,8),(74,7)]) == ("NORMAL",0,None,None)
-print("All 6 acceptance tests passed")
+class Monitor:
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.streak = 0
+        self.stopped = False
+        self.reason = "NONE"
+
+    def measure(self, value):
+        if self.stopped:
+            return
+        if value < 0 or value > 100:
+            self.stopped = True
+            self.reason = "INVALID"
+        elif value >= 90:
+            self.stopped = True
+            self.reason = "CRITICAL"
+        elif value >= 75:
+            self.streak += 1
+            if self.streak >= 3:
+                self.stopped = True
+                self.reason = "STREAK"
+        else:
+            self.streak = 0
+
+a = Monitor()
+b = Monitor()
+a.measure(75)
+a.measure(101)
+a.measure(70)
+b.measure(75)
+b.measure(75)
+print(a.streak, a.stopped, a.reason)
+print(b.streak, b.stopped, b.reason)
+a.reset()
+print(a.streak, a.stopped, a.reason)
 ```
 
-העתיקו את הבדיקות מתחת לפונקציה. אפשר לקבל פתרונות אחרים שמחזירים את אותם ערכים ושומרים על הכללים. אין צורך בממשק משתמש או בחומרה.
+פלט:
+
+```text
+1 True INVALID
+2 False NONE
+0 False NONE
+```
+
+---
+
+## אתגר מסכם
+
+אין פתרון יחיד. בדקו שהדרישות ברורות, שהכללים נשמרים, שהפתרון נבדק במקרי קצה ושניתן לנמק את הבחירה ההנדסית. אין לדרוש נושא תכנות שלא נלמד.

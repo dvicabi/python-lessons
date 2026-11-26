@@ -1,102 +1,378 @@
-# פתרון והערות למורה: מכונת כביסה: מי מנהל את מחזור הכביסה?
+# פתרונות למורה: מכונת כביסה: מי מנהל את מחזור הכביסה?
 
 [חזרה למשימת התלמיד](../01_washing_machine.md)
 
-## פלט מדויק ומעקב
+כל פתרון הוא דרך אפשרית. יש לדרוש מהתלמידים הסבר ותכנון, ולא רק התאמה לפלט. מומלץ לחשוף כל רמה רק לאחר שנלמד החומר שלה. הפתרונות במאגר ציבורי.
 
-קלט ראשון:
+## רמה 1: תצוגה: print ו-end
 
-```text
-1 FILL 3 0
-2 WASH 6 0
-3 WASH 6 1
-4 DRAIN 6 2
-5 DRAIN 2 2
-6 DONE 0 2
-7 DONE 0 2
-8 DONE 0 2
-```
-
-קלט שני:
+### א. פלט קריאת הקוד
 
 ```text
-1 WASH 6 0
-2 WASH 6 1
-3 DRAIN 6 2
-4 DRAIN 4 2
-5 DONE 0 2
+Stage: FILL
+Water: 0/6
 ```
 
-### טבלאות מעקב מלאות
+end="" מונע מעבר שורה. ההדפסה הבאה משלימה את השורה.
 
-**קלט ראשון**
+### ב. שינוי ודיון
 
-| מדידה | amount | stage בסוף | water | washed | מעבר מצב? |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 3 | FILL | 3 | 0 | לא |
-| 2 | 4 | WASH | 6 | 0 | כן |
-| 3 | 2 | WASH | 6 | 1 | לא |
-| 4 | 6 | DRAIN | 6 | 2 | כן |
-| 5 | 4 | DRAIN | 2 | 2 | לא |
-| 6 | 4 | DONE | 0 | 2 | כן |
-| 7 | 3 | DONE | 0 | 2 | לא |
-| 8 | 1 | DONE | 0 | 2 | לא |
+Stage:  | FILL; אם מסירים end, Stage: והערך FILL יהיו בשורות נפרדות.
 
-**קלט שני**
-
-| מדידה | amount | stage בסוף | water | washed | מעבר מצב? |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 6 | WASH | 6 | 0 | כן |
-| 2 | 0 | WASH | 6 | 1 | לא |
-| 3 | 0 | DRAIN | 6 | 2 | כן |
-| 4 | 2 | DRAIN | 4 | 2 | לא |
-| 5 | 4 | DONE | 0 | 2 | כן |
-
-**מעקב שורה-אחר-שורה לדוגמה:** מדידה 2: water משתנה מ-3 ל-6; stage משתנה מ-FILL ל-WASH; washed נשאר 0. הקוד אינו נכנס ל-elif באותה איטרציה.
-
-## תשובות והנחיות לדיון
-
-השטיפה הראשונה מתרחשת במדידה 3; מעבר המצב בסוף מדידה 2. החלפת elif ב-if מפעילה את WASH באותה מדידה 2, ולכן washed יהיה 1 במקום 0. min מונע למשל 7 יחידות במקום 6; max מונע למשל מינוס 2 יחידות אחרי ריקון 4 מ-2. אם רשימה נגמרת בריקון, המצב נשאר DRAIN. בתכנון השהיה יש לשמור previous_stage בנפרד; אף פעולה לא מתבצעת כשהדלת פתוחה.
-
-מומלץ לבקש מהתלמידים לנמק את הבחירה לפני הצגת הפתרון. בדקו במיוחד את ההבדל בין תוצאה מקרית נכונה לבין פתרון שעומד בכל הדרישות. בהרחבה ניתן לקבל יותר מתכנון אחד אם הכללים והבדיקות מנומקים.
-
-## פתרון אפשרי לכתיבה העצמאית
+### ג. פתרון אפשרי
 
 ```python
-def run_cycle(readings, target, wash_ticks):
-    if target <= 0 or wash_ticks <= 0:
-        return "ERROR", 0, 0, 0
-    stage, water, washed, used = "FILL", 0, 0, 0
-    for amount in readings:
-        used += 1
-        if amount < 0:
-            return "ERROR", water, washed, used
-        if stage == "FILL":
-            water = min(target, water + amount)
+print("Stage: ", end="")
+print("WASH")
+print("Cycles: ", end="")
+print("2/3")
+```
+
+פלט:
+
+```text
+Stage: WASH
+Cycles: 2/3
+```
+
+---
+
+## רמה 2: משתנים ופעולות חשבון
+
+### א. פלט קריאת הקוד
+
+```text
+Water: 5
+Missing: 1
+```
+
+אחרת הוא מתאר את המצב הקודם. הערכים לאחר ההוספה הם water=5 ו-missing=1.
+
+### ב. שינוי ודיון
+
+Water: 5, Missing: 4; הנתון הישן אינו מתאים למצב החדש.
+
+### ג. פתרון אפשרי
+
+```python
+target = 10
+water = 3
+water += 2
+water += 4
+missing = target - water
+print("Water:", water)
+print("Missing:", missing)
+```
+
+פלט:
+
+```text
+Water: 9
+Missing: 1
+```
+
+---
+
+## רמה 3: קלט מהמשתמש
+
+### א. פלט קריאת הקוד
+
+```text
+Water: 7
+Missing: 3
+```
+
+10 הוא יעד, 4 מצב נוכחי, 3 אירוע. input מחזיר טקסט ולכן נדרש int.
+
+### ב. שינוי ודיון
+
+Water: 13, Missing: -3. המודל זקוק לכלל להגבלת מילוי בשלב הבא.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+12
+2
+4
+2
+```
+
+```python
+target = int(input())
+water = int(input())
+first = int(input())
+second = int(input())
+water += first
+water += second
+print("Water:", water)
+print("Missing:", target - water)
+```
+
+פלט:
+
+```text
+Water: 8
+Missing: 4
+```
+
+---
+
+## רמה 4: תנאים
+
+### א. פלט קריאת הקוד
+
+```text
+WASH
+Water: 6
+```
+
+water=9 לפני ההגבלה; == היה נכשל ולכן מצב FILL היה שגוי.
+
+### ב. שינוי ודיון
+
+2: WASH ו-6. 1: FILL ו-5.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+6
+4
+-1
+```
+
+```python
+target = int(input())
+water = int(input())
+added = int(input())
+if added < 0:
+    print("ERROR")
+else:
+    water += added
+    if water >= target:
+        water = target
+        print("WASH")
+    else:
+        print("FILL")
+print("Water:", water)
+```
+
+פלט:
+
+```text
+ERROR
+Water: 4
+```
+
+---
+
+## רמה 5: לולאות
+
+### א. פלט קריאת הקוד
+
+```text
+1 2
+2 4
+3 6
+4 7
+WASH
+```
+
+מספר הקריאות תלוי ביעד ובקצב. כאן ארבע קריאות. ההגבלה מונעת חריגה.
+
+### ב. שינוי ודיון
+
+הלולאה לא תגיע ליעד. מונה ניסיונות ותנאי ticks < limit מאפשרים לסיים עם TIMEOUT.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+6
+3
+0
+2
+3
+```
+
+```python
+target = int(input())
+limit = int(input())
+water = 0
+for step in range(limit):
+    added = int(input())
+    water += added
+    if water >= target:
+        water = target
+        break
+print("Water:", water)
+if water == target:
+    print("WASH")
+else:
+    print("TIMEOUT")
+```
+
+פלט:
+
+```text
+Water: 5
+TIMEOUT
+```
+
+---
+
+## רמה 6: רשימות בלבד
+
+### א. פלט קריאת הקוד
+
+```text
+[2, 2, 5, 6]
+Unused: 1
+```
+
+readings מתארת תוספות; used מציגה מצבים מצטברים. לאחר 4 מדידות לא קוראים את האחרונה.
+
+### ב. שינוי ודיון
+
+[2, 2, 5, 9, 10], Unused: 0; היעד לא הושג, לכן אין להתחיל שטיפה.
+
+### ג. פתרון אפשרי
+
+```python
+readings = [3, -1, 2, 5, 4]
+target = 8
+water = 0
+errors = 0
+history = []
+for added in readings:
+    if added < 0:
+        errors += 1
+    else:
+        water += added
+        if water > target:
+            water = target
+        history.append(water)
+        if water == target:
+            break
+print(history)
+print("Errors:", errors)
+```
+
+פלט:
+
+```text
+[3, 5, 8]
+Errors: 1
+```
+
+---
+
+## רמה 7: פעולות (פונקציות)
+
+### א. פלט קריאת הקוד
+
+```text
+5
+5
+6
+```
+
+הפעולה מחזירה מספר חדש; ללא השמה המשתנה בחוץ יישאר ללא שינוי.
+
+### ב. שינוי ודיון
+
+2 בכל אחת משלוש האיטרציות.
+
+### ג. פתרון אפשרי
+
+```python
+def fill(water, added, target):
+    if added < 0:
+        return water
+    water += added
+    if water > target:
+        water = target
+    return water
+
+def run_fill(readings, target):
+    water = 0
+    history = []
+    for added in readings:
+        if added >= 0:
+            water = fill(water, added, target)
+            history.append(water)
             if water == target:
-                stage = "WASH"
-        elif stage == "WASH":
-            washed += 1
-            if washed == wash_ticks:
-                stage = "DRAIN"
-        elif stage == "DRAIN":
-            water = max(0, water - amount)
-            if water == 0:
-                stage = "DONE"
                 break
-    return stage, water, washed, used
+    return history
+
+print(run_fill([2, -1, 4, 8], 6))
 ```
 
-## בדיקות אוטומטיות
+פלט:
+
+```text
+[2, 6]
+```
+
+---
+
+## רמה 8: מחלקות
+
+### א. פלט קריאת הקוד
+
+```text
+6 WASH
+4 WASH
+```
+
+רק b; לאחר ההגעה ליעד stage הוא WASH ולכן לא נכנסים לתנאי.
+
+### ב. שינוי ודיון
+
+a: 6 WASH; b: 4 WASH, בעקבות b.fill(2) האחרון. b מגיעה ליעד בשלב אחר.
+
+### ג. פתרון אפשרי
 
 ```python
-assert run_cycle([3, 4, 2, 6, 4, 4, 3, 1], 6, 2) == ("DONE", 0, 2, 6)
-assert run_cycle([2, -1, 8], 6, 2) == ("ERROR", 2, 0, 2)
-assert run_cycle([6, 0], 6, 2) == ("WASH", 6, 1, 2)
-assert run_cycle([], 6, 2) == ("FILL", 0, 0, 0)
-assert run_cycle([5], 0, 2) == ("ERROR", 0, 0, 0)
-assert run_cycle([2, 0, 2], 2, 1) == ("DONE", 0, 1, 3)
-print("All 6 acceptance tests passed")
+class Washer:
+    def __init__(self, target):
+        self.target = target
+        self.reset()
+
+    def reset(self):
+        self.water = 0
+        self.stage = "FILL"
+
+    def fill(self, added):
+        if self.stage == "FILL" and added >= 0:
+            self.water += added
+            if self.water >= self.target:
+                self.water = self.target
+                self.stage = "WASH"
+
+a = Washer(6)
+b = Washer(4)
+a.fill(5)
+b.fill(4)
+b.reset()
+b.fill(1)
+print(a.water, a.stage)
+print(b.water, b.stage)
 ```
 
-העתיקו את הבדיקות מתחת לפונקציה. אפשר לקבל פתרונות אחרים שמחזירים את אותם ערכים ושומרים על הכללים. אין צורך בממשק משתמש או בחומרה.
+פלט:
+
+```text
+5 FILL
+1 FILL
+```
+
+---
+
+## אתגר מסכם
+
+אין פתרון יחיד. בדקו שהדרישות ברורות, שהכללים נשמרים, שהפתרון נבדק במקרי קצה ושניתן לנמק את הבחירה ההנדסית. אין לדרוש נושא תכנות שלא נלמד.

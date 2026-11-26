@@ -1,89 +1,387 @@
-# פתרון והערות למורה: פאנלים סולאריים: מתי לאגור, מתי לקנות ומתי למכור?
+# פתרונות למורה: פאנלים סולאריים: איך מנהלים אנרגיה לאורך היום?
 
 [חזרה למשימת התלמיד](../06_solar_panels.md)
 
-## פלט מדויק ומעקב
+כל פתרון הוא דרך אפשרית. יש לדרוש מהתלמידים הסבר ותכנון, ולא רק התאמה לפלט. מומלץ לחשוף כל רמה רק לאחר שנלמד החומר שלה. הפתרונות במאגר ציבורי.
 
-קלט ראשון:
+## רמה 1: תצוגה: print ו-end
 
-```text
-1 -4 0 2 0
-2 8 6 2 2
-3 -4 2 2 2
-4 6 6 2 4
-5 -8 0 4 4
-```
-
-קלט שני:
+### א. פלט קריאת הקוד
 
 ```text
-1 6 6 0 2
-2 0 6 0 2
-3 -3 3 0 2
-4 -5 0 2 2
+Generated: 8 | Demand: 5
+Battery: 3
 ```
 
-### טבלאות מעקב מלאות
+המפריד end מאפשר השוואה בשורה אחת.
 
-**קלט ראשון**
+### ב. שינוי ודיון
 
-| פרק זמן | ייצור, צריכה | net | סוללה לפני | סוללה אחרי | imported מצטבר | exported מצטבר |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | 1,5 | -4 | 2 | 0 | 2 | 0 |
-| 2 | 12,4 | 8 | 0 | 6 | 2 | 2 |
-| 3 | 1,5 | -4 | 6 | 2 | 2 | 2 |
-| 4 | 9,3 | 6 | 2 | 6 | 2 | 4 |
-| 5 | 0,8 | -8 | 6 | 0 | 4 | 4 |
+Generated: 8Demand: 5; אין מפריד בין שני שדות.
 
-**קלט שני**
-
-| פרק זמן | ייצור, צריכה | net | סוללה לפני | סוללה אחרי | imported מצטבר | exported מצטבר |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1 | 8,2 | 6 | 2 | 6 | 0 | 2 |
-| 2 | 2,2 | 0 | 6 | 6 | 0 | 2 |
-| 3 | 0,3 | -3 | 6 | 3 | 0 | 2 |
-| 4 | 0,5 | -5 | 3 | 0 | 2 | 2 |
-
-**מעקב שורה-אחר-שורה לדוגמה:** פרק 2 בקלט הראשון: net=8, מקום פנוי 6, stored=6; battery מ-0 ל-6; exported מ-0 ל-2; imported לא משתנה.
-
-## תשובות והנחיות לדיון
-
-פרקי הקלט הראשון: רכישה/ייצוא (2,0),(0,2),(0,0),(0,2),(2,0). סכומי ייצור 23, צריכה 25; 23+4+2=25+4+0=29. בפרק 2 ו-4 נוצרת אנרגיה עודפת מעבר למקום בסוללה. דוגמה: ייצור 0 וצריכה 5 לפני פרק ייצור 10 וצריכה 1, סוללה ריקה. קוד ללא min בפרק 2 יוצר סוללה 8 מתוך 6 ומדווח חסר של 2 בייצוא.
-
-מומלץ לבקש מהתלמידים לנמק את הבחירה לפני הצגת הפתרון. בדקו במיוחד את ההבדל בין תוצאה מקרית נכונה לבין פתרון שעומד בכל הדרישות. בהרחבה ניתן לקבל יותר מתכנון אחד אם הכללים והבדיקות מנומקים.
-
-## פתרון אפשרי לכתיבה העצמאית
+### ג. פתרון אפשרי
 
 ```python
-def energy_day(periods, capacity, battery, reserve):
-    imported = exported = 0
-    if not 0 <= reserve <= battery <= capacity:
-        return battery, imported, exported, "ERROR"
-    for generated, demand in periods:
-        if generated < 0 or demand < 0:
-            return battery, imported, exported, "ERROR"
-        net = generated - demand
-        if net >= 0:
-            stored = min(net, capacity - battery)
-            battery += stored
-            exported += net - stored
-        else:
-            taken = min(-net, battery - reserve)
-            battery -= taken
-            imported += -net - taken
-    return battery, imported, exported, "DONE"
+print("Generated: 4", end=" | ")
+print("Demand: 6")
+print("Battery: 0", end=" | ")
+print("GRID")
 ```
 
-## בדיקות אוטומטיות
+פלט:
+
+```text
+Generated: 4 | Demand: 6
+Battery: 0 | GRID
+```
+
+---
+
+## רמה 2: משתנים ופעולות חשבון
+
+### א. פלט קריאת הקוד
+
+```text
+Net: 3
+Battery: 5
+```
+
+net הוא שינוי אנרגיה בפרק אחד; battery היא כמות מצטברת.
+
+### ב. שינוי ודיון
+
+Net: 7, Battery: 9. קיבולת 6, לכן דרוש תנאי.
+
+### ג. פתרון אפשרי
 
 ```python
-assert energy_day([(1,5),(12,4),(1,5),(9,3),(0,8)], 6, 2, 0) == (0,4,4,"DONE")
-assert energy_day([(0,4),(7,2)], 6, 3, 2) == (6,3,1,"DONE")
-assert energy_day([(2,2),(0,1)], 5, 2, 2) == (2,1,0,"DONE")
-assert energy_day([(4,0),(-1,2)], 4, 0, 0) == (4,0,0,"ERROR")
-assert energy_day([], 2, 1, 2) == (1,0,0,"ERROR")
-assert energy_day([(5,0),(0,3)], 0, 0, 0) == (0,3,5,"DONE")
-print("All 6 acceptance tests passed")
+battery = 1
+generated = 5
+demand = 3
+battery += generated - demand
+print(battery)
+generated = 4
+demand = 1
+battery += generated - demand
+print(battery)
 ```
 
-העתיקו את הבדיקות מתחת לפונקציה. אפשר לקבל פתרונות אחרים שמחזירים את אותם ערכים ושומרים על הכללים. אין צורך בממשק משתמש או בחומרה.
+פלט:
+
+```text
+3
+6
+```
+
+---
+
+## רמה 3: קלט מהמשתמש
+
+### א. פלט קריאת הקוד
+
+```text
+Net: -3
+```
+
+net שלילי מייצג חוסר בפרק; אינו מלאי.
+
+### ב. שינוי ודיון
+
+First: -4, Second: 5, Total: 1; עדיין עלול להיות חוסר בשעה הראשונה.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+1
+5
+7
+3
+```
+
+```python
+g1 = int(input())
+d1 = int(input())
+g2 = int(input())
+d2 = int(input())
+first = g1 - d1
+second = g2 - d2
+print("First:", first)
+print("Second:", second)
+print("Total:", first + second)
+```
+
+פלט:
+
+```text
+First: -4
+Second: 4
+Total: 0
+```
+
+---
+
+## רמה 4: תנאים
+
+### א. פלט קריאת הקוד
+
+```text
+6 0 3
+```
+
+סוללה לפני הגבלה 9; צריך לייצא 3 ולהחזיק רק 6.
+
+### ב. שינוי ודיון
+
+0 1 0; נדרש לקנות יחידה אחת אחרי שימוש בארבע שהיו בסוללה.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+3
+1
+6
+```
+
+```python
+battery = int(input())
+generated = int(input())
+demand = int(input())
+net = generated - demand
+imported = 0
+exported = 0
+battery += net
+if battery > 8:
+    exported = battery - 8
+    battery = 8
+elif battery < 2:
+    imported = 2 - battery
+    battery = 2
+print(battery, imported, exported)
+```
+
+פלט:
+
+```text
+2 4 0
+```
+
+---
+
+## רמה 5: לולאות
+
+### א. פלט קריאת הקוד
+
+```text
+0 2 0
+6 2 2
+2 2 2
+```
+
+הדוח מסכם את כל היום. רק net מתחלף בכל פרק.
+
+### ב. שינוי ודיון
+
+6 0 4; 2 0 4; 0 2 4. אותם ערכי net, תוצאות אגירה וייצוא שונות.
+
+### ג. פתרון אפשרי
+
+קלט לבדיקה:
+
+```text
+3
+1
+5
+12
+4
+0
+8
+```
+
+```python
+count = int(input())
+battery = 2
+imported = 0
+exported = 0
+for hour in range(count):
+    generated = int(input())
+    demand = int(input())
+    battery += generated - demand
+    if battery > 6:
+        exported += battery - 6
+        battery = 6
+    elif battery < 0:
+        imported += -battery
+        battery = 0
+print(battery, imported, exported)
+```
+
+פלט:
+
+```text
+0 4 2
+```
+
+---
+
+## רמה 6: רשימות בלבד
+
+### א. פלט קריאת הקוד
+
+```text
+[0, 6, 2, 6, 0]
+```
+
+היסטוריית הסוללה לבדה לא מראה מה קנינו ומה ייצאנו.
+
+### ב. שינוי ודיון
+
+עלול להיות IndexError. אם len שונה, דחו את הקלט או הגדירו כלל מפורש לגבי פרקים חסרים.
+
+### ג. פתרון אפשרי
+
+```python
+generated = [1, 12, 1, 9, 0]
+demand = [5, 4, 5, 3, 8]
+battery = 2
+history = []
+buy = []
+sell = []
+for i in range(len(generated)):
+    battery += generated[i] - demand[i]
+    imported = 0
+    exported = 0
+    if battery > 6:
+        exported = battery - 6
+        battery = 6
+    elif battery < 0:
+        imported = -battery
+        battery = 0
+    history.append(battery)
+    buy.append(imported)
+    sell.append(exported)
+print(history)
+print(buy)
+print(sell)
+```
+
+פלט:
+
+```text
+[0, 6, 2, 6, 0]
+[2, 0, 0, 0, 2]
+[0, 2, 0, 2, 0]
+```
+
+---
+
+## רמה 7: פעולות (פונקציות)
+
+### א. פלט קריאת הקוד
+
+```text
+[0, 3, 0]
+[6, 0, 2]
+```
+
+אינדקס 0 הוא סוללה; אינדקס 1 מתאר רכישה בפרק הקודם.
+
+### ב. שינוי ודיון
+
+[0,3,0] ואז [4,0,4].
+
+### ג. פתרון אפשרי
+
+```python
+def balance(battery, net, capacity):
+    imported = 0
+    exported = 0
+    battery += net
+    if battery > capacity:
+        exported = battery - capacity
+        battery = capacity
+    elif battery < 0:
+        imported = -battery
+        battery = 0
+    return [battery, imported, exported]
+
+def day(nets, capacity, battery):
+    total_buy = 0
+    total_sell = 0
+    for net in nets:
+        state = balance(battery, net, capacity)
+        battery = state[0]
+        total_buy += state[1]
+        total_sell += state[2]
+    return [battery, total_buy, total_sell]
+
+print(day([-4, 8, -4, 6, -8], 6, 2))
+```
+
+פלט:
+
+```text
+[0, 4, 4]
+```
+
+---
+
+## רמה 8: מחלקות
+
+### א. פלט קריאת הקוד
+
+```text
+3 0 4
+0 4 0
+```
+
+כל בניין צריך דוח עצמאי; רכישה של b לא שייכת ל-a.
+
+### ב. שינוי ודיון
+
+a מסיימת 3 0 0; b נותרת 0 4 0.
+
+### ג. פתרון אפשרי
+
+```python
+class SolarSystem:
+    def __init__(self, capacity, battery, reserve):
+        self.capacity = capacity
+        self.battery = battery
+        self.reserve = reserve
+        self.buy = 0
+        self.sell = 0
+
+    def period(self, net):
+        self.battery += net
+        if self.battery > self.capacity:
+            self.sell += self.battery - self.capacity
+            self.battery = self.capacity
+        elif self.battery < self.reserve:
+            self.buy += self.reserve - self.battery
+            self.battery = self.reserve
+
+a = SolarSystem(6, 3, 2)
+b = SolarSystem(4, 1, 1)
+a.period(-4)
+a.period(5)
+b.period(-3)
+print(a.battery, a.buy, a.sell)
+print(b.battery, b.buy, b.sell)
+```
+
+פלט:
+
+```text
+6 3 1
+1 3 0
+```
+
+---
+
+## אתגר מסכם
+
+אין פתרון יחיד. בדקו שהדרישות ברורות, שהכללים נשמרים, שהפתרון נבדק במקרי קצה ושניתן לנמק את הבחירה ההנדסית. אין לדרוש נושא תכנות שלא נלמד.
