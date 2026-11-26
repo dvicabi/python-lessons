@@ -1,0 +1,12 @@
+event_id = 21
+used = [20]
+guests = 40
+need = 5
+budget = 180
+caps = [30, 50, 60]
+available = [True, True, True]
+built_in = [3, 2, 4]
+prices = [60, 90, 100]
+setup_staff = [1, 1, 0]
+equipment = 4
+staff = 4

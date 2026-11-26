@@ -1,0 +1,15 @@
+members = [101, 102]
+active = [True, True]
+levels = [1, 2]
+credits = [150, 90]
+discounted = [True, False]
+busy = [[False, True, False, False], [False, False, False, False]]
+person = 101
+registration = 61
+used = [60]
+activity = 1
+course_activity = [1, 1, 1, 2]
+course_level = [1, 1, 2, 1]
+course_slots = [[0, 1], [2, 3], [0, 2], [1]]
+seats = [2, 3, 1, 4]
+prices = [60, 80, 70, 30]

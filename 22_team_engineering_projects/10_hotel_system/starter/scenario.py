@@ -1,0 +1,10 @@
+guests = 3
+start = 1
+nights = 3
+budget = 260
+booking = 21
+used = [20]
+caps = [2, 4, 3]
+rates = [60, 90, 80]
+calendar = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 20]]
+paid = 260

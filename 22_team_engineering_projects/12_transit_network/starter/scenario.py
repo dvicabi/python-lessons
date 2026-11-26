@@ -1,0 +1,16 @@
+stations = [1, 2, 3, 4]
+origin = 1
+destination = 3
+group_size = 2
+earliest = 0
+latest = 30
+budget = 18
+ticket = 31
+used = [30]
+from_station = [1, 2, 1, 1, 4]
+to_station = [2, 3, 3, 4, 3]
+departs = [0, 12, 5, 2, 13]
+arrives = [10, 20, 25, 11, 19]
+seats = [3, 3, 4, 2, 2]
+fares = [3, 4, 8, 4, 5]
+paid = 18

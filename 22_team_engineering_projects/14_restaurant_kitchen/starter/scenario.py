@@ -1,0 +1,12 @@
+order_id = 51
+used = [50]
+mode = 1
+cart = [[0, 1], [1, 2], [0, 1]]
+special = [True, True, False]
+recipes = [[2, 1, 0], [0, 1, 2], [1, 0, 1]]
+stock = [8, 5, 8]
+stations = [0, 1, 0]
+minutes = [3, 2, 4]
+station_free = [8, 6]
+prices = [12, 8, 15]
+paid = 40

@@ -1,0 +1,13 @@
+members = [101, 102]
+active = [True, True]
+limits = [2, 1]
+reader = 101
+loan_id = 51
+used_ids = [50]
+book_ids = [10, 20]
+book = 10
+copy_books = [10, 10, 10, 20]
+holders = [0, 0, 0, 0]
+reserved = [102, 0, 101, 0]
+distances = [1, 5, 3, 2]
+day = 10

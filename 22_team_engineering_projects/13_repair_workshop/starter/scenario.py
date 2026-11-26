@@ -1,0 +1,16 @@
+job_ids = [1, 2]
+job = 1
+ticket = 41
+used = [40]
+budget = 80
+recipes = [[1, 2, 0], [0, 1, 2]]
+skills = [1, 2]
+minutes_by_job = [30, 40]
+stock = [2, 4, 3]
+part_prices = [20, 5, 10]
+tech_skill = [1, 2, 1]
+tech_time = [40, 60, 60]
+tech_rate = [2, 1, 1]
+bay_type = [1, 1, 2]
+bay_time = [40, 60, 60]
+bay_fee = [10, 15, 5]
