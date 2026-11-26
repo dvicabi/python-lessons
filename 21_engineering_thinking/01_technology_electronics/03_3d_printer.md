@@ -279,7 +279,7 @@ print(stock)
 
 חוזרים על אותה בדיקה לכל שכבה ועוצרים בלי להפחית חומר כשאין מספיק.
 
-מותר להשתמש ב-for, while, range, break לפי הצורך.
+מותר להשתמש ב-for, while ו-range. עצירה מתבצעת באמצעות תנאי הלולאה ומשתנה מצב.
 
 אין להשתמש ברשימות או בפעולות שאתם מגדירים.
 
@@ -288,14 +288,19 @@ print(stock)
 ```python
 stock = 13
 printed = 0
-for layer in range(5):
+running = True
+index = 0
+while index < 5 and running:
+    layer = index
+    index += 1
     cost = 4
     if stock - cost < 2:
         print("PAUSED")
-        break
-    stock -= cost
-    printed += 1
-    print(stock)
+        running = False
+    else:
+        stock -= cost
+        printed += 1
+        print(stock)
 print("Layers:", printed)
 ```
 
@@ -352,12 +357,17 @@ print("Layers:", printed)
 layers = [3, 5, 4, 2]
 stock = 13
 history = []
-for thickness in layers:
+running = True
+index = 0
+while index < len(layers) and running:
+    thickness = layers[index]
+    index += 1
     cost = thickness + 1
     if stock - cost < 2:
-        break
-    stock -= cost
-    history.append(stock)
+        running = False
+    else:
+        stock -= cost
+        history.append(stock)
 print(history)
 print("Next layer:", len(history) + 1)
 ```

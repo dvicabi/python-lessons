@@ -326,12 +326,12 @@ for i in range(count):
     distance = int(input())
     if price > budget:
         skipped += 1
-        continue
-    if best_id == -1 or time < best_time or (time == best_time and price < best_price) or (time == best_time and price == best_price and distance < best_distance):
-        best_id = i + 1
-        best_time = time
-        best_price = price
-        best_distance = distance
+    else:
+        if best_id == -1 or time < best_time or (time == best_time and price < best_price) or (time == best_time and price == best_price and distance < best_distance):
+            best_id = i + 1
+            best_time = time
+            best_price = price
+            best_distance = distance
 if best_id == -1:
     print("NONE")
 else:
@@ -443,18 +443,16 @@ def choose(times, prices, budget, mode):
         return -1
     best = -1
     for i in range(len(times)):
-        if prices[i] > budget:
-            continue
-        if best == -1:
-            best = i
-        elif mode == 1:
-            if times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
+        if not (prices[i] > budget):
+            if best == -1:
                 best = i
-        else:
-            if prices[i] < prices[best] or (prices[i] == prices[best] and times[i] < times[best]):
-                best = i
+            elif mode == 1:
+                if times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
+                    best = i
+            else:
+                if prices[i] < prices[best] or (prices[i] == prices[best] and times[i] < times[best]):
+                    best = i
     return best
-
 times = [25, 23, 24]
 prices = [4, 6, 2]
 print(choose(times, prices, 6, 1))
@@ -515,24 +513,20 @@ class Navigator:
         self.selected = -1
         self.history = []
         self.changes = 0
-
     def choose(self, times, prices):
         best = -1
         for i in range(len(times)):
-            if prices[i] > self.budget:
-                continue
-            if best == -1 or times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
-                best = i
+            if not (prices[i] > self.budget):
+                if best == -1 or times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
+                    best = i
         if len(self.history) > 0 and self.selected != best:
             self.changes += 1
         self.selected = best
         self.history.append(best)
         return best
-
     def set_budget(self, amount):
         if amount >= 0:
             self.budget = amount
-
 a = Navigator(5)
 b = Navigator(8)
 times = [25, 23, 24]

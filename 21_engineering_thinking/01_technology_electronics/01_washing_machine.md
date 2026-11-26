@@ -288,7 +288,7 @@ print("Water:", water)
 
 כל קריאה בניסוי הראשון מוסיפה 2.
 
-מותר להשתמש ב-for, while, range, break לפי הצורך.
+מותר להשתמש ב-for, while ו-range. עצירה מתבצעת באמצעות תנאי הלולאה ומשתנה מצב.
 
 אין להשתמש ברשימות או בפעולות שאתם מגדירים.
 
@@ -364,13 +364,17 @@ readings = [2, 0, 3, 4, 1]
 target = 6
 water = 0
 used = []
-for added in readings:
+running = True
+index = 0
+while index < len(readings) and running:
+    added = readings[index]
+    index += 1
     water += added
     if water > target:
         water = target
     used.append(water)
     if water == target:
-        break
+        running = False
 print(used)
 print("Unused:", len(readings) - len(used))
 ```

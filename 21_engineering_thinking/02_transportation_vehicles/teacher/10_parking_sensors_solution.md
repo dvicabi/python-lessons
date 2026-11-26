@@ -314,19 +314,19 @@ for step in range(count):
         errors += 1
         clear_count = 0
         print("ERROR")
-        continue
-    if d <= 20:
-        locked = True
-        clear_count = 0
-    elif d > 50:
-        clear_count += 1
-        if clear_count >= 2:
-            locked = False
     else:
-        clear_count = 0
-    if locked:
-        stops += 1
-    print(locked, clear_count)
+        if d <= 20:
+            locked = True
+            clear_count = 0
+        elif d > 50:
+            clear_count += 1
+            if clear_count >= 2:
+                locked = False
+        else:
+            clear_count = 0
+        if locked:
+            stops += 1
+        print(locked, clear_count)
 print(stops, errors)
 ```
 
@@ -382,13 +382,12 @@ stop_indexes = []
 closest = 201
 for i in range(len(readings)):
     d = readings[i]
-    if d < 0 or d > 200:
-        continue
-    valid.append(d)
-    if d < closest:
-        closest = d
-    if d <= 20:
-        stop_indexes.append(i)
+    if not (d < 0 or d > 200):
+        valid.append(d)
+        if d < closest:
+            closest = d
+        if d <= 20:
+            stop_indexes.append(i)
 print(valid)
 print(stop_indexes)
 if len(valid) == 0:

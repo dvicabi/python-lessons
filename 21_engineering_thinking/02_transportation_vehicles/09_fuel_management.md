@@ -410,7 +410,7 @@ print("Used:", used)
 
 מסלול נקטע ברגע שאין די דלק למקטע הבא.
 
-מותר for, while, range, break ו-continue.
+מותר להשתמש ב-for, while ו-range. משתמשים בתנאים ובמשתני מצב כדי לסנן נתונים ולעצור לולאות.
 
 אין רשימות או פעולות שהגדרתם.
 
@@ -431,18 +431,23 @@ fuel = 30
 reserve = 3
 used = 0
 done = 0
-for step in range(5):
+running = True
+index = 0
+while index < 5 and running:
+    step = index
+    index += 1
     cost = int(input())
     if cost <= 0:
         print("INVALID", step + 1)
-        continue
-    if fuel - cost < reserve:
-        print("STOP", step + 1)
-        break
-    fuel -= cost
-    used += cost
-    done += 1
-    print(step + 1, fuel, used)
+    else:
+        if fuel - cost < reserve:
+            print("STOP", step + 1)
+            running = False
+        else:
+            fuel -= cost
+            used += cost
+            done += 1
+            print(step + 1, fuel, used)
 print("Done:", done)
 print("Left:", fuel)
 ```
@@ -475,7 +480,7 @@ print("Left:", fuel)
 
 ### 5.ג ביקורת וחשיבה הנדסית
 
-1. מה ההבדל בין continue ל-break כאשר מתקבל נתון שגוי?
+1. מה ההבדל בין דילוג על מדידה שגויה באמצעות תנאי לבין שינוי running ל-False?
 
 2. למה done אינו בהכרח step + 1?
 
@@ -536,15 +541,20 @@ rates = [2, 3, 1, 2, 4]
 fuel = 30
 used = 0
 history = []
-for i in range(len(distances)):
+running = True
+index = 0
+while index < len(distances) and running:
+    i = index
+    index += 1
     cost = distances[i] * rates[i]
     if fuel - cost < 3:
         print("STOP", i + 1)
-        break
-    fuel -= cost
-    used += cost
-    history.append(fuel)
-    print(i + 1, cost, fuel)
+        running = False
+    else:
+        fuel -= cost
+        used += cost
+        history.append(fuel)
+        print(i + 1, cost, fuel)
 print(history)
 print("Used:", used)
 print("Unread:", len(distances) - len(history))
@@ -609,20 +619,22 @@ print("Unread:", len(distances) - len(history))
 ```python
 def segment_cost(distance, rate):
     return distance * rate
-
 def can_drive(fuel, cost, reserve):
     return cost > 0 and fuel - cost >= reserve
-
 def route(distances, rates, fuel):
     history = []
-    for i in range(len(distances)):
+    running = True
+    index = 0
+    while index < len(distances) and running:
+        i = index
+        index += 1
         cost = segment_cost(distances[i], rates[i])
         if not can_drive(fuel, cost, 3):
-            break
-        fuel -= cost
-        history.append(fuel)
+            running = False
+        else:
+            fuel -= cost
+            history.append(fuel)
     return history
-
 a = route([3, 5, 2, 4], [2, 3, 1, 2], 30)
 b = route([3, 5, 2, 4], [2, 3, 1, 2], 40)
 print(a)

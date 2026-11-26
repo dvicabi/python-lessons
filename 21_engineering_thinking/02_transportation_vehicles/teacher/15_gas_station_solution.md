@@ -329,17 +329,17 @@ for i in range(count):
     paid = int(input())
     if quantity <= 0 or paid < 0:
         print("ERROR")
-        continue
-    cost = quantity * rate
-    payments += paid
-    if quantity > stock or paid < cost:
-        refunds += paid
-        print("REJECTED")
-        continue
-    stock -= quantity
-    revenue += cost
-    refunds += paid - cost
-    print("SERVED")
+    else:
+        cost = quantity * rate
+        payments += paid
+        if quantity > stock or paid < cost:
+            refunds += paid
+            print("REJECTED")
+        else:
+            stock -= quantity
+            revenue += cost
+            refunds += paid - cost
+            print("SERVED")
 print(revenue, refunds, payments)
 print("Check:", payments - refunds)
 print("Stock:", stock)
@@ -402,17 +402,17 @@ for i in range(len(kinds)):
     if kinds[i] < 1 or kinds[i] > 2:
         statuses.append("ERROR")
         receipts.append(payments[i])
-        continue
-    index = kinds[i] - 1
-    cost = quantities[i] * rates[index]
-    if quantities[i] > stock[index] or payments[i] < cost:
-        statuses.append("REJECTED")
-        receipts.append(payments[i])
-        continue
-    stock[index] -= quantities[i]
-    income[index] += cost
-    statuses.append("SERVED")
-    receipts.append(payments[i] - cost)
+    else:
+        index = kinds[i] - 1
+        cost = quantities[i] * rates[index]
+        if quantities[i] > stock[index] or payments[i] < cost:
+            statuses.append("REJECTED")
+            receipts.append(payments[i])
+        else:
+            stock[index] -= quantities[i]
+            income[index] += cost
+            statuses.append("SERVED")
+            receipts.append(payments[i] - cost)
 print(stock)
 print(statuses)
 print(income)

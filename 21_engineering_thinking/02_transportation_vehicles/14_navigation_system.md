@@ -413,7 +413,7 @@ print("Selected:", chosen)
 
 נבחר את המסלול הטוב ביותר מתוך מספר מועמדים, ללא צורך לשמור את כולם.
 
-מותר for, while, range, break ו-continue.
+מותר להשתמש ב-for, while ו-range. משתמשים בתנאים ובמשתני מצב כדי לסנן נתונים ולעצור לולאות.
 
 אין רשימות או פעולות שהגדרתם.
 
@@ -444,14 +444,14 @@ for i in range(5):
     price = int(input())
     if price > budget:
         print("SKIP", i + 1)
-        continue
-    if best_id == -1 or time < best_time or (time == best_time and price < best_price):
-        best_id = i + 1
-        best_time = time
-        best_price = price
-        print("UPDATE", best_id, best_time, best_price)
     else:
-        print("KEEP", best_id)
+        if best_id == -1 or time < best_time or (time == best_time and price < best_price):
+            best_id = i + 1
+            best_time = time
+            best_price = price
+            print("UPDATE", best_id, best_time, best_price)
+        else:
+            print("KEEP", best_id)
 print("Best:", best_id, best_time, best_price)
 ```
 
@@ -559,11 +559,10 @@ eligible = []
 best = -1
 for i in range(len(bases)):
     times.append(bases[i] + delays[i])
-    if prices[i] > budget:
-        continue
-    eligible.append(i)
-    if best == -1 or times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
-        best = i
+    if not (prices[i] > budget):
+        eligible.append(i)
+        if best == -1 or times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
+            best = i
 print(times)
 print(eligible)
 print("Best index:", best)
@@ -635,16 +634,13 @@ def total_times(bases, delays):
     for i in range(len(bases)):
         times.append(bases[i] + delays[i])
     return times
-
 def choose(times, prices, budget):
     best = -1
     for i in range(len(times)):
-        if prices[i] > budget:
-            continue
-        if best == -1 or times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
-            best = i
+        if not (prices[i] > budget):
+            if best == -1 or times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
+                best = i
     return best
-
 times = total_times([18, 20, 24], [7, 3, 0])
 prices = [4, 6, 0]
 print(times)
@@ -723,18 +719,15 @@ class Navigator:
         self.budget = budget
         self.selected = -1
         self.history = []
-
     def choose(self, times, prices):
         best = -1
         for i in range(len(times)):
-            if prices[i] > self.budget:
-                continue
-            if best == -1 or times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
-                best = i
+            if not (prices[i] > self.budget):
+                if best == -1 or times[i] < times[best] or (times[i] == times[best] and prices[i] < prices[best]):
+                    best = i
         self.selected = best
         self.history.append(best)
         return best
-
 a = Navigator(5)
 b = Navigator(8)
 times = [25, 23, 24]

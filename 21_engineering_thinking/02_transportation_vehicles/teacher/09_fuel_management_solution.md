@@ -297,9 +297,9 @@ Left: 3
 
 ### ג. תשובות והערות לדיון
 
-continue מדלג על קלט פגום;
+ענף הנתון השגוי מונע את ביצוע העדכונים באותה איטרציה;
 
-break מפסיק מסלול.
+running=False מסיים את המסלול משום שתנאי הלולאה כבר אינו מתקיים.
 
 done סופר הצלחות בלבד.
 
@@ -327,20 +327,26 @@ fuel = int(input())
 count = int(input())
 done = 0
 distance = 0
-for step in range(count):
+running = True
+index = 0
+while index < count and running:
+    step = index
+    index += 1
     length = int(input())
     rate = int(input())
     if length <= 0 or rate <= 0:
         print("ERROR")
-        break
-    cost = length * rate
-    if fuel - cost < 3:
-        print("STOP")
-        break
-    fuel -= cost
-    distance += length
-    done += 1
-    print(step + 1, fuel)
+        running = False
+    else:
+        cost = length * rate
+        if fuel - cost < 3:
+            print("STOP")
+            running = False
+        else:
+            fuel -= cost
+            distance += length
+            done += 1
+            print(step + 1, fuel)
 print(done, distance, fuel)
 ```
 
@@ -399,13 +405,18 @@ rates = [2, 3, 1, 2, 4]
 fuel = 40
 completed = []
 costs = []
-for i in range(len(distances)):
+running = True
+index = 0
+while index < len(distances) and running:
+    i = index
+    index += 1
     cost = distances[i] * rates[i]
     if fuel - cost < 3:
-        break
-    fuel -= cost
-    completed.append(i + 1)
-    costs.append(cost)
+        running = False
+    else:
+        fuel -= cost
+        completed.append(i + 1)
+        costs.append(cost)
 print(completed)
 print(costs)
 print("Left:", fuel)
@@ -454,22 +465,24 @@ False
 ```python
 def segment_cost(distance, rate):
     return distance * rate
-
 def can_drive(fuel, cost, reserve):
     return cost > 0 and fuel - cost >= reserve
-
 def route(distances, rates, fuel, reserve):
     history = []
     if len(distances) != len(rates) or fuel < reserve:
         return history
-    for i in range(len(distances)):
+    running = True
+    index = 0
+    while index < len(distances) and running:
+        i = index
+        index += 1
         cost = segment_cost(distances[i], rates[i])
         if not can_drive(fuel, cost, reserve):
-            break
-        fuel -= cost
-        history.append(fuel)
+            running = False
+        else:
+            fuel -= cost
+            history.append(fuel)
     return history
-
 print(route([3, 5, 2, 4], [2, 3, 1, 2], 30, 3))
 print(route([3, 5, 2, 4], [2, 3, 1, 2], 30, 8))
 print(route([3, 5], [2], 30, 3))

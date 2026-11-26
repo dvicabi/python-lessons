@@ -402,7 +402,7 @@ print("Alerts:", alerts)
 
 נדרשות שתי מדידות CLEAR רצופות.
 
-מותר for, while, range, break ו-continue.
+מותר להשתמש ב-for, while ו-range. משתמשים בתנאים ובמשתני מצב כדי לסנן נתונים ולעצור לולאות.
 
 אין רשימות או פעולות שהגדרתם.
 
@@ -428,17 +428,17 @@ for step in range(7):
     if distance < 0 or distance > 200:
         clear_count = 0
         print("ERROR", locked)
-        continue
-    if distance <= 20:
-        locked = True
-        clear_count = 0
-    elif distance > 50:
-        clear_count += 1
-        if clear_count >= 2:
-            locked = False
     else:
-        clear_count = 0
-    print(step + 1, locked, clear_count)
+        if distance <= 20:
+            locked = True
+            clear_count = 0
+        elif distance > 50:
+            clear_count += 1
+            if clear_count >= 2:
+                locked = False
+        else:
+            clear_count = 0
+        print(step + 1, locked, clear_count)
 print("Final:", locked)
 ```
 
@@ -536,15 +536,15 @@ for distance in readings:
     if distance < 0 or distance > 200:
         errors += 1
         history.append("ERROR")
-        continue
-    if distance < closest:
-        closest = distance
-    if distance <= 20:
-        history.append("STOP")
-    elif distance <= 50:
-        history.append("NEAR")
     else:
-        history.append("CLEAR")
+        if distance < closest:
+            closest = distance
+        if distance <= 20:
+            history.append("STOP")
+        elif distance <= 50:
+            history.append("NEAR")
+        else:
+            history.append("CLEAR")
 print(history)
 print("Closest:", closest)
 print("Errors:", errors)

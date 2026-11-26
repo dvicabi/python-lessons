@@ -14,7 +14,7 @@ def code_blocks(path):
 
 def check_level(code, level, label):
     tree = ast.parse(code)
-    prohibited = (ast.Dict, ast.Set, ast.Tuple, ast.DictComp, ast.SetComp)
+    prohibited = (ast.Dict, ast.Set, ast.Tuple, ast.DictComp, ast.SetComp, ast.Break, ast.Continue)
     if level < 8:
         prohibited += (ast.ClassDef,)
     if level < 7:
@@ -22,7 +22,7 @@ def check_level(code, level, label):
     if level < 6:
         prohibited += (ast.List, ast.ListComp, ast.Subscript)
     if level < 5:
-        prohibited += (ast.For, ast.While, ast.Break, ast.Continue, ast.AsyncFor)
+        prohibited += (ast.For, ast.While, ast.AsyncFor)
     if level < 4:
         prohibited += (ast.If, ast.IfExp, ast.BoolOp, ast.Compare)
     allowed = {"print"}

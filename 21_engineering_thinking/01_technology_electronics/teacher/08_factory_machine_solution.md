@@ -246,16 +246,18 @@ STOPPED
 streak = 0
 count = 0
 reason = ""
-while streak < 3:
+running = True
+while (streak < 3) and running:
     reading = int(input())
     count += 1
     if reading >= 90:
         reason = "CRITICAL"
-        break
-    if reading >= 75:
-        streak += 1
+        running = False
     else:
-        streak = 0
+        if reading >= 75:
+            streak += 1
+        else:
+            streak = 0
 if reason == "":
     reason = "STREAK"
 print(reason, count)
@@ -294,21 +296,26 @@ Read: 5
 readings = [70, 75, 80, 73, 78, 91, 60]
 history = []
 streak = 0
-for value in readings:
+running = True
+index = 0
+while index < len(readings) and running:
+    value = readings[index]
+    index += 1
     if value >= 90:
         history.append("CRITICAL")
-        break
-    if value >= 75:
-        streak += 1
+        running = False
     else:
-        streak = 0
-    if streak >= 3:
-        history.append("STOPPED")
-        break
-    elif streak > 0:
-        history.append("WARNING")
-    else:
-        history.append("NORMAL")
+        if value >= 75:
+            streak += 1
+        else:
+            streak = 0
+        if streak >= 3:
+            history.append("STOPPED")
+            running = False
+        elif streak > 0:
+            history.append("WARNING")
+        else:
+            history.append("NORMAL")
 print(history)
 print(len(history))
 ```
@@ -354,25 +361,29 @@ def classify(value):
     if value >= 75:
         return "WARNING"
     return "NORMAL"
-
 def monitor(readings):
     history = []
     streak = 0
-    for value in readings:
+    running = True
+    index = 0
+    while index < len(readings) and running:
+        value = readings[index]
+        index += 1
         status = classify(value)
         if status == "INVALID" or status == "CRITICAL":
             history.append(status)
-            break
-        if status == "WARNING":
-            streak += 1
-            if streak >= 3:
-                history.append("STOPPED")
-                break
+            running = False
         else:
-            streak = 0
-        history.append(status)
+            if status == "WARNING":
+                streak += 1
+                if streak >= 3:
+                    history.append("STOPPED")
+                    running = False
+            else:
+                streak = 0
+            if running:
+                history.append(status)
     return history
-
 print(monitor([75, 80, 60, 75, 76, 77, 90]))
 ```
 

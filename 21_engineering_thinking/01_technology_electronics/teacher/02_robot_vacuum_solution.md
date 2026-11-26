@@ -224,13 +224,15 @@ LOW
 ```python
 position = 0
 battery = 6
-while battery >= 2:
+running = True
+while (battery >= 2) and running:
     candidate = position + 1
     if candidate == 3:
-        break
-    position = candidate
-    battery -= 2
-    print(position, battery)
+        running = False
+    else:
+        position = candidate
+        battery -= 2
+        print(position, battery)
 print("STOP")
 ```
 
@@ -270,17 +272,22 @@ position = 0
 battery = 10
 visited = [0]
 commands = [1, 1, 1, -1, -1, -1]
-for direction in commands:
+running = True
+index = 0
+while index < len(commands) and running:
+    direction = commands[index]
+    index += 1
     if battery < 2:
-        break
-    candidate = position + direction
-    if candidate < 0 or candidate > 5 or candidate == 3:
-        battery -= 1
+        running = False
     else:
-        position = candidate
-        battery -= 2
-        if position not in visited:
-            visited.append(position)
+        candidate = position + direction
+        if candidate < 0 or candidate > 5 or candidate == 3:
+            battery -= 1
+        else:
+            position = candidate
+            battery -= 2
+            if position not in visited:
+                visited.append(position)
 print(visited)
 print(position, battery)
 ```
@@ -321,22 +328,25 @@ position הופך 3 אף שזה מכשול.
 ```python
 def allowed(candidate):
     return 0 <= candidate and candidate <= 5 and candidate != 3
-
 def clean(commands, battery):
     position = 0
     visited = [0]
-    for direction in commands:
+    running = True
+    index = 0
+    while index < len(commands) and running:
+        direction = commands[index]
+        index += 1
         if battery < 2:
-            break
-        if allowed(position + direction):
-            position += direction
-            battery -= 2
-            if position not in visited:
-                visited.append(position)
+            running = False
         else:
-            battery -= 1
+            if allowed(position + direction):
+                position += direction
+                battery -= 2
+                if position not in visited:
+                    visited.append(position)
+            else:
+                battery -= 1
     return visited
-
 print(clean([1, 1, 1, -1, -1], 7))
 ```
 

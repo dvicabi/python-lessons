@@ -268,16 +268,22 @@ layers = [2, 0, 4, 3]
 stock = 12
 history = []
 status = "DONE"
-for thickness in layers:
+running = True
+index = 0
+while index < len(layers) and running:
+    thickness = layers[index]
+    index += 1
     if thickness <= 0:
         status = "ERROR"
-        break
-    cost = thickness + 1
-    if stock - cost < 2:
-        status = "PAUSED"
-        break
-    stock -= cost
-    history.append(stock)
+        running = False
+    else:
+        cost = thickness + 1
+        if stock - cost < 2:
+            status = "PAUSED"
+            running = False
+        else:
+            stock -= cost
+            history.append(stock)
 print(history)
 print(status, len(history))
 ```
@@ -318,16 +324,19 @@ YES 6, NO 6, YES 4.
 ```python
 def can_print(stock, thickness, reserve):
     return thickness > 0 and stock - thickness - 1 >= reserve
-
 def plan(layers, stock, reserve):
     history = []
-    for thickness in layers:
+    running = True
+    index = 0
+    while index < len(layers) and running:
+        thickness = layers[index]
+        index += 1
         if not can_print(stock, thickness, reserve):
-            break
-        stock -= thickness + 1
-        history.append(stock)
+            running = False
+        else:
+            stock -= thickness + 1
+            history.append(stock)
     return history
-
 print(plan([1, 4, 2], 10, 2))
 ```
 

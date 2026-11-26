@@ -401,7 +401,7 @@ print("Unused recovery:", lost)
 
 מחשבים סדרה של מקטעים, מפסיקים לפני מקטע לא אפשרי ומבדילים צריכה מהחזרה בפועל.
 
-מותר for, while, range, break ו-continue.
+מותר להשתמש ב-for, while ו-range. משתמשים בתנאים ובמשתני מצב כדי לסנן נתונים ולעצור לולאות.
 
 אין רשימות או פעולות שהגדרתם.
 
@@ -427,28 +427,35 @@ battery = 20
 used = 0
 gained = 0
 distance = 0
-for i in range(5):
+running = True
+index = 0
+while index < 5 and running:
+    i = index
+    index += 1
     kind = int(input())
     length = int(input())
     if battery < 2:
-        break
-    if kind == 3:
-        added = length
-        if added > 30 - battery:
-            added = 30 - battery
-        gained += added
-        battery += added
+        running = False
     else:
-        cost = length
-        if kind == 2:
-            cost *= 2
-        if battery - cost < 2:
-            print("STOP", i + 1)
-            break
-        battery -= cost
-        used += cost
-    distance += length
-    print(i + 1, battery, distance)
+        if kind == 3:
+            added = length
+            if added > 30 - battery:
+                added = 30 - battery
+            gained += added
+            battery += added
+        else:
+            cost = length
+            if kind == 2:
+                cost *= 2
+            if battery - cost < 2:
+                print("STOP", i + 1)
+                running = False
+            else:
+                battery -= cost
+                used += cost
+        if running:
+            distance += length
+            print(i + 1, battery, distance)
 print(used, gained, battery)
 ```
 
@@ -552,7 +559,11 @@ lengths = [4, 5, 6, 6, 2]
 battery = 20
 history = []
 completed = []
-for i in range(len(kinds)):
+running = True
+index = 0
+while index < len(kinds) and running:
+    i = index
+    index += 1
     length = lengths[i]
     if kinds[i] == 3:
         battery += length
@@ -563,10 +574,12 @@ for i in range(len(kinds)):
         if kinds[i] == 2:
             cost *= 2
         if battery - cost < 2:
-            break
-        battery -= cost
-    completed.append(i + 1)
-    history.append(battery)
+            running = False
+        else:
+            battery -= cost
+    if running:
+        completed.append(i + 1)
+        history.append(battery)
 print(completed)
 print(history)
 print("Remaining:", len(kinds) - len(completed))
@@ -647,17 +660,20 @@ def step(battery, kind, length):
     if battery - cost < 2:
         return -1
     return battery - cost
-
 def route(battery, kinds, lengths):
     history = []
-    for i in range(len(kinds)):
+    running = True
+    index = 0
+    while index < len(kinds) and running:
+        i = index
+        index += 1
         next_battery = step(battery, kinds[i], lengths[i])
         if next_battery == -1:
-            break
-        battery = next_battery
-        history.append(battery)
+            running = False
+        else:
+            battery = next_battery
+            history.append(battery)
     return history
-
 print(route(22, [1, 2, 3, 2], [4, 5, 6, 6]))
 print(route(25, [3, 2, 1], [10, 8, 6]))
 ```

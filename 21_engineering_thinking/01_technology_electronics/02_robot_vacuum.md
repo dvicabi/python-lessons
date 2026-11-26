@@ -293,7 +293,7 @@ print(position, battery)
 
 עצירה לפי סוללה עדיפה על תנועה שלא ניתן להשלים.
 
-מותר להשתמש ב-for, while, range, break לפי הצורך.
+מותר להשתמש ב-for, while ו-range. עצירה מתבצעת באמצעות תנאי הלולאה ומשתנה מצב.
 
 אין להשתמש ברשימות או בפעולות שאתם מגדירים.
 
@@ -302,17 +302,22 @@ print(position, battery)
 ```python
 position = 0
 battery = 7
-for step in range(5):
+running = True
+index = 0
+while index < 5 and running:
+    step = index
+    index += 1
     if battery < 2:
         print("LOW")
-        break
-    candidate = position + 1
-    if candidate == 3:
-        battery -= 1
+        running = False
     else:
-        position = candidate
-        battery -= 2
-    print(position, battery)
+        candidate = position + 1
+        if candidate == 3:
+            battery -= 1
+        else:
+            position = candidate
+            battery -= 2
+        print(position, battery)
 ```
 
 1. הכינו טבלת מעקב בעצמכם וכתבו את הפלט המדויק.
@@ -364,13 +369,18 @@ position = 0
 battery = 8
 visited = [0]
 commands = [1, 1, -1, 1]
-for direction in commands:
+running = True
+index = 0
+while index < len(commands) and running:
+    direction = commands[index]
+    index += 1
     if battery < 2:
-        break
-    position += direction
-    battery -= 2
-    if position not in visited:
-        visited.append(position)
+        running = False
+    else:
+        position += direction
+        battery -= 2
+        if position not in visited:
+            visited.append(position)
 print(visited)
 print("Clean:", len(visited))
 ```

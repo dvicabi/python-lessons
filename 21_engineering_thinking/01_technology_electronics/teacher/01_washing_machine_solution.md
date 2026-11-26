@@ -231,12 +231,16 @@ WASH
 target = int(input())
 limit = int(input())
 water = 0
-for step in range(limit):
+running = True
+index = 0
+while index < limit and running:
+    step = index
+    index += 1
     added = int(input())
     water += added
     if water >= target:
         water = target
-        break
+        running = False
 print("Water:", water)
 if water == target:
     print("WASH")
@@ -282,7 +286,11 @@ target = 8
 water = 0
 errors = 0
 history = []
-for added in readings:
+running = True
+index = 0
+while index < len(readings) and running:
+    added = readings[index]
+    index += 1
     if added < 0:
         errors += 1
     else:
@@ -291,7 +299,7 @@ for added in readings:
             water = target
         history.append(water)
         if water == target:
-            break
+            running = False
 print(history)
 print("Errors:", errors)
 ```
@@ -333,18 +341,20 @@ def fill(water, added, target):
     if water > target:
         water = target
     return water
-
 def run_fill(readings, target):
     water = 0
     history = []
-    for added in readings:
+    running = True
+    index = 0
+    while index < len(readings) and running:
+        added = readings[index]
+        index += 1
         if added >= 0:
             water = fill(water, added, target)
             history.append(water)
             if water == target:
-                break
+                running = False
     return history
-
 print(run_fill([2, -1, 4, 8], 6))
 ```
 

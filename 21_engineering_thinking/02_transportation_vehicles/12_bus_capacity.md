@@ -418,7 +418,7 @@ print("Passengers:", passengers)
 
 מטפלים במספר תחנות עם מונים מצטברים ובדיקת תקינות.
 
-מותר for, while, range, break ו-continue.
+מותר להשתמש ב-for, while ו-range. משתמשים בתנאים ובמשתני מצב כדי לסנן נתונים ולעצור לולאות.
 
 אין רשימות או פעולות שהגדרתם.
 
@@ -448,16 +448,16 @@ for stop in range(5):
     waiting = int(input())
     if off < 0 or off > passengers or waiting < 0:
         print("ERROR", stop + 1)
-        continue
-    passengers -= off
-    free = 12 - passengers
-    boarded = waiting
-    if boarded > free:
-        boarded = free
-    passengers += boarded
-    boarded_total += boarded
-    denied_total += waiting - boarded
-    print(stop + 1, passengers, waiting - boarded)
+    else:
+        passengers -= off
+        free = 12 - passengers
+        boarded = waiting
+        if boarded > free:
+            boarded = free
+        passengers += boarded
+        boarded_total += boarded
+        denied_total += waiting - boarded
+        print(stop + 1, passengers, waiting - boarded)
 print("Boarded:", boarded_total)
 print("Denied:", denied_total)
 ```
@@ -497,7 +497,7 @@ print("Denied:", denied_total)
 
 1. מה ההבדל בין מספר ממתינים שנדחו בתחנה לבין denied_total?
 
-2. מדוע continue אינו משנה את מצב האוטובוס באירוע פסול?
+2. מדוע ענף ה-ERROR אינו משנה את מצב האוטובוס באירוע פסול?
 
 3. האם אפשר לשחזר את מספר היורדים הכולל אם יודעים תפוסה התחלתית, סופית ו-boarded_total?
 

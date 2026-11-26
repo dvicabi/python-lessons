@@ -343,15 +343,15 @@ for i in range(count):
     priority = int(input())
     if w <= 0 or t <= 0 or (priority != 1 and priority != 2):
         errors += 1
-        continue
-    if w <= weight_left and t <= time_left:
-        assigned += 1
-        weight_left -= w
-        time_left -= t
-        if priority == 1:
-            urgent_done += 1
-    elif priority == 1:
-        urgent_wait += 1
+    else:
+        if w <= weight_left and t <= time_left:
+            assigned += 1
+            weight_left -= w
+            time_left -= t
+            if priority == 1:
+                urgent_done += 1
+        elif priority == 1:
+            urgent_wait += 1
 print(assigned, urgent_done, urgent_wait, errors)
 print(weight_left, time_left)
 ```
@@ -407,20 +407,21 @@ weight_left = 12
 time_left = 30
 selected = []
 urgent = 0
-while True:
+running = True
+while running:
     best = -1
     for i in range(len(weights)):
-        if i in selected or weights[i] > weight_left or durations[i] > time_left:
-            continue
-        if best == -1 or durations[i] < durations[best] or (durations[i] == durations[best] and priorities[i] < priorities[best]):
-            best = i
+        if not (i in selected or weights[i] > weight_left or durations[i] > time_left):
+            if best == -1 or durations[i] < durations[best] or (durations[i] == durations[best] and priorities[i] < priorities[best]):
+                best = i
     if best == -1:
-        break
-    selected.append(best)
-    weight_left -= weights[best]
-    time_left -= durations[best]
-    if priorities[best] == 1:
-        urgent += 1
+        running = False
+    else:
+        selected.append(best)
+        weight_left -= weights[best]
+        time_left -= durations[best]
+        if priorities[best] == 1:
+            urgent += 1
 waiting_indexes = []
 for i in range(len(weights)):
     if i not in selected:
@@ -472,14 +473,11 @@ return מסיים את plan ומחזיר הקצאות.
 def choose(weights, durations, priorities, selected, w, t):
     best = -1
     for i in range(len(weights)):
-        if weights[i] <= 0 or durations[i] <= 0 or priorities[i] <= 0:
-            continue
-        if i in selected or weights[i] > w or durations[i] > t:
-            continue
-        if best == -1 or priorities[i] < priorities[best] or (priorities[i] == priorities[best] and durations[i] < durations[best]):
-            best = i
+        if not (weights[i] <= 0 or durations[i] <= 0 or priorities[i] <= 0):
+            if not (i in selected or weights[i] > w or durations[i] > t):
+                if best == -1 or priorities[i] < priorities[best] or (priorities[i] == priorities[best] and durations[i] < durations[best]):
+                    best = i
     return best
-
 def plan(weights, durations, priorities, w, t):
     if len(weights) != len(durations) or len(weights) != len(priorities) or w < 0 or t < 0:
         return []
@@ -491,7 +489,6 @@ def plan(weights, durations, priorities, w, t):
         selected.append(i)
         w -= weights[i]
         t -= durations[i]
-
 print(plan([6, 5, 4, 3, 2], [12, 18, 10, 8, 6], [2, 1, 1, 2, 1], 12, 30))
 print(plan([6, 5, 4, 3, -2], [12, 18, 10, 8, 6], [2, 1, 1, 2, 1], 12, 30))
 ```

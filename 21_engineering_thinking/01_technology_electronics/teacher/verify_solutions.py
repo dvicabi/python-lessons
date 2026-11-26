@@ -1,4 +1,5 @@
 """Check the exact Python examples in the graded engineering labs."""
+import ast
 import json
 import re
 import subprocess
@@ -12,6 +13,8 @@ def code_blocks(path):
     return re.findall(r"```python\n(.*?)\n```", path.read_text(encoding="utf-8"), re.S)
 
 def check(code, input_text, expected, label):
+    if any(isinstance(node, (ast.Break, ast.Continue)) for node in ast.walk(ast.parse(code))):
+        raise AssertionError(label + ": forbidden loop-control statement")
     result = subprocess.run(
         [sys.executable, "-c", code],
         input=input_text, capture_output=True, text=True, timeout=5

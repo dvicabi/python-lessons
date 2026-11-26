@@ -337,18 +337,18 @@ for i in range(count):
     waiting = int(input())
     if off < 0 or off > passengers or waiting < 0:
         print("ERROR")
-        continue
-    passengers -= off
-    off_total += off
-    boarded = waiting
-    if boarded > capacity - passengers:
-        boarded = capacity - passengers
-    passengers += boarded
-    boarded_total += boarded
-    denied_total += waiting - boarded
-    if passengers == capacity:
-        full_count += 1
-    print(i + 1, passengers)
+    else:
+        passengers -= off
+        off_total += off
+        boarded = waiting
+        if boarded > capacity - passengers:
+            boarded = capacity - passengers
+        passengers += boarded
+        boarded_total += boarded
+        denied_total += waiting - boarded
+        if passengers == capacity:
+            full_count += 1
+        print(i + 1, passengers)
 print(boarded_total, off_total, denied_total, full_count)
 print("Check:", initial + boarded_total - off_total)
 ```

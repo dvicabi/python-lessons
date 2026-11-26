@@ -329,31 +329,39 @@ count = int(input())
 done = 0
 overflow = 0
 distance = 0
-for i in range(count):
+running = True
+index = 0
+while index < count and running:
+    i = index
+    index += 1
     kind = int(input())
     length = int(input())
     if length <= 0 or kind < 1 or kind > 3:
         print("ERROR")
-        break
-    if battery < 2:
-        print("LOW")
-        break
-    if kind == 3:
-        battery += length
-        if battery > 30:
-            overflow += battery - 30
-            battery = 30
+        running = False
     else:
-        cost = length
-        if kind == 2:
-            cost *= 2
-        if battery - cost < 2:
-            print("STOP")
-            break
-        battery -= cost
-    done += 1
-    distance += length
-    print(done, battery)
+        if battery < 2:
+            print("LOW")
+            running = False
+        else:
+            if kind == 3:
+                battery += length
+                if battery > 30:
+                    overflow += battery - 30
+                    battery = 30
+            else:
+                cost = length
+                if kind == 2:
+                    cost *= 2
+                if battery - cost < 2:
+                    print("STOP")
+                    running = False
+                else:
+                    battery -= cost
+            if running:
+                done += 1
+                distance += length
+                print(done, battery)
 print(done, distance, overflow)
 ```
 
@@ -404,7 +412,11 @@ battery = 26
 history = []
 overflows = []
 total = 0
-for i in range(len(kinds)):
+running = True
+index = 0
+while index < len(kinds) and running:
+    i = index
+    index += 1
     length = lengths[i]
     overflow = 0
     if kinds[i] == 3:
@@ -417,11 +429,13 @@ for i in range(len(kinds)):
         if kinds[i] == 2:
             cost *= 2
         if battery - cost < 2:
-            break
-        battery -= cost
-    history.append(battery)
-    overflows.append(overflow)
-    total += overflow
+            running = False
+        else:
+            battery -= cost
+    if running:
+        history.append(battery)
+        overflows.append(overflow)
+        total += overflow
 print(history)
 print(overflows)
 print(total, len(history))
@@ -478,19 +492,22 @@ def step(battery, kind, length, reserve, capacity):
     if battery - cost < reserve:
         return -1
     return battery - cost
-
 def route(battery, kinds, lengths, reserve, capacity):
     history = []
     if len(kinds) != len(lengths):
         return history
-    for i in range(len(kinds)):
+    running = True
+    index = 0
+    while index < len(kinds) and running:
+        i = index
+        index += 1
         next_battery = step(battery, kinds[i], lengths[i], reserve, capacity)
         if next_battery == -1:
-            break
-        battery = next_battery
-        history.append(battery)
+            running = False
+        else:
+            battery = next_battery
+            history.append(battery)
     return history
-
 print(route(22, [1, 2, 3, 2], [4, 5, 6, 6], 2, 30))
 print(route(22, [1, 2, 3, 2], [4, 5, 6, 6], 5, 30))
 ```

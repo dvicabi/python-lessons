@@ -287,7 +287,7 @@ print(left, right)
 
 מעבירים יחידה בכל פעם לצד הפחות טעון, כל עוד יש תקציב ומקום.
 
-מותר להשתמש ב-for, while, range, break לפי הצורך.
+מותר להשתמש ב-for, while ו-range. עצירה מתבצעת באמצעות תנאי הלולאה ומשתנה מצב.
 
 אין להשתמש ברשימות או בפעולות שאתם מגדירים.
 
@@ -297,15 +297,20 @@ print(left, right)
 left = 2
 right = 4
 case = 6
-for step in range(5):
+running = True
+index = 0
+while index < 5 and running:
+    step = index
+    index += 1
     if case == 0 or (left == 10 and right == 10):
-        break
-    if left <= right:
-        left += 1
+        running = False
     else:
-        right += 1
-    case -= 1
-    print(left, right, case)
+        if left <= right:
+            left += 1
+        else:
+            right += 1
+        case -= 1
+        print(left, right, case)
 ```
 
 1. הכינו טבלת מעקב בעצמכם וכתבו את הפלט המדויק.
@@ -314,7 +319,7 @@ for step in range(5):
 
 ### 5.ב שינוי וחשיבה
 
-שנו את range(5) ל-range(10).
+שנו את מגבלת index בתנאי הלולאה מ-5 ל-10.
 
 כמה העברות יתבצעו?
 
@@ -370,7 +375,7 @@ print(left, right)
 
 ### 6.ב שינוי וחשיבה
 
-הוסיפו break אחרי בקשה שנדחתה בקוד הנתון.
+שנו את הלולאה ל-while עם מונה אינדקס ומשתנה running. כאשר בקשה נדחית, עדכנו running ל-False כדי לסיים את העיבוד.
 
 מה יקרה?
 

@@ -417,7 +417,7 @@ print(stock1, stock2, revenue)
 
 תחנה מטפלת בעסקאות ברצף, עם מוני הצלחות, דחיות והכנסה.
 
-מותר for, while, range, break ו-continue.
+מותר להשתמש ב-for, while ו-range. משתמשים בתנאים ובמשתני מצב כדי לסנן נתונים ולעצור לולאות.
 
 אין רשימות או פעולות שהגדרתם.
 
@@ -449,15 +449,15 @@ for i in range(5):
     cost = quantity * 7
     if quantity <= 0 or paid < 0:
         print("ERROR")
-        continue
-    if quantity > stock or paid < cost:
-        rejected += 1
-        print("REJECTED", paid)
-        continue
-    stock -= quantity
-    revenue += cost
-    accepted += 1
-    print("SERVED", paid - cost, stock)
+    else:
+        if quantity > stock or paid < cost:
+            rejected += 1
+            print("REJECTED", paid)
+        else:
+            stock -= quantity
+            revenue += cost
+            accepted += 1
+            print("SERVED", paid - cost, stock)
 print(accepted, rejected, revenue, stock)
 ```
 
@@ -569,10 +569,10 @@ for i in range(len(kinds)):
     cost = quantities[i] * rates[index]
     if quantities[i] > stock[index] or payments[i] < cost:
         receipts.append(payments[i])
-        continue
-    stock[index] -= quantities[i]
-    revenue += cost
-    receipts.append(payments[i] - cost)
+    else:
+        stock[index] -= quantities[i]
+        revenue += cost
+        receipts.append(payments[i] - cost)
 print(stock)
 print(receipts)
 print("Revenue:", revenue)

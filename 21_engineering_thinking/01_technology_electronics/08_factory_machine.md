@@ -294,7 +294,7 @@ print(streak)
 
 המכונה בודקת סדרת מדידות, ועצירה אינה מאפשרת המשך אוטומטי.
 
-מותר להשתמש ב-for, while, range, break לפי הצורך.
+מותר להשתמש ב-for, while ו-range. עצירה מתבצעת באמצעות תנאי הלולאה ומשתנה מצב.
 
 אין להשתמש ברשימות או בפעולות שאתם מגדירים.
 
@@ -313,7 +313,11 @@ print(streak)
 
 ```python
 streak = 0
-for step in range(6):
+running = True
+index = 0
+while index < 6 and running:
+    step = index
+    index += 1
     reading = int(input())
     if reading >= 75:
         streak += 1
@@ -322,7 +326,7 @@ for step in range(6):
     print(streak)
     if streak >= 3:
         print("STOPPED")
-        break
+        running = False
 ```
 
 1. הכינו טבלת מעקב בעצמכם וכתבו את הפלט המדויק.
@@ -384,14 +388,18 @@ for step in range(6):
 readings = [75, 74, 75, 75, 76, 60]
 history = []
 streak = 0
-for value in readings:
+running = True
+index = 0
+while index < len(readings) and running:
+    value = readings[index]
+    index += 1
     if value >= 75:
         streak += 1
     else:
         streak = 0
     history.append(streak)
     if streak == 3:
-        break
+        running = False
 print(history)
 print("Read:", len(history))
 ```
