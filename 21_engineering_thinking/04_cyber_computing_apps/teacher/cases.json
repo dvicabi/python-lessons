@@ -1,0 +1,862 @@
+[
+  {
+    "id": "25_login_system",
+    "levels": [
+      {
+        "input": "",
+        "out": "LOGIN A01 | SIM\nAttempts: 2 / 3\nAccount: OPEN | READY\nResult: FAIL | RETRY\nEvent: 07 | LOG\n",
+        "edits": [
+          [
+            "print(\"LOGIN \", end=\"\")",
+            "print(\"LOGIN \", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "LOGIN  | A01 | SIM\nAttempts: 2 / 3\nAccount: OPEN | READY\nResult: FAIL | RETRY\nEvent: 07 | LOG\n",
+        "solution_input": "",
+        "solution_out": "LOGIN B02 | SIM\nAttempts: 3 / 3\nAccount: LOCKED | REVIEW\nResult: DENIED | WAIT\nEvent: 08 | LOG\n"
+      },
+      {
+        "input": "",
+        "out": "1 1 0 1\n2 2 0 2\n3 2 1 0\n4 3 1 1\n5 4 1 2\nRemaining: 1\nCheck: 5\nDifference: 2\n",
+        "edits": [
+          [
+            "streak = 0\nprint(attempts, failures, successes, streak)",
+            "streak = 1\nprint(attempts, failures, successes, streak)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "1 1 0 1\n2 2 0 2\n3 2 1 1\n4 3 1 2\n5 4 1 3\nRemaining: 0\nCheck: 5\nDifference: 1\n",
+        "solution_input": "",
+        "solution_out": "1 1 0 1\n2 1 1 0\n3 2 1 1\n4 3 1 2\n5 3 2 0\n6 4 2 1\nRemaining: 2\nCheck: 6\nDifference: 3\n"
+      },
+      {
+        "input": "5\n3\n2\n2\n7\n1\n3\n",
+        "out": "A: 8 2 1\nB: 9 1 2\nTotals: 17 7 10\nAccount gap: -1\nCheck: 17\nStreak gap: 1\n",
+        "edits": [],
+        "alt_input": "5\n3\n2\n6\n1\n3\n3\n",
+        "alt_out": "A: 8 2 1\nB: 7 3 0\nTotals: 15 11 4\nAccount gap: 1\nCheck: 15\nStreak gap: -1\n",
+        "solution_input": "5\n3\n2\n2\n7\n1\n4\n2\n3\n3\n",
+        "solution_out": "8 1\n9 2\n6 0\n11 12 23\n"
+      },
+      {
+        "input": "",
+        "out": "FAIL True\nLOCKED\n3 True 0 1\n",
+        "edits": [
+          [
+            "streak = 2",
+            "streak = 1"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "FAIL False\nSUCCESS\n0 False 1 1\n",
+        "solution_input": "2\n0\n1\n",
+        "solution_out": "FAIL\nLOCKED\n3 True\n0 1 1 0\n"
+      },
+      {
+        "input": "0\n0\n1\n0\n2\n0\n0\n1\n0\n2\n",
+        "out": "1 FAIL 1 False\n2 FAIL 2 False\n3 SUCCESS 0 False\n4 FAIL 1 False\n5 INVALID 1 False\n6 FAIL 2 False\n7 FAIL 3 True\n8 LOCKED 3 True\n9 LOCKED 3 True\n10 INVALID 3 True\nCounters: 1 5 2 2\nCheck: 10\nLock index: 7\n",
+        "edits": [],
+        "alt_input": "0\n0\n0\n0\n2\n0\n0\n1\n0\n2\n",
+        "alt_out": "1 FAIL 1 False\n2 FAIL 2 False\n3 FAIL 3 True\n4 LOCKED 3 True\n5 INVALID 3 True\n6 LOCKED 3 True\n7 LOCKED 3 True\n8 LOCKED 3 True\n9 LOCKED 3 True\n10 INVALID 3 True\nCounters: 0 3 5 2\nCheck: 10\nLock index: 3\n",
+        "solution_input": "10\n4\n0\n0\n1\n0\n0\n2\n0\n0\n1\n0\n",
+        "solution_out": "1 FAIL 1 False\n2 FAIL 2 False\n3 SUCCESS 0 False\n4 FAIL 1 False\n5 FAIL 2 False\n6 INVALID 2 False\n7 FAIL 3 False\n8 FAIL 4 True\n9 LOCKED 4 True\n10 LOCKED 4 True\nCounters: 1 6 2 1\nCheck: 10\nLock index: 8\nLongest: 4\n"
+      },
+      {
+        "input": "",
+        "out": "0 0 FAIL [1, 0] [False, False]\n1 1 FAIL [1, 1] [False, False]\n2 0 FAIL [2, 1] [False, False]\n3 1 SUCCESS [2, 0] [False, False]\n4 0 FAIL [3, 0] [True, False]\n5 0 LOCKED [3, 0] [True, False]\n6 1 FAIL [3, 1] [True, False]\n7 1 FAIL [3, 2] [True, False]\n8 2 UNKNOWN [3, 2] [True, False]\n9 0 INVALID [3, 2] [True, False]\nHistory: ['FAIL', 'FAIL', 'FAIL', 'SUCCESS', 'FAIL', 'LOCKED', 'FAIL', 'FAIL', 'UNKNOWN', 'INVALID']\nFailures: [3, 3]\nSuccesses: [0, 1]\n",
+        "edits": [
+          [
+            "events = [0, 0, 0, 1, 0, 1, 0, 0, 1, 2]",
+            "events = [0, 0, 0, 0, 1, 1, 0, 0, 1, 2]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "0 0 FAIL [1, 0] [False, False]\n1 1 FAIL [1, 1] [False, False]\n2 0 FAIL [2, 1] [False, False]\n3 1 FAIL [2, 2] [False, False]\n4 0 SUCCESS [0, 2] [False, False]\n5 0 SUCCESS [0, 2] [False, False]\n6 1 FAIL [0, 3] [False, True]\n7 1 LOCKED [0, 3] [False, True]\n8 2 UNKNOWN [0, 3] [False, True]\n9 0 INVALID [0, 3] [False, True]\nHistory: ['FAIL', 'FAIL', 'FAIL', 'FAIL', 'SUCCESS', 'SUCCESS', 'FAIL', 'LOCKED', 'UNKNOWN', 'INVALID']\nFailures: [2, 3]\nSuccesses: [2, 0]\n",
+        "solution_input": "",
+        "solution_out": "0 0 FAIL [1, 0] [False, False]\n1 1 FAIL [1, 1] [False, False]\n2 0 FAIL [2, 1] [False, False]\n3 1 SUCCESS [2, 0] [False, False]\n4 0 FAIL [3, 0] [True, False]\n5 0 LOCKED [3, 0] [True, False]\n6 1 FAIL [3, 1] [True, False]\n7 1 FAIL [3, 2] [True, False]\n8 2 UNKNOWN [3, 2] [True, False]\n9 0 INVALID [3, 2] [True, False]\nHistory: ['FAIL', 'FAIL', 'FAIL', 'SUCCESS', 'FAIL', 'LOCKED', 'FAIL', 'FAIL', 'UNKNOWN', 'INVALID']\nFailures: [3, 3]\nSuccesses: [0, 1]\n[1, 0] 1 [4]\n"
+      },
+      {
+        "input": "",
+        "out": "[3, True, 'FAIL']\n[3, True, 'LOCKED']\n0 [1, False, 'FAIL']\n1 [2, False, 'FAIL']\n2 [0, False, 'SUCCESS']\n3 [1, False, 'FAIL']\n4 [2, False, 'FAIL']\n5 [3, True, 'FAIL']\n6 [3, True, 'LOCKED']\n7 [3, True, 'INVALID']\n[['FAIL', 'FAIL', 'SUCCESS', 'FAIL', 'FAIL', 'FAIL', 'LOCKED', 'INVALID'], 3, True, 5]\n['ERROR', []]\n",
+        "edits": [
+          [
+            "return [streak, streak >= limit, \"FAIL\"]",
+            "return [streak, streak > limit, \"FAIL\"]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[3, False, 'FAIL']\n[3, True, 'LOCKED']\n0 [1, False, 'FAIL']\n1 [2, False, 'FAIL']\n2 [0, False, 'SUCCESS']\n3 [1, False, 'FAIL']\n4 [2, False, 'FAIL']\n5 [3, False, 'FAIL']\n6 [0, False, 'SUCCESS']\n7 [0, False, 'INVALID']\n[['FAIL', 'FAIL', 'SUCCESS', 'FAIL', 'FAIL', 'FAIL', 'SUCCESS', 'INVALID'], 0, False, -1]\n['ERROR', []]\n",
+        "solution_input": "",
+        "solution_out": "[3, True, 'FAIL']\n[3, True, 'LOCKED']\n0 [1, False, 'FAIL']\n1 [2, False, 'FAIL']\n2 [0, False, 'SUCCESS']\n3 [1, False, 'FAIL']\n4 [2, False, 'FAIL']\n5 [3, True, 'FAIL']\n6 [3, True, 'LOCKED']\n7 [3, True, 'INVALID']\n[['FAIL', 'FAIL', 'SUCCESS', 'FAIL', 'FAIL', 'FAIL', 'LOCKED', 'INVALID'], 3, True, 5, [1, 5, 1, 1], 8]\n['ERROR', []]\n[[], 0, False, -1, [0, 0, 0, 0], 0]\n"
+      },
+      {
+        "input": "",
+        "out": "FAIL\nFAIL\nFAIL\nFAIL\nSUCCESS\nLOCKED\nUNKNOWN\nINVALID\nLOCKED\n['A', 0, False, 1, 2] ['B', 2, True, 0, 2]\n['FAIL', 'FAIL', 'SUCCESS', 'INVALID']\n['FAIL', 'FAIL', 'LOCKED', 'LOCKED']\n[[0, 0, 'FAIL'], [1, 0, 'FAIL'], [0, 0, 'FAIL'], [1, 0, 'FAIL'], [0, 1, 'SUCCESS'], [1, 1, 'LOCKED'], [2, 1, 'UNKNOWN'], [0, 2, 'INVALID'], [1, 0, 'LOCKED']]\nLocked: 1\n",
+        "edits": [
+          [
+            "b = Account(\"B\", 2)",
+            "b = Account(\"B\", 3)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "FAIL\nFAIL\nFAIL\nFAIL\nSUCCESS\nSUCCESS\nUNKNOWN\nINVALID\nFAIL\n['A', 0, False, 1, 2] ['B', 1, False, 1, 3]\n['FAIL', 'FAIL', 'SUCCESS', 'INVALID']\n['FAIL', 'FAIL', 'SUCCESS', 'FAIL']\n[[0, 0, 'FAIL'], [1, 0, 'FAIL'], [0, 0, 'FAIL'], [1, 0, 'FAIL'], [0, 1, 'SUCCESS'], [1, 1, 'SUCCESS'], [2, 1, 'UNKNOWN'], [0, 2, 'INVALID'], [1, 0, 'FAIL']]\nLocked: 0\n",
+        "solution_input": "",
+        "solution_out": "FAIL\nFAIL\nFAIL\nFAIL\nSUCCESS\nLOCKED\nUNKNOWN\nINVALID\nLOCKED\n['A', 0, False, 1, 2] ['B', 2, True, 0, 2]\n['FAIL', 'FAIL', 'SUCCESS', 'INVALID']\n['FAIL', 'FAIL', 'LOCKED', 'LOCKED']\n[[0, 0, 'FAIL'], [1, 0, 'FAIL'], [0, 0, 'FAIL'], [1, 0, 'FAIL'], [0, 1, 'SUCCESS'], [1, 1, 'LOCKED'], [2, 1, 'UNKNOWN'], [0, 2, 'INVALID'], [1, 0, 'LOCKED']]\nLocked: 1\nTrue\n['A', 0, False, 1, 2] ['B', 0, False, 0, 2]\n[[0, 0, 'FAIL'], [1, 0, 'FAIL'], [0, 0, 'FAIL'], [1, 0, 'FAIL'], [0, 1, 'SUCCESS'], [1, 1, 'LOCKED'], [2, 1, 'UNKNOWN'], [0, 2, 'INVALID'], [1, 0, 'LOCKED'], [1, 2, 'RESET']]\n"
+      }
+    ]
+  },
+  {
+    "id": "26_password_strength",
+    "levels": [
+      {
+        "input": "",
+        "out": "CHECK 01 | DEMO\nLength: 8 chars\nGroups: 3 / 4\nScore: 25 points\nResult: PASS_DEMO | RULE\n",
+        "edits": [
+          [
+            "print(\"CHECK \", end=\"\")",
+            "print(\"CHECK \", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "CHECK  | 01 | DEMO\nLength: 8 chars\nGroups: 3 / 4\nScore: 25 points\nResult: PASS_DEMO | RULE\n",
+        "solution_input": "",
+        "solution_out": "CHECK 02 | DEMO\nLength: 6 chars\nGroups: 2 / 4\nScore: 18 points\nResult: REVIEW | RULE\n"
+      },
+      {
+        "input": "",
+        "out": "8 4 28\n10 4 32\n9 3 27\n12 3 33\nLength part: 24\nGroup part: 9\nCheck: 12\n",
+        "edits": [
+          [
+            "lower += 2",
+            "lower += 4"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "8 4 28\n12 4 36\n11 3 31\n14 3 37\nLength part: 28\nGroup part: 9\nCheck: 14\n",
+        "solution_input": "",
+        "solution_out": "9 4 30\n8 3 25\n9 3 27\n"
+      },
+      {
+        "input": "3\n2\n2\n1\n4\n8\n3\n",
+        "out": "Features: 3 2 2 1\nLength: 8\nScore: 28\nParts: 16 12\nGaps: 0 1\nCheck: 28\n",
+        "edits": [],
+        "alt_input": "5\n0\n2\n0\n2\n8\n3\n",
+        "alt_out": "Features: 5 0 2 0\nLength: 7\nScore: 20\nParts: 14 6\nGaps: -1 -1\nCheck: 20\n",
+        "solution_input": "9\n2\n8\n3\n8\n3\n",
+        "solution_out": "A: 24 1 -1\nB: 25 0 0\nGap: -1\n"
+      },
+      {
+        "input": "",
+        "out": "PASS_DEMO\n8 3\nScore: 25\n",
+        "edits": [
+          [
+            "upper = 1",
+            "upper = 0"
+          ],
+          [
+            "digits = 3",
+            "digits = 4"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "FEW GROUPS\nREVIEW\n8 2\nScore: 22\n",
+        "solution_input": "6\n1\n1\n0\n12\n3\n",
+        "solution_out": "SHORT\nREVIEW\n8 3\nScore: 25\n"
+      },
+      {
+        "input": "4\n1\n3\n0\n10\n0\n0\n0\n-1\n2\n3\n1\n3\n2\n2\n1\n1\n1\n1\n1\n",
+        "out": "1 8 3 25 PASS_DEMO\n2 10 1 23 REVIEW\n3 INVALID\n4 8 4 28 PASS_DEMO\n5 4 4 20 REVIEW\n2 2 1\nBest score: 4 28\n",
+        "edits": [],
+        "alt_input": "4\n0\n4\n0\n10\n0\n0\n0\n-1\n2\n3\n1\n3\n2\n2\n1\n1\n1\n1\n1\n",
+        "alt_out": "1 8 2 22 REVIEW\n2 10 1 23 REVIEW\n3 INVALID\n4 8 4 28 PASS_DEMO\n5 4 4 20 REVIEW\n1 3 1\nBest score: 4 28\n",
+        "solution_input": "5\n8\n3\n4\n1\n3\n0\n10\n0\n0\n0\n-1\n2\n3\n1\n3\n2\n2\n1\n1\n1\n1\n1\n",
+        "solution_out": "1 8 3 25 PASS_DEMO\n2 10 1 23 REVIEW\n3 INVALID\n4 8 4 28 PASS_DEMO\n5 4 4 20 REVIEW\n2 2 1\n1 1\nBest score: 4 28\n"
+      },
+      {
+        "input": "",
+        "out": "[[8, 4], [8, 1], [4, 3], [8, 2], [8, 4], [0, 0]]\n[28, 19, 17, 22, 28, 0]\n['PASS_DEMO', 'REVIEW', 'REVIEW', 'REVIEW', 'PASS_DEMO', 'REVIEW']\n",
+        "edits": [
+          [
+            "QQQQQQ99",
+            "QQQQQq99"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[[8, 4], [8, 1], [4, 3], [8, 3], [8, 4], [0, 0]]\n[28, 19, 17, 25, 28, 0]\n['PASS_DEMO', 'REVIEW', 'REVIEW', 'PASS_DEMO', 'PASS_DEMO', 'REVIEW']\n",
+        "solution_input": "",
+        "solution_out": "[[8, 4], [8, 1], [4, 3], [8, 2], [8, 4], [0, 0]]\n[28, 19, 17, 22, 28, 0]\n['PASS_DEMO', 'REVIEW', 'REVIEW', 'REVIEW', 'PASS_DEMO', 'REVIEW']\n[[0, 0], [0, 2], [4, 0], [0, 1], [0, 0], [8, 3]]\n[0, 4]\n"
+      },
+      {
+        "input": "",
+        "out": "[[[8, 3], [25, 'PASS_DEMO']], [[8, 1], [19, 'REVIEW']], [[8, 2], [22, 'REVIEW']], [[8, 4], [28, 'PASS_DEMO']]]\n[[[8, 3], [25, 'REVIEW']], [[8, 1], [19, 'REVIEW']], [[8, 2], [22, 'REVIEW']], [[8, 4], [28, 'REVIEW']]]\n[25, 'PASS_DEMO']\n",
+        "edits": [
+          [
+            "if length >= min_length and groups >= min_groups:",
+            "if length > min_length and groups >= min_groups:"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[[[8, 3], [25, 'REVIEW']], [[8, 1], [19, 'REVIEW']], [[8, 2], [22, 'REVIEW']], [[8, 4], [28, 'REVIEW']]]\n[[[8, 3], [25, 'REVIEW']], [[8, 1], [19, 'REVIEW']], [[8, 2], [22, 'REVIEW']], [[8, 4], [28, 'REVIEW']]]\n[25, 'REVIEW']\n",
+        "solution_input": "",
+        "solution_out": "[[[[8, 3], [25, 'PASS_DEMO', 0, 0]], [[8, 1], [19, 'REVIEW', 0, 2]], [[8, 2], [22, 'REVIEW', 0, 1]], [[8, 4], [28, 'PASS_DEMO', 0, 0]]], 2]\n[[[[8, 3], [25, 'REVIEW', 4, 0]], [[8, 1], [19, 'REVIEW', 4, 1]], [[8, 2], [22, 'REVIEW', 4, 0]], [[8, 4], [28, 'REVIEW', 4, 0]]], 0]\n[25, 'PASS_DEMO', 0, 0]\n"
+      },
+      {
+        "input": "",
+        "out": "[8, 3, 25, 'PASS_DEMO'] [0, 0]\n[8, 3, 25, 'REVIEW'] [4, 0]\n[8, 1, 19, 'REVIEW'] [0, 2]\n[8, 1, 19, 'REVIEW'] [4, 1]\n[12, 2, 30, 'REVIEW'] [0, 1]\n[12, 2, 30, 'PASS_DEMO'] [0, 0]\n[8, 4, 28, 'PASS_DEMO'] [0, 0]\n[8, 4, 28, 'REVIEW'] [4, 0]\n[4, 2, 2] [4, 1, 3]\n[[8, 3, 25, 'PASS_DEMO'], [8, 1, 19, 'REVIEW'], [12, 2, 30, 'REVIEW'], [8, 4, 28, 'PASS_DEMO']]\n[[8, 3, 25, 'REVIEW'], [8, 1, 19, 'REVIEW'], [12, 2, 30, 'PASS_DEMO'], [8, 4, 28, 'REVIEW']]\n",
+        "edits": [
+          [
+            "b = Inspector(Policy(12, 2))",
+            "b = Inspector(Policy(8, 2))"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[8, 3, 25, 'PASS_DEMO'] [0, 0]\n[8, 3, 25, 'PASS_DEMO'] [0, 0]\n[8, 1, 19, 'REVIEW'] [0, 2]\n[8, 1, 19, 'REVIEW'] [0, 1]\n[12, 2, 30, 'REVIEW'] [0, 1]\n[12, 2, 30, 'PASS_DEMO'] [0, 0]\n[8, 4, 28, 'PASS_DEMO'] [0, 0]\n[8, 4, 28, 'PASS_DEMO'] [0, 0]\n[4, 2, 2] [4, 3, 1]\n[[8, 3, 25, 'PASS_DEMO'], [8, 1, 19, 'REVIEW'], [12, 2, 30, 'REVIEW'], [8, 4, 28, 'PASS_DEMO']]\n[[8, 3, 25, 'PASS_DEMO'], [8, 1, 19, 'REVIEW'], [12, 2, 30, 'PASS_DEMO'], [8, 4, 28, 'PASS_DEMO']]\n",
+        "solution_input": "",
+        "solution_out": "[8, 3, 25, 'PASS_DEMO'] [0, 0]\n[8, 3, 25, 'REVIEW'] [4, 0]\n[8, 1, 19, 'REVIEW'] [0, 2]\n[8, 1, 19, 'REVIEW'] [4, 1]\n[12, 2, 30, 'REVIEW'] [0, 1]\n[12, 2, 30, 'PASS_DEMO'] [0, 0]\n[8, 4, 28, 'PASS_DEMO'] [0, 0]\n[8, 4, 28, 'REVIEW'] [4, 0]\n[4, 2, 2] [4, 1, 3]\n[[8, 3, 25, 'PASS_DEMO'], [8, 1, 19, 'REVIEW'], [12, 2, 30, 'REVIEW'], [8, 4, 28, 'PASS_DEMO']]\n[[8, 3, 25, 'REVIEW'], [8, 1, 19, 'REVIEW'], [12, 2, 30, 'PASS_DEMO'], [8, 4, 28, 'REVIEW']]\n[[], ['FEW_GROUPS'], ['FEW_GROUPS'], []] [8, 3]\n[['SHORT'], ['SHORT', 'FEW_GROUPS'], [], ['SHORT']] [12, 2]\n"
+      }
+    ]
+  },
+  {
+    "id": "27_web_server",
+    "levels": [
+      {
+        "input": "",
+        "out": "SERVER S1 | SIM\nQueue: 4 / 6\nRate: 2 jobs\nDone: 15 total\nState: BUSY | OK\n",
+        "edits": [
+          [
+            "print(\"SERVER \", end=\"\")",
+            "print(\"SERVER \", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "SERVER  | S1 | SIM\nQueue: 4 / 6\nRate: 2 jobs\nDone: 15 total\nState: BUSY | OK\n",
+        "solution_input": "",
+        "solution_out": "SERVER S2 | SIM\nQueue: 6 / 6\nRate: 0 jobs\nDone: 20 total\nState: FULL | WAIT\n"
+      },
+      {
+        "input": "",
+        "out": "Before: 5\n3 3 2\nBefore: 5\n4 5 3\nBefore: 5\n1 6 7\nCheck: 1\n",
+        "edits": [
+          [
+            "processed = 4",
+            "processed = 3"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "Before: 5\n3 3 2\nBefore: 5\n4 5 3\nBefore: 5\n2 6 6\nCheck: 2\n",
+        "solution_input": "",
+        "solution_out": "4\n2 3 2\n4\n3 5 3\n4\n1 6 6\n7 7\n"
+      },
+      {
+        "input": "6\n2\n3\n2\n2\n1\n",
+        "out": "Before 1: 5 1\nAfter 1: 3\nBefore 2: 5 1\nAfter 2: 4\nTotals: 5 3\nCheck: 4\n",
+        "edits": [],
+        "alt_input": "4\n3\n3\n4\n2\n1\n",
+        "alt_out": "Before 1: 6 -2\nAfter 1: 2\nBefore 2: 4 0\nAfter 2: 3\nTotals: 5 5\nCheck: 3\n",
+        "solution_input": "6\n1\n3\n2\n2\n1\n1\n3\n",
+        "solution_out": "4 2\n2\n4 2\n3\n4 2\n1\n7 7\n"
+      },
+      {
+        "input": "",
+        "out": "Accepted: 1\nRejected: 3\nDone: 3\nWaiting: 3\nBUSY\nPeak: 6\nCheck: 6 6\n",
+        "edits": [
+          [
+            "rate = 3",
+            "rate = 8"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "Accepted: 1\nRejected: 3\nDone: 6\nWaiting: 0\nEMPTY\nPeak: 6\nCheck: 6 6\n",
+        "solution_input": "6\n5\n4\n8\n",
+        "solution_out": "Accepted: 1\nRejected: 3\nDone: 6\nWaiting: 0\nEMPTY\nPeak: 6\nFree: 6\nArrival check: 4\nCheck: 6 6\n"
+      },
+      {
+        "input": "4\n1\n5\n0\n2\n2\n-1\n1\n3\n3\n1\n0\n0\n4\n",
+        "out": "1 4 0 1 3\n2 3 2 0 6\n3 0 2 2 4\n4 INVALID\n5 2 1 3 3\n6 1 0 0 4\n7 0 0 4 0\n10 5 10\n2 1 6 0\nCheck: 0\n",
+        "edits": [],
+        "alt_input": "4\n4\n5\n0\n2\n2\n-1\n1\n3\n3\n1\n0\n0\n4\n",
+        "alt_out": "1 4 0 4 0\n2 5 0 0 5\n3 1 1 2 4\n4 INVALID\n5 2 1 3 3\n6 1 0 0 4\n7 0 0 4 0\n13 2 13\n2 1 6 0\nCheck: 0\n",
+        "solution_input": "6\n7\n4\n1\n5\n0\n2\n2\n-1\n1\n3\n3\n1\n0\n0\n4\n",
+        "solution_out": "1 4 0 1 3\n2 3 2 0 6\n3 0 2 2 4\n4 INVALID\n5 2 1 3 3\n6 1 0 0 4\n7 0 0 4 0\n10 5 10\n2 1 6 0\nCheck: 0\n3 1\n"
+      },
+      {
+        "input": "",
+        "out": "1 1 0 1\n2 2 0 2\n3 3 0 3\n4 4 0 4\n5 4 2 2\n6 3 1 2\n7 3 0 3\n8 4 2 2\n9 3 3 0\n[101, 102, 103, 104, 106, 107, 108, 109]\n[105]\n[]\n[[1, 1], [2, 2], [3, 3], [4, 4], [4, 2], [3, 2], [3, 3], [4, 2], [3, 0]]\nCheck: 9\n",
+        "edits": [
+          [
+            "rates = [0, 0, 0, 0, 2, 1, 0, 2, 5]",
+            "rates = [0, 0, 0, 1, 2, 1, 0, 2, 5]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "1 1 0 1\n2 2 0 2\n3 3 0 3\n4 4 1 3\n5 4 2 2\n6 3 1 2\n7 3 0 3\n8 4 2 2\n9 3 3 0\n[101, 102, 103, 104, 105, 106, 107, 108, 109]\n[]\n[]\n[[1, 1], [2, 2], [3, 3], [4, 3], [4, 2], [3, 2], [3, 3], [4, 2], [3, 0]]\nCheck: 9\n",
+        "solution_input": "",
+        "solution_out": "1 1 0 1\n2 2 0 2\n3 3 0 3\n4 4 0 4\n5 4 2 2\n6 3 1 2\n7 3 0 3\n8 4 2 2\n9 3 3 0\n[101, 102, 103, 104, 106, 107, 108, 109]\n[105]\n[]\n[[1, 1], [2, 2], [3, 3], [4, 4], [4, 2], [3, 2], [3, 3], [4, 2], [3, 0]]\n[5, 5, 6, 8, 8, 9, 9, 9] 3\nCheck: 9\n"
+      },
+      {
+        "input": "",
+        "out": "['OK', [1, 2, 3, 5], [4], [6]]\n['OK', [], [3], [1, 2]]\n['ERROR', [], [], []]\n",
+        "edits": [
+          [
+            "if len(queue) - first >= capacity:",
+            "if len(queue) - first > capacity:"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "['OK', [1, 2, 3, 4], [], [5, 6]]\n['OK', [], [], [1, 2, 3]]\n['ERROR', [], [], []]\n",
+        "solution_input": "",
+        "solution_out": "['OK', [1, 2, 3, 5], [4], [6], 6, 5]\n['OK', [], [3], [1, 2], 3, 2]\n['ERROR', [], [], []]\n['ERROR', [], [], []]\n"
+      },
+      {
+        "input": "",
+        "out": "11 0\n12 1\n13 0\n14 1\n15 1\n16 -1\n[[2, 0, 2], [3, 0, 3]]\n1 2\n0\n1\n[[11, 0], [12, 1], [13, 0], [14, 1], [15, 1], [16, -1], [17, 0], [18, 1]]\n[16]\n[11] [12, 14]\n[[2, 1, 2], [2, 2, 3]]\n",
+        "edits": [
+          [
+            "a = Server(2)",
+            "a = Server(3)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "11 0\n12 1\n13 0\n14 1\n15 0\n16 1\n[[3, 0, 3], [3, 0, 3]]\n1 2\n1\n0\n[[11, 0], [12, 1], [13, 0], [14, 1], [15, 0], [16, 1], [17, 1], [18, 0]]\n[]\n[11] [12, 14]\n[[3, 1, 3], [2, 2, 3]]\n",
+        "solution_input": "",
+        "solution_out": "11 0\n12 1\n13 0\n14 1\n15 1\n16 -1\n[[2, 0, 2], [3, 0, 3]]\n[5, 1, 5, 0]\n1 2\n[5, 1, 2, 3]\n0\n1\n[[11, 0], [12, 1], [13, 0], [14, 1], [15, 1], [16, -1], [17, 0], [18, 1]]\n[16]\n[11] [12, 14]\n[7, 1, 4, 3]\n[[2, 1, 2], [2, 2, 3]]\n"
+      }
+    ]
+  },
+  {
+    "id": "28_file_storage",
+    "levels": [
+      {
+        "input": "",
+        "out": "STORAGE A | SIM\nCapacity: 40 units\nUsed: 27 units\nFree: 13 units\nState: READY | OK\n",
+        "edits": [
+          [
+            "print(\"STORAGE \", end=\"\")",
+            "print(\"STORAGE \", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "STORAGE  | A | SIM\nCapacity: 40 units\nUsed: 27 units\nFree: 13 units\nState: READY | OK\n",
+        "solution_input": "",
+        "solution_out": "STORAGE B | SIM\nCapacity: 30 units\nUsed: 30 units\nFree: 0 units\nState: FULL | WAIT\n"
+      },
+      {
+        "input": "",
+        "out": "18 22 3\n23 17 4\n19 21 3\n26 14 4\nTotals: 20 4\nCheck: 26\nCapacity: 40\n",
+        "edits": [
+          [
+            "size = 7",
+            "size = 12"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "18 22 3\n23 17 4\n19 21 3\n31 9 4\nTotals: 25 4\nCheck: 31\nCapacity: 40\n",
+        "solution_input": "",
+        "solution_out": "29 21 4\n23 27 3\n27 23 4\n19 31 3\n13 14 19\n"
+      },
+      {
+        "input": "40\n10\n18\n4\n7\n",
+        "out": "Add 1: 28 12\nDelete: 24 16\nAdd 2: 31 9\nDelta: 21\nCheck: 31\nTotal writes: 25\nFree: 9\n",
+        "edits": [],
+        "alt_input": "25\n15\n18\n12\n1\n",
+        "alt_out": "Add 1: 33 -8\nDelete: 21 4\nAdd 2: 22 3\nDelta: 7\nCheck: 22\nTotal writes: 19\nFree: 3\n",
+        "solution_input": "50\n20\n9\n6\n4\n8\n",
+        "solution_out": "29 21\n23 27\n27 23\n19 31\n19 19\n"
+      },
+      {
+        "input": "",
+        "out": "ADDED\n30 0\n1 0\nFULL\n",
+        "edits": [
+          [
+            "size = 6",
+            "size = 7"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "NO SPACE\n24 6\n0 1\nPARTIAL\n",
+        "solution_input": "30\n24\n2\n8\n",
+        "solution_out": "REMOVED\n16 14\n1 0\nDelta: -8\nPARTIAL\n"
+      },
+      {
+        "input": "1\n12\n1\n9\n2\n6\n1\n14\n2\n50\n0\n5\n1\n-1\n2\n4\n",
+        "out": "1 ADDED 22 8\n2 NO SPACE 22 8\n3 REMOVED 16 14\n4 ADDED 30 0\n5 NOT ENOUGH 30 0\n6 INVALID 30 0\n7 INVALID 30 0\n8 REMOVED 26 4\n4 2 2\n26 10 30\nCheck: 26 26\n",
+        "edits": [],
+        "alt_input": "1\n12\n1\n8\n2\n6\n1\n6\n2\n50\n0\n5\n1\n-1\n2\n4\n",
+        "alt_out": "1 ADDED 22 8\n2 ADDED 30 0\n3 REMOVED 24 6\n4 ADDED 30 0\n5 NOT ENOUGH 30 0\n6 INVALID 30 0\n7 INVALID 30 0\n8 REMOVED 26 4\n5 1 2\n26 10 30\nCheck: 26 26\n",
+        "solution_input": "30\n10\n8\n1\n12\n1\n9\n2\n6\n1\n14\n2\n50\n0\n5\n1\n-1\n2\n4\n",
+        "solution_out": "1 ADDED 22 8\n2 NO SPACE 22 8\n3 REMOVED 16 14\n4 ADDED 30 0\n5 NOT ENOUGH 30 0\n6 INVALID 30 0\n7 INVALID 30 0\n8 REMOVED 26 4\n4 2 2\n26 10 30 1\nCheck: 26 26\n"
+      },
+      {
+        "input": "",
+        "out": "30 ADDED 24 [True, True, True, False]\n40 NO SPACE 24 [True, True, True, False]\n20 REMOVED 16 [True, False, True, False]\n40 ADDED 28 [True, False, True, True]\n30 DUPLICATE 28 [True, False, True, True]\n99 INVALID 28 [True, False, True, True]\n10 REMOVED 22 [False, False, True, True]\n['ADDED', 'NO SPACE', 'REMOVED', 'ADDED', 'DUPLICATE', 'INVALID', 'REMOVED']\nCheck: 22 22\n",
+        "edits": [
+          [
+            "capacity = 30",
+            "capacity = 26"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "30 ADDED 24 [True, True, True, False]\n40 NO SPACE 24 [True, True, True, False]\n20 REMOVED 16 [True, False, True, False]\n40 NO SPACE 16 [True, False, True, False]\n30 DUPLICATE 16 [True, False, True, False]\n99 INVALID 16 [True, False, True, False]\n10 REMOVED 10 [False, False, True, False]\n['ADDED', 'NO SPACE', 'REMOVED', 'NO SPACE', 'DUPLICATE', 'INVALID', 'REMOVED']\nCheck: 10 10\n",
+        "solution_input": "",
+        "solution_out": "30 ADDED 24 [True, True, True, False]\n40 NO SPACE 24 [True, True, True, False]\n20 REMOVED 16 [True, False, True, False]\n40 ADDED 28 [True, False, True, True]\n30 DUPLICATE 28 [True, False, True, True]\n99 INVALID 28 [True, False, True, True]\n10 REMOVED 22 [False, False, True, True]\n['ADDED', 'NO SPACE', 'REMOVED', 'ADDED', 'DUPLICATE', 'INVALID', 'REMOVED']\n[30, 40] 12\nCheck: 22 22\n"
+      },
+      {
+        "input": "",
+        "out": "[14, 'ADDED'] [True, True, False]\n[14, 'NO SPACE'] [True, True, False]\n[8, 'REMOVED'] [False, True, False]\n[18, 'ADDED'] [False, True, True]\n18 18\n",
+        "edits": [
+          [
+            "result = change(ids, sizes, active, 20, used, event[0], event[1])",
+            "result = change(ids, sizes, active, 24, used, event[0], event[1])"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[14, 'ADDED'] [True, True, False]\n[24, 'ADDED'] [True, True, True]\n[18, 'REMOVED'] [False, True, True]\n[18, 'DUPLICATE'] [False, True, True]\n18 18\n",
+        "solution_input": "",
+        "solution_out": "[14, 'ADDED'] [True, True, False] True\n[14, 'NO SPACE'] [True, True, False] True\n[8, 'REMOVED'] [False, True, False] True\n[18, 'ADDED'] [False, True, True] True\n18 18\nFalse\n"
+      },
+      {
+        "input": "",
+        "out": "True True True\nDENIED\nDENIED\nTrue\nMOVED\nDENIED\n[9, 21, [20]] [8, 4, [10]]\n[[10, 'DENIED'], [20, 'DENIED'], [10, 'MOVED'], [20, 'DENIED']]\nCombined: 17\n",
+        "edits": [
+          [
+            "b = Drive(12)",
+            "b = Drive(16)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "True True True\nMOVED\nDENIED\nTrue\nDENIED\nDENIED\n[9, 21, [20]] [8, 8, [10]]\n[[10, 'MOVED'], [20, 'DENIED'], [10, 'DENIED'], [20, 'DENIED']]\nCombined: 17\n",
+        "solution_input": "",
+        "solution_out": "True True True\nDENIED\nDENIED\nTrue\nMOVED\nDENIED\n[9, 21, [20]] [8, 4, [10]]\n[[10, 'DENIED'], [20, 'DENIED'], [10, 'MOVED'], [20, 'DENIED']]\nCombined: 17\nTrue True 1\nMOVED\nTrue True 2\n"
+      }
+    ]
+  },
+  {
+    "id": "29_whatsapp_unread",
+    "levels": [
+      {
+        "input": "",
+        "out": "CHAT A | SIM\nUnread: 5 messages\nReceived: 12 total\nAlerts: 7 total\nState: MUTED | READY\n",
+        "edits": [
+          [
+            "print(\"CHAT \", end=\"\")",
+            "print(\"CHAT \", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "CHAT  | A | SIM\nUnread: 5 messages\nReceived: 12 total\nAlerts: 7 total\nState: MUTED | READY\n",
+        "solution_input": "",
+        "solution_out": "CHAT B | SIM\nUnread: 0 messages\nReceived: 9 total\nAlerts: 9 total\nState: SOUND | READ\n"
+      },
+      {
+        "input": "",
+        "out": "4 4 0 4\n2 4 2 4\n5 7 2 4\n1 7 6 4\n3 9 6 6\nCheck: 3\nSilent arrivals: 3\n",
+        "edits": [
+          [
+            "unread += 3\nreceived += 3",
+            "unread += 5\nreceived += 5"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "4 4 0 4\n2 4 2 4\n7 9 2 4\n3 9 6 4\n5 11 6 6\nCheck: 5\nSilent arrivals: 5\n",
+        "solution_input": "",
+        "solution_out": "5 5 0 5\n3 5 2 5\n7 9 2 5\n4 9 5 5\n5 10 5 6\n5 5\n"
+      },
+      {
+        "input": "12\n7\n7\n9\n9\n9\n6\n2\n0\n",
+        "out": "A: 5 5\nB: 0 0\nC: 4 6\nTotal: 9\nCheck: 9\nAlerts: 16\n",
+        "edits": [],
+        "alt_input": "12\n5\n7\n9\n9\n9\n6\n2\n4\n",
+        "alt_out": "A: 7 5\nB: 0 0\nC: 4 2\nTotal: 11\nCheck: 11\nAlerts: 20\n",
+        "solution_input": "12\n7\n7\n9\n9\n9\n",
+        "solution_out": "5 5\n0 0\n21 16 16\n5\n"
+      },
+      {
+        "input": "",
+        "out": "READ 5\n0 12 12 7\nCheck: 0\nCLEAR\n",
+        "edits": [
+          [
+            "kind = 2",
+            "kind = 1"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "RECEIVED\n13 20 7 7\nCheck: 13\nPENDING\n",
+        "solution_input": "2\n10\n",
+        "solution_out": "READ 5\n0 12 12 7\nCheck: 0\n5 0\nCLEAR\n"
+      },
+      {
+        "input": "1\n4\n3\n0\n1\n3\n2\n2\n2\n9\n2\n1\n3\n0\n1\n5\n9\n0\n",
+        "out": "1 RECEIVED 4 4 False\n2 MUTE 4 4 True\n3 RECEIVED 7 4 True\n4 READ 5 4 True\n5 READ 0 4 True\n6 READ 0 4 True\n7 MUTE 0 4 False\n8 RECEIVED 5 9 False\n9 INVALID 5 9 False\n12 7 5\n7 2 1\nCheck: 5\n",
+        "edits": [],
+        "alt_input": "1\n4\n3\n0\n1\n3\n2\n2\n2\n9\n2\n1\n3\n1\n1\n5\n9\n0\n",
+        "alt_out": "1 RECEIVED 4 4 False\n2 MUTE 4 4 True\n3 RECEIVED 7 4 True\n4 READ 5 4 True\n5 READ 0 4 True\n6 READ 0 4 True\n7 INVALID 0 4 True\n8 RECEIVED 5 4 True\n9 INVALID 5 4 True\n12 7 5\n7 1 2\nCheck: 5\n",
+        "solution_input": "9\n1\n4\n3\n0\n1\n3\n2\n2\n2\n9\n2\n1\n3\n0\n1\n5\n9\n0\n",
+        "solution_out": "1 RECEIVED 4 4 False\n2 MUTE 4 4 True\n3 RECEIVED 7 4 True\n4 READ 5 4 True\n5 READ 0 4 True\n6 READ 0 4 True\n7 MUTE 0 4 False\n8 RECEIVED 5 9 False\n9 INVALID 5 9 False\n12 7 5\n7 2 1\nCheck: 5\n3 1\n12 12\n"
+      },
+      {
+        "input": "",
+        "out": "0 RECEIVED [5, 0] [False, False]\n1 RECEIVED [5, 3] [False, False]\n0 MUTE [5, 3] [True, False]\n0 RECEIVED [9, 3] [True, False]\n1 READ [9, 1] [True, False]\n2 UNKNOWN [9, 1] [True, False]\n0 READ [0, 1] [True, False]\n1 MUTE [0, 1] [True, True]\n1 RECEIVED [0, 3] [True, True]\n[5, 3] [9, 5] [9, 2]\n[[0, 'RECEIVED'], [1, 'RECEIVED'], [0, 'MUTE'], [0, 'RECEIVED'], [1, 'READ'], [2, 'UNKNOWN'], [0, 'READ'], [1, 'MUTE'], [1, 'RECEIVED']]\n[True, True]\n",
+        "edits": [
+          [
+            "[0, 3, 0], [0, 1, 4]",
+            "[1, 3, 0], [0, 1, 4]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "0 RECEIVED [5, 0] [False, False]\n1 RECEIVED [5, 3] [False, False]\n1 MUTE [5, 3] [False, True]\n0 RECEIVED [9, 3] [False, True]\n1 READ [9, 1] [False, True]\n2 UNKNOWN [9, 1] [False, True]\n0 READ [0, 1] [False, True]\n1 MUTE [0, 1] [False, False]\n1 RECEIVED [0, 3] [False, False]\n[9, 5] [9, 5] [9, 2]\n[[0, 'RECEIVED'], [1, 'RECEIVED'], [1, 'MUTE'], [0, 'RECEIVED'], [1, 'READ'], [2, 'UNKNOWN'], [0, 'READ'], [1, 'MUTE'], [1, 'RECEIVED']]\n[True, True]\n",
+        "solution_input": "",
+        "solution_out": "0 RECEIVED [5, 0] [False, False]\n1 RECEIVED [5, 3] [False, False]\n0 MUTE [5, 3] [True, False]\n0 RECEIVED [9, 3] [True, False]\n1 READ [9, 1] [True, False]\n2 UNKNOWN [9, 1] [True, False]\n0 READ [0, 1] [True, False]\n1 MUTE [0, 1] [True, True]\n1 RECEIVED [0, 3] [True, True]\n[5, 3] [9, 5] [9, 2]\n[[0, 'RECEIVED'], [1, 'RECEIVED'], [0, 'MUTE'], [0, 'RECEIVED'], [1, 'READ'], [2, 'UNKNOWN'], [0, 'READ'], [1, 'MUTE'], [1, 'RECEIVED']]\n[True, True]\n[1] [0, 1]\n3 8\n"
+      },
+      {
+        "input": "",
+        "out": "[[0, False, 4, 4, 4], 'READ']\n[[4, True, 8, 4, 5], ['RECEIVED', 'MUTE', 'RECEIVED', 'READ']]\n[[0, True, 8, 8, 5], ['RECEIVED', 'MUTE', 'RECEIVED', 'READ']]\n",
+        "edits": [
+          [
+            "if not muted:",
+            "if muted:"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[[0, False, 4, 4, 4], 'READ']\n[[4, True, 8, 4, 3], ['RECEIVED', 'MUTE', 'RECEIVED', 'READ']]\n[[0, True, 8, 8, 3], ['RECEIVED', 'MUTE', 'RECEIVED', 'READ']]\n",
+        "solution_input": "",
+        "solution_out": "[[0, False, 4, 4, 4], 'READ']\nFalse\n[[4, True, 8, 4, 5], ['RECEIVED', 'MUTE', 'RECEIVED', 'READ'], [True, True, True, True]]\n[[0, True, 8, 8, 5], ['RECEIVED', 'MUTE', 'RECEIVED', 'READ'], [True, True, True, True]]\n"
+      },
+      {
+        "input": "",
+        "out": "RECEIVED\nRECEIVED\n3\nUNKNOWN\nRECEIVED\n7\n[['A', 4, 7, False], ['B', 0, 0, True]]\n4 [[0, 'RECEIVED'], [1, 'RECEIVED'], [2, 'UNKNOWN'], [0, 'RECEIVED']]\n",
+        "edits": [
+          [
+            "b.toggle()",
+            "a.toggle()"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "RECEIVED\nRECEIVED\n3\nUNKNOWN\nRECEIVED\n7\n[['A', 4, 5, True], ['B', 0, 7, False]]\n4 [[0, 'RECEIVED'], [1, 'RECEIVED'], [2, 'UNKNOWN'], [0, 'RECEIVED']]\n",
+        "solution_input": "",
+        "solution_out": "RECEIVED\nRECEIVED\n3\nUNKNOWN\nRECEIVED\n7\n[['A', 4, 7, False], ['B', 0, 0, True]]\n4 [[0, 'RECEIVED'], [1, 'RECEIVED'], [2, 'UNKNOWN'], [0, 'RECEIVED']]\n[['A', 4, 7, False]] 1\nRECEIVED\n[['A', 4, 7, False], ['B', 4, 0, True]] 1\n8\n"
+      }
+    ]
+  },
+  {
+    "id": "30_youtube_ranking",
+    "levels": [
+      {
+        "input": "",
+        "out": "VIDEO 17 | DEMO\nViews: 100 count\nLikes: 20 count\nScore: 110 points\nRank: 2 | READY\n",
+        "edits": [
+          [
+            "print(\"VIDEO \", end=\"\")",
+            "print(\"VIDEO \", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "VIDEO  | 17 | DEMO\nViews: 100 count\nLikes: 20 count\nScore: 110 points\nRank: 2 | READY\n",
+        "solution_input": "",
+        "solution_out": "VIDEO 18 | DEMO\nViews: 50 count\nLikes: 15 count\nScore: 180 points\nRank: 1 | READY\n"
+      },
+      {
+        "input": "",
+        "out": "20 4 1 110\n30 7 3 153\n50 8 4 112\nWeighted: 56\nCheck: 56\nUnscaled: 5600\n",
+        "edits": [
+          [
+            "views += 20",
+            "views += 40"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "20 4 1 110\n30 7 3 153\n70 8 4 80\nWeighted: 56\nCheck: 56\nUnscaled: 5600\n",
+        "solution_input": "",
+        "solution_out": "30 6 2 120\n40 8 3 125\n60 13 4 126\n6\n"
+      },
+      {
+        "input": "100\n20\n5\n50\n15\n5\n",
+        "out": "A: 100 110 110\nB: 50 90 180\nViews gap: 50\nActivity gap: 20\nScore gap: -70\nCombined views: 150\n",
+        "edits": [],
+        "alt_input": "100\n20\n5\n50\n5\n1\n",
+        "alt_out": "A: 100 110 110\nB: 50 26 52\nViews gap: 50\nActivity gap: 84\nScore gap: 58\nCombined views: 150\n",
+        "solution_input": "100\n20\n5\n50\n15\n5\n20\n3\n2\n",
+        "solution_out": "100 110\n50 180\n20 120\nTotal: 170\n80 -10\n"
+      },
+      {
+        "input": "",
+        "out": "100 100\nSelected: B\n40 100\n",
+        "edits": [
+          [
+            "comments_a = 0",
+            "comments_a = 1"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "130 100\nSelected: A\n20 130\n",
+        "solution_input": "9\n4\n1\n30\n5\n2\n",
+        "solution_out": "A SMALL\n-1 106 B\n"
+      },
+      {
+        "input": "100\n20\n5\n50\n15\n5\n9\n4\n1\n20\n30\n0\n40\n10\n0\n20\n5\n0\n",
+        "out": "1 100 110\n2 50 180\n3 SMALL\n4 INVALID\n5 40 100\n6 20 100\nScore rank: 2 180\nViews rank: 1 100\n4 1 1\nCheck: 6\n",
+        "edits": [],
+        "alt_input": "100\n20\n5\n50\n1\n1\n9\n4\n1\n20\n30\n0\n40\n10\n0\n20\n5\n0\n",
+        "alt_out": "1 100 110\n2 50 20\n3 SMALL\n4 INVALID\n5 40 100\n6 20 100\nScore rank: 1 110\nViews rank: 1 100\n4 1 1\nCheck: 6\n",
+        "solution_input": "6\n20\n100\n20\n5\n50\n15\n5\n9\n4\n1\n20\n30\n0\n40\n10\n0\n20\n5\n0\n",
+        "solution_out": "1 100 110\n2 50 180\n3 SMALL\n4 INVALID\n5 40 100\n6 20 100\nScore rank: 2 180\nViews rank: 1 100\n4 1 1\nCheck: 6\n122\nFalse\n"
+      },
+      {
+        "input": "",
+        "out": "1 1 180 50\n2 0 110 100\n3 4 100 40\n[110, 180, -1, -1, 100, 100, 100]\n[0, 1, 4, 5, 6]\n[1, 0, 4]\n[[100, 20, 5], [50, 15, 5], [9, 4, 1], [20, 30, 0], [40, 10, 0], [20, 5, 0], [40, 10, 0]]\n",
+        "edits": [
+          [
+            "[50, 15, 5]",
+            "[50, 1, 1]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "1 0 110 100\n2 4 100 40\n3 6 100 40\n[110, 20, -1, -1, 100, 100, 100]\n[0, 1, 4, 5, 6]\n[0, 4, 6]\n[[100, 20, 5], [50, 1, 1], [9, 4, 1], [20, 30, 0], [40, 10, 0], [20, 5, 0], [40, 10, 0]]\n",
+        "solution_input": "",
+        "solution_out": "1 1 180 50\n2 0 110 100\n3 4 100 40\n[110, 180, -1, -1, 100, 100, 100]\n[0, 1, 4, 5, 6]\n[1, 0, 4]\n[0, 1, 4]\n[1, 0, 4]\n"
+      },
+      {
+        "input": "",
+        "out": "['OK', 0]\n['SMALL', -1]\n[[100, 100, 100, -1, 180], [4, 1, 2, 0]]\n[[100, 100, 100, -1, 180], [4, 1]]\n",
+        "edits": [
+          [
+            "return videos[i][0] > videos[best][0]",
+            "return videos[i][0] >= videos[best][0]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "['OK', 0]\n['SMALL', -1]\n[[100, 100, 100, -1, 180], [4, 2, 1, 0]]\n[[100, 100, 100, -1, 180], [4, 2]]\n",
+        "solution_input": "",
+        "solution_out": "['OK', 0]\n['SMALL', -1]\n[[100, 100, 100, -1, 180], [4, 1, 2, 0]]\n[[100, 100, 100, -1, 180], [4, 1, 2, 0]]\n[]\n"
+      },
+      {
+        "input": "",
+        "out": "[['A', 100, 110], ['B', 50, 180], ['C', 9, -1], ['D', 40, 100]]\n[1, 0, 3]\nTrue\nTrue\nTrue\nFalse\n[['A', 120, 151], ['B', 100, 90], ['C', 10, 260], ['D', 40, 100]]\n[2, 0, 3]\n[[1, 0, 3], [2, 0, 3]]\n",
+        "edits": [
+          [
+            "print(b.add(50, 0, 0))",
+            "print(b.add(50, 20, 5))"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[['A', 100, 110], ['B', 50, 180], ['C', 9, -1], ['D', 40, 100]]\n[1, 0, 3]\nTrue\nTrue\nTrue\nFalse\n[['A', 120, 151], ['B', 100, 200], ['C', 10, 260], ['D', 40, 100]]\n[2, 1, 0]\n[[1, 0, 3], [2, 1, 0]]\n",
+        "solution_input": "",
+        "solution_out": "[0, 1, 3]\n[['A', 100, 110], ['B', 50, 180], ['C', 9, -1], ['D', 40, 100]]\n[1, 0, 3]\nTrue\nTrue\nTrue\nFalse\n[['A', 120, 151], ['B', 100, 90], ['C', 10, 260], ['D', 40, 100]]\n[2, 0, 3]\n[[1, 0, 3], [2, 0, 3]]\n[0, 1, 3]\n[[0, 1, 3], [0, 1, 3]]\n"
+      }
+    ]
+  },
+  {
+    "id": "31_backup_system",
+    "levels": [
+      {
+        "input": "",
+        "out": "BACKUP 01 | SIM\nSource: 5 version\nCopy: 3 version\nBudget: 12 units\nState: STALE | WAIT\n",
+        "edits": [
+          [
+            "print(\"BACKUP \", end=\"\")",
+            "print(\"BACKUP \", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "BACKUP  | 01 | SIM\nSource: 5 version\nCopy: 3 version\nBudget: 12 units\nState: STALE | WAIT\n",
+        "solution_input": "",
+        "solution_out": "BACKUP 02 | SIM\nSource: 7 version\nCopy: 7 version\nBudget: 4 units\nState: CURRENT | OK\n"
+      },
+      {
+        "input": "",
+        "out": "2 1 40 1\n3 1 40 2\n3 3 34 0\n5 3 34 2\n5 5 24 0\nUpdates: 2\nTransferred: 16\nCheck: 40\n",
+        "edits": [
+          [
+            "size += 4",
+            "size += 8"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "2 1 40 1\n3 1 40 2\n3 3 34 0\n5 3 34 2\n5 5 20 0\nUpdates: 2\nTransferred: 20\nCheck: 40\n",
+        "solution_input": "",
+        "solution_out": "3 3 0 43\n6 3 3 43\n6 6 0 34\n7 6 1 34\n50\n"
+      },
+      {
+        "input": "5\n3\n6\n2\n2\n4\n3\n0\n8\n15\n",
+        "out": "A: 2 6\nB: 0 4\nC: 3 8\nAll sizes: 18\nRemaining: -3\nVersion gaps: 5\n",
+        "edits": [],
+        "alt_input": "5\n3\n6\n2\n4\n4\n3\n0\n8\n10\n",
+        "alt_out": "A: 2 6\nB: -2 4\nC: 3 8\nAll sizes: 18\nRemaining: -8\nVersion gaps: 3\n",
+        "solution_input": "5\n1\n6\n3\n0\n8\n12\n",
+        "solution_out": "4 3\nAfter A: 6\nAfter B: -2\nPlanned transfer: 14\n"
+      },
+      {
+        "input": "",
+        "out": "COPIED\n5 5 0\n0 8\nCheck: True\nUP TO DATE\n",
+        "edits": [
+          [
+            "budget = 8",
+            "budget = 7"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "WAIT\n5 2 3\n7 0\nCheck: True\nNOT CURRENT\n",
+        "solution_input": "5\n2\n9\n4\n",
+        "solution_out": "WAIT 5\n5 2 3\n4 0\nCheck: True\nNOT CURRENT\n"
+      },
+      {
+        "input": "5\n2\n8\n3\n3\n4\n4\n5\n2\n4\n0\n14\n2\n1\n4\n3\n0\n7\n0\n0\n2\n",
+        "out": "1 COPIED 5 5 12\n2 CURRENT 3 3 12\n3 CONFLICT 4 5 12\n4 WAIT 4 0 12\n5 COPIED 2 2 8\n6 COPIED 3 3 1\n7 INVALID 0 0 1\n3 1 1 1 1\nCheck: 7\n19 1 True\n",
+        "edits": [],
+        "alt_input": "5\n2\n7\n3\n3\n4\n4\n5\n2\n4\n0\n14\n2\n1\n4\n3\n0\n7\n0\n0\n2\n",
+        "alt_out": "1 COPIED 5 5 13\n2 CURRENT 3 3 13\n3 CONFLICT 4 5 13\n4 WAIT 4 0 13\n5 COPIED 2 2 9\n6 COPIED 3 3 2\n7 INVALID 0 0 2\n3 1 1 1 1\nCheck: 7\n18 2 True\n",
+        "solution_input": "20\n7\n5\n2\n8\n3\n3\n4\n4\n5\n2\n4\n0\n14\n2\n1\n4\n3\n0\n7\n0\n0\n2\n",
+        "solution_out": "1 COPIED 5 5 12\n2 CURRENT 3 3 12\n3 CONFLICT 4 5 12\n4 WAIT 4 0 12\n5 COPIED 2 2 8\n6 COPIED 3 3 1\n7 INVALID 0 0 1\n3 1 1 1 1\nCheck: 7\n19 1 True\n14 4\n"
+      },
+      {
+        "input": "",
+        "out": "['COPIED', 'CURRENT', 'CONFLICT', 'WAIT', 'COPIED', 'WAIT']\n[101, 105] 0\n[5, 3, 5, 0, 2, 0]\n['CURRENT', 'CURRENT', 'CONFLICT', 'COPIED', 'CURRENT', 'WAIT']\n[104] 2\n[5, 3, 5, 4, 2, 0]\n[[['COPIED', 'CURRENT', 'CONFLICT', 'WAIT', 'COPIED', 'WAIT'], [101, 105], 0], [['CURRENT', 'CURRENT', 'CONFLICT', 'COPIED', 'CURRENT', 'WAIT'], [104], 2]]\nPending: [106]\n",
+        "edits": [
+          [
+            "budgets = [12, 16]",
+            "budgets = [12, 21]"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "['COPIED', 'CURRENT', 'CONFLICT', 'WAIT', 'COPIED', 'WAIT']\n[101, 105] 0\n[5, 3, 5, 0, 2, 0]\n['CURRENT', 'CURRENT', 'CONFLICT', 'COPIED', 'CURRENT', 'COPIED']\n[104, 106] 0\n[5, 3, 5, 4, 2, 3]\n[[['COPIED', 'CURRENT', 'CONFLICT', 'WAIT', 'COPIED', 'WAIT'], [101, 105], 0], [['CURRENT', 'CURRENT', 'CONFLICT', 'COPIED', 'CURRENT', 'COPIED'], [104, 106], 0]]\nPending: []\n",
+        "solution_input": "",
+        "solution_out": "['COPIED', 'CURRENT', 'CONFLICT', 'WAIT', 'COPIED', 'WAIT']\n[101, 105] 0\n[5, 3, 5, 0, 2, 0]\n['CURRENT', 'CURRENT', 'CONFLICT', 'COPIED', 'CURRENT', 'WAIT']\n[104] 2\n[5, 3, 5, 4, 2, 0]\n[[['COPIED', 'CURRENT', 'CONFLICT', 'WAIT', 'COPIED', 'WAIT'], [101, 105], 0], [['CURRENT', 'CURRENT', 'CONFLICT', 'COPIED', 'CURRENT', 'WAIT'], [104], 2]]\nPending: [106]\n[101, 102, 104, 105] [103]\nNeeded: 7\n"
+      },
+      {
+        "input": "",
+        "out": "[[5, 3, 0, 4], ['COPIED', 'CURRENT', 'WAIT', 'CONFLICT'], 0, 8]\n[[5, 3, 4, 4], ['CURRENT', 'CURRENT', 'COPIED', 'CONFLICT'], 0, 12]\n[2, 3, 0, 4]\n[]\n",
+        "edits": [
+          [
+            "if size > budget:",
+            "if size >= budget:"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[[2, 3, 0, 4], ['WAIT', 'CURRENT', 'WAIT', 'CONFLICT'], 8, 0]\n[[5, 3, 0, 4], ['COPIED', 'CURRENT', 'WAIT', 'CONFLICT'], 4, 8]\n[2, 3, 0, 4]\n[]\n",
+        "solution_input": "",
+        "solution_out": "[[5, 3, 0, 4], ['COPIED', 'CURRENT', 'WAIT', 'CONFLICT'], 0, 8, [0], [2]]\n[[5, 3, 4, 4], ['CURRENT', 'CURRENT', 'COPIED', 'CONFLICT'], 0, 12, [2], []]\n[2, 3, 0, 4]\n[]\n[[], [], 10, 0, [], []]\n"
+      },
+      {
+        "input": "",
+        "out": "[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'WAIT'], ['D', 'CONFLICT']], 8, 0]\n[[['A', 'CURRENT'], ['B', 'CURRENT'], ['C', 'COPIED'], ['D', 'CONFLICT']], 12, 0]\nTrue\n[[['A', 'WAIT'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 0, 6]\n[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 7, 0]\n[['A', 6, 6, 'CURRENT'], ['B', 3, 3, 'CURRENT'], ['C', 4, 4, 'CURRENT'], ['D', 2, 4, 'CONFLICT']]\n27\n[[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'WAIT'], ['D', 'CONFLICT']], 8, 0], [[['A', 'CURRENT'], ['B', 'CURRENT'], ['C', 'COPIED'], ['D', 'CONFLICT']], 12, 0], [[['A', 'WAIT'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 0, 6], [[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 7, 0]]\n",
+        "edits": [
+          [
+            "print(job.run(6))",
+            "print(job.run(7))"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'WAIT'], ['D', 'CONFLICT']], 8, 0]\n[[['A', 'CURRENT'], ['B', 'CURRENT'], ['C', 'COPIED'], ['D', 'CONFLICT']], 12, 0]\nTrue\n[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 7, 0]\n[[['A', 'CURRENT'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 0, 7]\n[['A', 6, 6, 'CURRENT'], ['B', 3, 3, 'CURRENT'], ['C', 4, 4, 'CURRENT'], ['D', 2, 4, 'CONFLICT']]\n27\n[[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'WAIT'], ['D', 'CONFLICT']], 8, 0], [[['A', 'CURRENT'], ['B', 'CURRENT'], ['C', 'COPIED'], ['D', 'CONFLICT']], 12, 0], [[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 7, 0], [[['A', 'CURRENT'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 0, 7]]\n",
+        "solution_input": "",
+        "solution_out": "20 1\n[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'WAIT'], ['D', 'CONFLICT']], 8, 0]\n[[['A', 'CURRENT'], ['B', 'CURRENT'], ['C', 'COPIED'], ['D', 'CONFLICT']], 12, 0]\n0 3\nTrue\n[[['A', 'WAIT'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 0, 6]\n[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 7, 0]\n[['A', 6, 6, 'CURRENT'], ['B', 3, 3, 'CURRENT'], ['C', 4, 4, 'CURRENT'], ['D', 2, 4, 'CONFLICT']]\n27\n0 3\n[[[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'WAIT'], ['D', 'CONFLICT']], 8, 0], [[['A', 'CURRENT'], ['B', 'CURRENT'], ['C', 'COPIED'], ['D', 'CONFLICT']], 12, 0], [[['A', 'WAIT'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 0, 6], [[['A', 'COPIED'], ['B', 'CURRENT'], ['C', 'CURRENT'], ['D', 'CONFLICT']], 7, 0]]\n"
+      }
+    ]
+  },
+  {
+    "id": "32_spam_detection",
+    "levels": [
+      {
+        "input": "",
+        "out": "MESSAGE 12 | DEMO\nFlags: 2 / 3\nLinks: 1 / 3\nScore: 8 points\nDecision: REVIEW | CHECK\n",
+        "edits": [
+          [
+            "print(\"MESSAGE \", end=\"\")",
+            "print(\"MESSAGE \", end=\" | \")"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "MESSAGE  | 12 | DEMO\nFlags: 2 / 3\nLinks: 1 / 3\nScore: 8 points\nDecision: REVIEW | CHECK\n",
+        "solution_input": "",
+        "solution_out": "MESSAGE 13 | DEMO\nFlags: 1 / 3\nLinks: 0 / 3\nScore: 3 points\nDecision: NORMAL | READY\n"
+      },
+      {
+        "input": "",
+        "out": "1 0 1 7\n2 2 1 14\n2 2 0 10\n2 1 0 8\nParts: 6 2 0\nChange: 1\nCheck: 8\n",
+        "edits": [
+          [
+            "links += 2",
+            "links += 3"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "1 0 1 7\n2 3 1 16\n2 3 0 12\n2 2 0 10\nParts: 6 4 0\nChange: 3\nCheck: 10\n",
+        "solution_input": "",
+        "solution_out": "6 2 0 8\n6 2 4 12\n6 4 4 14\n3 4 4 11\n9\n"
+      },
+      {
+        "input": "2\n1\n0\n1\n0\n1\n8\n",
+        "out": "A: 8 0\nB: 7 -1\nScore gap: 1\nFlag gap: 1\nLink gap: 1\nUnknown gap: -1\nTotal: 15\n",
+        "edits": [],
+        "alt_input": "2\n2\n1\n1\n0\n1\n10\n",
+        "alt_out": "A: 14 4\nB: 7 -3\nScore gap: 7\nFlag gap: 1\nLink gap: 2\nUnknown gap: 0\nTotal: 21\n",
+        "solution_input": "2\n1\n0\n1\n0\n1\n3\n2\n1\n8\n",
+        "solution_out": "8 0\n7 -1\n17 9\n32 10\n"
+      },
+      {
+        "input": "",
+        "out": "REVIEW\n8 FP\nCost: 2\n",
+        "edits": [
+          [
+            "threshold = 8",
+            "threshold = 9"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "NORMAL\n8 TN\nCost: 0\n",
+        "solution_input": "1\n0\n1\n1\n8\n",
+        "solution_out": "NORMAL\n7 FN\nCost: 5\nFalse\n"
+      },
+      {
+        "input": "2\n1\n0\n0\n1\n0\n1\n1\n3\n2\n1\n1\n0\n1\n0\n0\n1\n2\n0\n1\n2\n2\n0\n0\n4\n0\n0\n1\n0\n0\n0\n0\n",
+        "out": "1 8 FP\n2 7 FN\n3 17 TP\n4 2 TN\n5 7 FN\n6 10 FP\n7 INVALID\n8 0 TN\n1 2 2 2\nValid: 7 Invalid: 1\nCost: 14\nCorrect percent: 42\n",
+        "edits": [],
+        "alt_input": "2\n1\n0\n1\n1\n0\n1\n0\n3\n2\n1\n1\n0\n1\n0\n0\n1\n2\n0\n1\n2\n2\n0\n0\n4\n0\n0\n1\n0\n0\n0\n0\n",
+        "alt_out": "1 8 TP\n2 7 TN\n3 17 TP\n4 2 TN\n5 7 FN\n6 10 FP\n7 INVALID\n8 0 TN\n2 1 1 3\nValid: 7 Invalid: 1\nCost: 7\nCorrect percent: 71\n",
+        "solution_input": "8\n8\n2\n5\n2\n1\n0\n0\n1\n0\n1\n1\n3\n2\n1\n1\n0\n1\n0\n0\n1\n2\n0\n1\n2\n2\n0\n0\n4\n0\n0\n1\n0\n0\n0\n0\n",
+        "solution_out": "1 8 FP\n2 7 FN\n3 17 TP\n4 2 TN\n5 7 FN\n6 10 FP\n7 INVALID\n8 0 TN\n1 2 2 2\nValid: 7 Invalid: 1\nCost: 14\nMarked: 3\nActual spam: 3\nCorrect percent: 42\n"
+      },
+      {
+        "input": "",
+        "out": "6 [3, 2, 0, 2] 1 4\n8 [1, 2, 2, 2] 1 14\n10 [1, 1, 2, 3] 1 12\nBest: 6 4\n[[6, [3, 2, 0, 2], 1, 4], [8, [1, 2, 2, 2], 1, 14], [10, [1, 1, 2, 3], 1, 12]]\n",
+        "edits": [
+          [
+            "cost = counts[1] * 2 + counts[2] * 5",
+            "cost = counts[1] * 5 + counts[2] * 2"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "6 [3, 2, 0, 2] 1 10\n8 [1, 2, 2, 2] 1 14\n10 [1, 1, 2, 3] 1 9\nBest: 10 9\n[[6, [3, 2, 0, 2], 1, 10], [8, [1, 2, 2, 2], 1, 14], [10, [1, 1, 2, 3], 1, 9]]\n",
+        "solution_input": "",
+        "solution_out": "6 [3, 2, 0, 2] 1 4\n8 [1, 2, 2, 2] 1 14\n10 [1, 1, 2, 3] 1 12\nBest: 6 4\nFewest errors: 6 2\n[[6, [3, 2, 0, 2], 1, 4, 71, 2], [8, [1, 2, 2, 2], 1, 14, 42, 4], [10, [1, 1, 2, 3], 1, 12, 57, 3]]\n"
+      },
+      {
+        "input": "",
+        "out": "1\n[[6, [3, 2, 0, 1], 0, 4], [[6, [3, 2, 0, 1], 0, 4], [8, [1, 2, 2, 1], 0, 14], [10, [1, 1, 2, 2], 0, 12]]]\n[[10, [1, 1, 2, 2], 0, 9], [[6, [3, 2, 0, 1], 0, 10], [8, [1, 2, 2, 1], 0, 14], [10, [1, 1, 2, 2], 0, 9]]]\n[[], []]\n",
+        "edits": [
+          [
+            "if score >= threshold:",
+            "if score > threshold:"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "3\n[[6, [3, 2, 0, 1], 0, 4], [[6, [3, 2, 0, 1], 0, 4], [8, [1, 1, 2, 2], 0, 12], [10, [1, 0, 2, 3], 0, 10]]]\n[[10, [1, 0, 2, 3], 0, 4], [[6, [3, 2, 0, 1], 0, 10], [8, [1, 1, 2, 2], 0, 9], [10, [1, 0, 2, 3], 0, 4]]]\n[[], []]\n",
+        "solution_input": "",
+        "solution_out": "1\n[[6, [3, 2, 0, 1], 0, 4, 66], [[6, [3, 2, 0, 1], 0, 4, 66], [8, [1, 2, 2, 1], 0, 14, 33], [10, [1, 1, 2, 2], 0, 12, 50]]]\n[[10, [1, 1, 2, 2], 0, 9, 50], [[6, [3, 2, 0, 1], 0, 10, 66], [8, [1, 2, 2, 1], 0, 14, 33], [10, [1, 1, 2, 2], 0, 9, 50]]]\n[[], []]\n[6, [2, 1, 0, 0], 0, 2, 66]\n"
+      },
+      {
+        "input": "",
+        "out": "[0, [[6, [3, 2, 0, 1], 0, 4], [8, [1, 2, 2, 1], 0, 14], [10, [1, 1, 2, 2], 0, 12]]]\n[2, [[6, [3, 2, 0, 1], 0, 10], [8, [1, 2, 2, 1], 0, 14], [10, [1, 1, 2, 2], 0, 9]]]\n[6, [2, 1, 0, 0], 0, 2]\n[10, [1, 0, 1, 1], 0, 2]\n[]\n1 1\n",
+        "edits": [
+          [
+            "lab = Experiment([a, b, c], 2, 5)",
+            "lab = Experiment([a, b, c], 8, 1)"
+          ]
+        ],
+        "alt_input": "",
+        "alt_out": "[2, [[6, [3, 2, 0, 1], 0, 16], [8, [1, 2, 2, 1], 0, 18], [10, [1, 1, 2, 2], 0, 10]]]\n[2, [[6, [3, 2, 0, 1], 0, 10], [8, [1, 2, 2, 1], 0, 14], [10, [1, 1, 2, 2], 0, 9]]]\n[10, [1, 0, 1, 1], 0, 1]\n[10, [1, 0, 1, 1], 0, 2]\n[]\n1 1\n",
+        "solution_input": "",
+        "solution_out": "[0, [[6, [3, 2, 0, 1], 0, 4], [8, [1, 2, 2, 1], 0, 14], [10, [1, 1, 2, 2], 0, 12]]]\n[2, [[6, [3, 2, 0, 1], 0, 10], [8, [1, 2, 2, 1], 0, 14], [10, [1, 1, 2, 2], 0, 9]]]\n[6, [2, 1, 0, 0], 0, 2]\n[10, [1, 0, 1, 1], 0, 2]\n[]\nTrue\nTrue\nTrue\nTrue\nTrue\nTrue\nTrue\n[1, 3] [1, 3]\n"
+      }
+    ]
+  }
+]
